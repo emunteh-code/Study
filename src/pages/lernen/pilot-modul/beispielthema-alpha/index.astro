@@ -1,13 +1,12 @@
 ---
-import Button from "../../../../components/foundation/Button.astro";
-import Callout from "../../../../components/foundation/Callout.astro";
-import PageHeader from "../../../../components/foundation/PageHeader.astro";
+import TopicPageLayout from "../../../../components/topic/TopicPageLayout.astro";
+import { pilotTopicFixture } from "../../../../fixtures/topic-page";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout
-  title="Beispielthema Alpha"
-  description="Noindex Fixture-Platzhalter für ein späteres Thema ohne akademische Inhalte."
+  title={pilotTopicFixture.title}
+  description="Noindex Fixture-Themenseite mit neutralem technischen Inhalt für die generische Topic-Page-Struktur."
   canonicalPath="/lernen/pilot-modul/beispielthema-alpha/"
   robots="noindex, nofollow"
   breadcrumbs={[
@@ -16,24 +15,7 @@ import BaseLayout from "../../../../layouts/BaseLayout.astro";
     { label: "Pilotmodul A", href: "/lernen/pilot-modul/" },
     { label: "Beispielthema Alpha" },
   ]}
+  pageId="fixture-topic-page"
 >
-  <section class="placeholder-page" aria-labelledby="page-title">
-    <PageHeader
-      eyebrow="Technisches Thema-Fixture"
-      title="Beispielthema Alpha"
-      summary="Dieser Platzhalter prüft nur die Navigation vom Modul-Dashboard zu einem verfügbaren Thema."
-    />
-    <Callout title="Fixture-only" variant="note">
-      <p>
-        Diese Seite enthält keine akademischen Inhalte, keine Formeln, keine
-        Definitionen, keine Aufgaben und keine Quellenbehauptungen. Der
-        generische Topic-Page-Template folgt in einem separaten Schritt.
-      </p>
-    </Callout>
-    <div class="placeholder-actions">
-      <Button href="/lernen/pilot-modul/" variant="secondary">
-        Zurück zu Pilotmodul A
-      </Button>
-    </div>
-  </section>
+  <TopicPageLayout topic={pilotTopicFixture} />
 </BaseLayout>

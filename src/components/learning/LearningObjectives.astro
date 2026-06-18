@@ -5,15 +5,20 @@ export interface Objective {
 }
 
 interface Props {
+  id?: string;
   title?: string;
   objectives: Objective[];
 }
 
-const { title = "Lernziele", objectives } = Astro.props;
+const {
+  id = "learning-objectives",
+  title = "Lernziele",
+  objectives,
+} = Astro.props;
 ---
 
-<section class="learning-block" aria-labelledby="learning-objectives">
-  <h2 id="learning-objectives">{title}</h2>
+<section class="learning-block" aria-labelledby={id}>
+  <h2 id={id}>{title}</h2>
   <ul>
     {objectives.map((objective) => <li id={objective.id}>{objective.text}</li>)}
   </ul>

@@ -5,26 +5,33 @@ export interface Variable {
 }
 
 interface Props {
+  id?: string;
   name: string;
   expression: string;
   purpose: string;
   variables: Variable[];
   assumptions?: string[];
-  source?: string;
+  source?: string | undefined;
+  commonMisuse?: string | undefined;
+  sourceStatus?: string | undefined;
 }
 
 const {
+  id,
   name,
   expression,
   purpose,
   variables,
   assumptions = [],
   source,
+  commonMisuse,
+  sourceStatus,
 } = Astro.props;
+const headingId = id ?? `${name}-formula`;
 ---
 
-<section class="learning-block" aria-labelledby={`${name}-formula`}>
-  <h2 id={`${name}-formula`}>{name}</h2>
+<section class="learning-block" aria-labelledby={headingId}>
+  <h2 id={headingId}>{name}</h2>
   <p>{purpose}</p>
   <div class="formula-expression" aria-label={`Formel ${name}`}>
     {expression}
@@ -52,5 +59,13 @@ const {
       </>
     )
   }
+  {
+    commonMisuse && (
+      <p>
+        <strong>Häufige Fehlverwendung:</strong> {commonMisuse}
+      </p>
+    )
+  }
+  {sourceStatus && <p class="card__meta">Quellenstatus: {sourceStatus}</p>}
   {source && <p class="card__meta">Quelle: {source}</p>}
 </section>

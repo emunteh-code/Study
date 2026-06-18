@@ -130,7 +130,7 @@ Future real modules should support coverage wording for fully available, partial
 
 The fixture module route is `/lernen/pilot-modul/`. It is `noindex, nofollow`, has a canonical URL for the same route, and marks the global `Lernen` navigation item as current.
 
-The available fixture topic route is `/lernen/pilot-modul/beispielthema-alpha/`. It is a noindex placeholder, not the generic topic template.
+The available fixture topic route is `/lernen/pilot-modul/beispielthema-alpha/`. It is a noindex generic topic-page fixture with neutral technical content only.
 
 The previous shell-validation learning route was removed to avoid duplicate fixture learning routes.
 
@@ -154,8 +154,8 @@ When real module data is introduced, fixture data should be replaced by content 
 
 ## Known Limitations
 
-The page does not implement real course modules, real topics, persistence, search, question answering, review scheduling, mock exams, formulas, reference pages, or the generic topic-page template.
+The page does not implement real course modules, real topics, persistence, search, question answering, review scheduling, mock exams, real formulas, or reference pages.
 
 ## Next Recommended Task
 
-Build the generic topic-page template using neutral fixture content. Do not ingest real course material yet.
+Build the reusable practice-question and solution flow using neutral fixtures. Do not ingest real course material yet.

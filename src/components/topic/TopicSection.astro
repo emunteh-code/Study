@@ -1,0 +1,34 @@
+---
+import Callout from "../foundation/Callout.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import { type TopicTextSection } from "../../fixtures/topic-page";
+
+interface Props {
+  section: TopicTextSection;
+}
+
+const { section } = Astro.props;
+---
+
+<section class="topic-section" aria-labelledby={section.id}>
+  <SectionHeader id={section.id} title={section.heading} />
+  <div class="topic-prose">
+    {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    {
+      section.list && (
+        <ul>
+          {section.list.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      )
+    }
+    {
+      section.callout && (
+        <Callout title={section.callout.title} variant="note">
+          <p>{section.callout.text}</p>
+        </Callout>
+      )
+    }
+  </div>
+</section>

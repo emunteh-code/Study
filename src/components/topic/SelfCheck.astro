@@ -1,0 +1,21 @@
+---
+import SectionHeader from "../foundation/SectionHeader.astro";
+import { type TopicSelfCheckItem } from "../../fixtures/topic-page";
+
+interface Props {
+  items: TopicSelfCheckItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="topic-section" aria-labelledby="selbstcheck">
+  <SectionHeader
+    id="selbstcheck"
+    title="Selbstcheck"
+    summary="Diese Liste ist statisch. Sie speichert nichts und behauptet keine Meisterschaft."
+  />
+  <ul class="topic-check-list">
+    {items.map((item) => <li id={item.id}>{item.text}</li>)}
+  </ul>
+</section>

@@ -1,0 +1,63 @@
+---
+import Button from "../foundation/Button.astro";
+import MetadataList from "../foundation/MetadataList.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import TextLink from "../foundation/TextLink.astro";
+import {
+  exerciseProvenanceLabels,
+  getTopicContentStatePresentation,
+  reviewStateLabels,
+  sourceVerificationLabels,
+  type TopicSourceSummary,
+} from "../../fixtures/topic-page";
+
+interface Props {
+  summary: TopicSourceSummary;
+  errorReportRoute: string;
+}
+
+const { summary, errorReportRoute } = Astro.props;
+const contentState = getTopicContentStatePresentation(summary.contentState);
+---
+
+<section
+  class="topic-section topic-source-summary"
+  aria-labelledby="quellen-pruefstand"
+>
+  <SectionHeader
+    id="quellen-pruefstand"
+    title="Quellen und Prüfstand"
+    summary={summary.fixtureWarning}
+  />
+  <MetadataList
+    items={[
+      {
+        term: "Inhaltsstand",
+        value: `${contentState.label}: ${contentState.explanation}`,
+      },
+      { term: "Review", value: reviewStateLabels[summary.reviewState] },
+      {
+        term: "Letzte technische Prüfung",
+        value: summary.lastReviewedDate ?? "Nicht vorhanden",
+      },
+      {
+        term: "Quellenprüfung",
+        value: sourceVerificationLabels[summary.sourceVerificationState],
+      },
+      {
+        term: "Übungsprovenienz",
+        value: exerciseProvenanceLabels[summary.exerciseProvenanceState],
+      },
+    ]}
+  />
+  <ul>
+    {summary.notes.map((note) => <li>{note}</li>)}
+  </ul>
+  <ul class="inline-link-list" aria-label="Topic-Vertrauenslinks">
+    <li><TextLink href="/methodik/">Methodik</TextLink></li>
+    <li><TextLink href="/quellen/">Quellen</TextLink></li>
+  </ul>
+  <div class="home-actions">
+    <Button href={errorReportRoute} variant="secondary">Fehler melden</Button>
+  </div>
+</section>

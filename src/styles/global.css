@@ -1129,6 +1129,156 @@ details > * {
   white-space: nowrap;
 }
 
+.topic-page {
+  display: grid;
+  gap: var(--space-48);
+  min-inline-size: 0;
+  max-inline-size: var(--layout-reading);
+}
+
+.topic-header {
+  display: grid;
+  gap: var(--space-16);
+  max-inline-size: var(--layout-narrow);
+}
+
+.topic-toc {
+  display: grid;
+  gap: var(--space-12);
+  min-inline-size: 0;
+  padding: var(--space-16);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+}
+
+.topic-toc h2 {
+  margin-block-end: 0;
+  font-size: var(--font-size-2);
+}
+
+.topic-toc ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-16);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.topic-toc li {
+  max-inline-size: none;
+}
+
+.topic-toc a {
+  display: inline-flex;
+  min-block-size: 2.25rem;
+  align-items: center;
+}
+
+.topic-section {
+  display: grid;
+  gap: var(--space-16);
+  min-inline-size: 0;
+  scroll-margin-block-start: var(--space-24);
+}
+
+.topic-section .section-header,
+.topic-section > h2 {
+  margin-block-end: 0;
+}
+
+.topic-prose {
+  max-inline-size: var(--layout-content);
+}
+
+.topic-learning-blocks {
+  display: grid;
+  gap: var(--space-16);
+  min-inline-size: 0;
+}
+
+.topic-prerequisites,
+.topic-check-list,
+.topic-review-prompts {
+  display: grid;
+  gap: var(--space-12);
+  padding: 0;
+  list-style: none;
+}
+
+.topic-prerequisites li,
+.topic-review-prompts li {
+  display: grid;
+  gap: var(--space-8);
+  max-inline-size: var(--layout-content);
+  padding: var(--space-16);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+}
+
+.topic-prerequisites h3,
+.topic-prerequisites p,
+.topic-review-prompts p {
+  margin: 0;
+}
+
+.topic-check-list li {
+  position: relative;
+  max-inline-size: var(--layout-content);
+  padding-inline-start: var(--space-24);
+}
+
+.topic-check-list li::before {
+  content: "□";
+  position: absolute;
+  inset-inline-start: 0;
+  color: var(--color-text-muted);
+}
+
+.topic-practice {
+  max-inline-size: var(--layout-content);
+  padding: var(--space-24);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+}
+
+.topic-practice--guided {
+  border-inline-start: 0.35rem solid var(--color-status-info-text);
+}
+
+.topic-practice--independent {
+  border-inline-start: 0.35rem solid var(--color-status-warning-text);
+}
+
+.topic-source-summary {
+  max-inline-size: var(--layout-content);
+}
+
+.topic-navigation-grid {
+  display: grid;
+  gap: var(--space-16);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.topic-navigation-grid article,
+.next-step-panel {
+  display: grid;
+  gap: var(--space-12);
+  min-inline-size: 0;
+  padding: var(--space-16);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+}
+
+.topic-navigation-grid h3,
+.topic-navigation-grid p {
+  margin: 0;
+}
+
 .showcase-grid {
   display: grid;
   gap: var(--space-16);
@@ -1213,7 +1363,11 @@ summary {
   }
 
   .module-option,
-  .continue-panel {
+  .continue-panel,
+  .topic-practice,
+  .topic-toc,
+  .topic-navigation-grid article,
+  .next-step-panel {
     padding: var(--space-16);
   }
 }
@@ -1242,7 +1396,11 @@ summary {
   .learning-block,
   .module-topic-item,
   .module-option,
-  .continue-panel {
+  .continue-panel,
+  .topic-toc,
+  .topic-practice,
+  .topic-navigation-grid article,
+  .next-step-panel {
     border: 1px solid CanvasText;
   }
 }
@@ -1255,11 +1413,41 @@ summary {
 
   .site-header,
   .site-footer,
-  .skip-link {
+  .skip-link,
+  .breadcrumb-region,
+  .topic-toc,
+  .home-actions {
     display: none;
   }
 
   a {
     color: #000000;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+  }
+
+  details {
+    border: 1px solid #000000;
+    background: #ffffff;
+  }
+
+  details > * {
+    display: block;
+  }
+
+  .topic-page,
+  .topic-section,
+  .learning-block,
+  .topic-practice,
+  .topic-source-summary {
+    max-inline-size: none;
+    break-inside: avoid;
+  }
+
+  .formula-expression {
+    white-space: normal;
   }
 }

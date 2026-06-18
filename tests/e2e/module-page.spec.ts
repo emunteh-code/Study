@@ -145,7 +145,7 @@ test("module practice, mock-exam, references, and trust sections are honest", as
   }
 });
 
-test("fixture topic placeholder is noindex and contains no academic claims", async ({
+test("fixture topic route opens the generic noindex topic template", async ({
   page,
 }) => {
   await page.goto(topicPath);
@@ -153,13 +153,15 @@ test("fixture topic placeholder is noindex and contains no academic claims", asy
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Beispielthema Alpha",
   );
-  await expect(page.getByText("Fixture-only")).toBeVisible();
   await expect(
-    page.getByText("keine akademischen Inhalte, keine Formeln"),
+    page.getByRole("navigation", { name: "Inhalt dieser Lektion" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Zurück zu Pilotmodul A" }),
-  ).toHaveAttribute("href", modulePath);
+    page.getByRole("heading", { name: "Geführte Übung" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("neutrale technische Beispieldaten").first(),
+  ).toBeVisible();
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
     "content",
     "noindex, nofollow",
@@ -198,7 +200,7 @@ for (const route of [learningIndexPath, modulePath, topicPath]) {
 }
 
 for (const width of [320, 768, 1440]) {
-  for (const route of [learningIndexPath, modulePath]) {
+  for (const route of [learningIndexPath, modulePath, topicPath]) {
     test(`${route} has no horizontal overflow at ${width}px`, async ({
       page,
     }) => {

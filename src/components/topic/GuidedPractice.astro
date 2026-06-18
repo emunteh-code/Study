@@ -1,0 +1,45 @@
+---
+import Button from "../foundation/Button.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import SolutionDisclosure from "../learning/SolutionDisclosure.astro";
+import { type TopicGuidedPractice } from "../../fixtures/topic-page";
+
+interface Props {
+  practice: TopicGuidedPractice;
+}
+
+const { practice } = Astro.props;
+---
+
+<section
+  class="topic-section topic-practice topic-practice--guided"
+  aria-labelledby="gefuehrte-uebung"
+>
+  <SectionHeader
+    id="gefuehrte-uebung"
+    title={practice.title}
+    summary={practice.objective}
+  />
+  <p>{practice.prompt}</p>
+  <h3>Schrittfolge</h3>
+  <ol>
+    {practice.steps.map((step) => <li>{step}</li>)}
+  </ol>
+  <details>
+    <summary>Hinweise anzeigen</summary>
+    <ul>
+      {practice.hints.map((hint) => <li>{hint}</li>)}
+    </ul>
+  </details>
+  <SolutionDisclosure summary="Geführte Lösung anzeigen">
+    <ol>
+      {practice.solution.map((step) => <li>{step}</li>)}
+    </ol>
+    <p><strong>Fehlerfeedback:</strong> {practice.commonErrorFeedback}</p>
+  </SolutionDisclosure>
+  <div class="home-actions">
+    <Button href={practice.nextAction.href} variant="secondary">
+      {practice.nextAction.label}
+    </Button>
+  </div>
+</section>

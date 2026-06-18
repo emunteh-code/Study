@@ -1,0 +1,39 @@
+---
+import Button from "../foundation/Button.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import { type TopicPrerequisite } from "../../fixtures/topic-page";
+
+interface Props {
+  prerequisites: TopicPrerequisite[];
+}
+
+const { prerequisites } = Astro.props;
+---
+
+<section class="topic-section" aria-labelledby="voraussetzungen">
+  <SectionHeader
+    id="voraussetzungen"
+    title="Vorwissen"
+    summary="Diese Vorschau erfindet keine fachlichen Voraussetzungen."
+  />
+  <ul class="topic-prerequisites">
+    {
+      prerequisites.map((item) => (
+        <li>
+          <h3>{item.label}</h3>
+          <p>{item.description}</p>
+          {item.objectiveIds && item.objectiveIds.length > 0 && (
+            <p class="card__meta">
+              Verknüpfte Lernziel-IDs: {item.objectiveIds.join(", ")}
+            </p>
+          )}
+          {item.href && (
+            <Button href={item.href} variant="secondary" size="compact">
+              Voraussetzung öffnen
+            </Button>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</section>

@@ -1,0 +1,31 @@
+---
+import SectionHeader from "../foundation/SectionHeader.astro";
+import { type TopicReviewPrompt } from "../../fixtures/topic-page";
+
+interface Props {
+  prompts: TopicReviewPrompt[];
+}
+
+const { prompts } = Astro.props;
+---
+
+<section class="topic-section" aria-labelledby="wiederholung">
+  <SectionHeader
+    id="wiederholung"
+    title="Wiederholung"
+    summary="Spätere Review-Logik kann diese stabilen Prompts verwenden. Hier wird noch nichts geplant oder gespeichert."
+  />
+  <ul class="topic-review-prompts">
+    {
+      prompts.map((prompt) => (
+        <li id={prompt.id}>
+          <p>{prompt.prompt}</p>
+          <p class="card__meta">
+            Für spätere Wiederholung geeignet:{" "}
+            {prompt.eligibleForFutureReview ? "ja" : "nein"}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</section>

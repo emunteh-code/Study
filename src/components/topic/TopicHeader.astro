@@ -1,0 +1,59 @@
+---
+import Button from "../foundation/Button.astro";
+import MetadataList from "../foundation/MetadataList.astro";
+import PageHeader from "../foundation/PageHeader.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import {
+  getTopicContentStatePresentation,
+  reviewStateLabels,
+  type TopicPageViewModel,
+} from "../../fixtures/topic-page";
+
+interface Props {
+  topic: TopicPageViewModel;
+}
+
+const { topic } = Astro.props;
+const contentState = getTopicContentStatePresentation(topic.contentState);
+---
+
+<section class="topic-header" aria-labelledby="page-title">
+  <PageHeader
+    eyebrow={`${topic.moduleTitle} · Thema ${topic.topicOrder} von ${topic.topicCount}`}
+    title={topic.title}
+    summary={topic.shortSummary}
+  >
+    <div slot="metadata" class="module-status-strip">
+      <StatusLabel label={contentState.label} tone={contentState.tone} />
+      <StatusLabel
+        label={reviewStateLabels[topic.reviewState]}
+        tone="warning"
+      />
+    </div>
+    <MetadataList
+      slot="metadata"
+      items={[
+        { term: "Modul", value: topic.moduleTitle },
+        { term: "Geschätzte Lernzeit", value: topic.estimatedLearningTime },
+        { term: "Inhaltsstand", value: contentState.explanation },
+        { term: "Review", value: reviewStateLabels[topic.reviewState] },
+        {
+          term: "Letzte technische Prüfung",
+          value: topic.lastReviewedDate ?? "Nicht vorhanden",
+        },
+      ]}
+    />
+    <Button slot="actions" href="#intuition">Lektion beginnen</Button>
+    {
+      topic.secondaryAction && (
+        <Button
+          slot="actions"
+          href={topic.secondaryAction.href}
+          variant="secondary"
+        >
+          {topic.secondaryAction.label}
+        </Button>
+      )
+    }
+  </PageHeader>
+</section>

@@ -1,26 +1,50 @@
 ---
 interface Props {
+  id?: string;
   title: string;
   task: string;
   given: string[];
+  target?: string | undefined;
   method: string;
   steps: string[];
   result: string;
   interpretation: string;
+  commonWrongApproach?: string | undefined;
+  extension?: string | undefined;
 }
 
-const { title, task, given, method, steps, result, interpretation } =
-  Astro.props;
+const {
+  id,
+  title,
+  task,
+  given,
+  target,
+  method,
+  steps,
+  result,
+  interpretation,
+  commonWrongApproach,
+  extension,
+} = Astro.props;
+const headingId = id ?? `${title}-example`;
 ---
 
-<section class="learning-block" aria-labelledby={`${title}-example`}>
-  <h2 id={`${title}-example`}>{title}</h2>
+<section class="learning-block" aria-labelledby={headingId}>
+  <h2 id={headingId}>{title}</h2>
   <h3>Aufgabe</h3>
   <p>{task}</p>
   <h3>Gegeben</h3>
   <ul>
     {given.map((item) => <li>{item}</li>)}
   </ul>
+  {
+    target && (
+      <>
+        <h3>Ziel</h3>
+        <p>{target}</p>
+      </>
+    )
+  }
   <h3>Methode</h3>
   <p>{method}</p>
   <h3>Schritte</h3>
@@ -31,4 +55,20 @@ const { title, task, given, method, steps, result, interpretation } =
   <p>{result}</p>
   <h3>Einordnung</h3>
   <p>{interpretation}</p>
+  {
+    commonWrongApproach && (
+      <>
+        <h3>Typischer falscher Ansatz</h3>
+        <p>{commonWrongApproach}</p>
+      </>
+    )
+  }
+  {
+    extension && (
+      <>
+        <h3>Erweiterung</h3>
+        <p>{extension}</p>
+      </>
+    )
+  }
 </section>

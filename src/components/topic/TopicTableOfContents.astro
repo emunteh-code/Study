@@ -1,0 +1,22 @@
+---
+import { type TopicTableOfContentsEntry } from "../../fixtures/topic-page";
+
+interface Props {
+  entries: TopicTableOfContentsEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<nav class="topic-toc" aria-labelledby="topic-toc-title">
+  <h2 id="topic-toc-title">Inhalt dieser Lektion</h2>
+  <ol>
+    {
+      entries.map((entry) => (
+        <li>
+          <a href={`#${entry.id}`}>{entry.label}</a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>

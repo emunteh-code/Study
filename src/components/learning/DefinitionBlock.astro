@@ -1,20 +1,31 @@
 ---
 interface Props {
+  id?: string;
   term: string;
   definition: string;
-  explanation?: string;
-  source?: string;
+  explanation?: string | undefined;
+  source?: string | undefined;
+  commonConfusion?: string | undefined;
 }
 
-const { term, definition, explanation, source } = Astro.props;
+const { id, term, definition, explanation, source, commonConfusion } =
+  Astro.props;
+const headingId = id ?? `${term}-definition`;
 ---
 
-<section class="learning-block" aria-labelledby={`${term}-definition`}>
-  <h2 id={`${term}-definition`}>Definition</h2>
+<section class="learning-block" aria-labelledby={headingId}>
+  <h2 id={headingId}>Definition</h2>
   <dl>
     <dt>{term}</dt>
     <dd>{definition}</dd>
   </dl>
   {explanation && <p>{explanation}</p>}
+  {
+    commonConfusion && (
+      <p>
+        <strong>Häufige Verwechslung:</strong> {commonConfusion}
+      </p>
+    )
+  }
   {source && <p class="card__meta">Quelle: {source}</p>}
 </section>

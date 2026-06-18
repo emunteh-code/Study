@@ -1,0 +1,145 @@
+---
+import Callout from "../foundation/Callout.astro";
+import LearningObjectives from "../learning/LearningObjectives.astro";
+import DefinitionBlock from "../learning/DefinitionBlock.astro";
+import FormulaBlock from "../learning/FormulaBlock.astro";
+import WorkedExample from "../learning/WorkedExample.astro";
+import CommonMistake from "../learning/CommonMistake.astro";
+import ExamTip from "../learning/ExamTip.astro";
+import TopicHeader from "./TopicHeader.astro";
+import TopicTableOfContents from "./TopicTableOfContents.astro";
+import Prerequisites from "./Prerequisites.astro";
+import TopicSection from "./TopicSection.astro";
+import GuidedPractice from "./GuidedPractice.astro";
+import IndependentPractice from "./IndependentPractice.astro";
+import SelfCheck from "./SelfCheck.astro";
+import ReviewPrompts from "./ReviewPrompts.astro";
+import TopicSourceSummary from "./TopicSourceSummary.astro";
+import TopicNavigation from "./TopicNavigation.astro";
+import { type TopicPageViewModel } from "../../fixtures/topic-page";
+
+interface Props {
+  topic: TopicPageViewModel;
+}
+
+const { topic } = Astro.props;
+---
+
+<article class="topic-page">
+  <TopicHeader topic={topic} />
+  <Callout title="Technische Vorschau" variant="note">
+    <p>{topic.sourceSummary.fixtureWarning}</p>
+  </Callout>
+  <TopicTableOfContents entries={topic.tableOfContents} />
+  <LearningObjectives
+    id="lernziele"
+    title="Lernziele"
+    objectives={topic.learningObjectives.map((objective) => ({
+      id: objective.id,
+      text: objective.text,
+    }))}
+  />
+  <Prerequisites prerequisites={topic.prerequisites} />
+  <section class="topic-section" aria-labelledby="intuition">
+    <h2 id="intuition">Intuitive Einführung</h2>
+    <div class="topic-prose">
+      {topic.intuitiveIntroduction.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+  </section>
+  {
+    topic.coreExplanationSections.map((section) => (
+      <TopicSection section={section} />
+    ))
+  }
+  <section class="topic-section" aria-labelledby="formale-struktur">
+    <h2 id="formale-struktur">Formale Struktur</h2>
+    <div class="topic-learning-blocks">
+      {
+        topic.definitions.map((definition) => (
+          <DefinitionBlock
+            id={definition.id}
+            term={definition.term}
+            definition={definition.formalDefinition}
+            explanation={definition.plainLanguageExplanation}
+            source={definition.source}
+            commonConfusion={definition.commonConfusion}
+          />
+        ))
+      }
+      {
+        topic.formulas.map((formula) => (
+          <FormulaBlock
+            id={formula.id}
+            name={formula.name}
+            expression={formula.expression}
+            purpose={formula.purpose}
+            variables={formula.symbols}
+            assumptions={formula.assumptions}
+            commonMisuse={formula.commonMisuse}
+            sourceStatus={formula.sourceStatus}
+          />
+        ))
+      }
+    </div>
+  </section>
+  <section class="topic-section" aria-labelledby="beispiel">
+    <h2 id="beispiel">Worked Example</h2>
+    <div class="topic-learning-blocks">
+      {
+        topic.workedExamples.map((example) => (
+          <WorkedExample
+            id={example.id}
+            title={example.title}
+            task={example.task}
+            given={example.given}
+            target={example.target}
+            method={example.method}
+            steps={example.steps}
+            result={example.result}
+            interpretation={example.interpretation}
+            commonWrongApproach={example.commonWrongApproach}
+            extension={example.extension}
+          />
+        ))
+      }
+    </div>
+  </section>
+  <section class="topic-section" aria-labelledby="haeufige-fehler">
+    <h2 id="haeufige-fehler">Häufige Fehler</h2>
+    <div class="topic-learning-blocks">
+      {
+        topic.commonMistakes.map((mistake) => (
+          <CommonMistake
+            id={mistake.id}
+            title={mistake.title}
+            mistake={mistake.mistake}
+            whyWrong={mistake.whyWrong}
+            correction={mistake.correction}
+            recognition={mistake.recognition}
+          />
+        ))
+      }
+    </div>
+  </section>
+  <GuidedPractice practice={topic.guidedPractice} />
+  <IndependentPractice practice={topic.independentPractice} />
+  <section class="topic-section" aria-labelledby="klausurtransfer">
+    <h2 id="klausurtransfer">Exam Transfer</h2>
+    <ExamTip
+      id={topic.examRecognition.id}
+      title={topic.examRecognition.previewLabel}
+      cue={topic.examRecognition.recognitionCue}
+      guidance={topic.examRecognition.expectedAction}
+      commonTrap={topic.examRecognition.commonTrap}
+      timeManagementNote={topic.examRecognition.timeManagementNote}
+      provenanceStatus={topic.examRecognition.provenanceStatus}
+    />
+  </section>
+  <SelfCheck items={topic.selfCheckItems} />
+  <ReviewPrompts prompts={topic.reviewPrompts} />
+  <TopicSourceSummary
+    summary={topic.sourceSummary}
+    errorReportRoute={topic.errorReportRoute}
+  />
+  <TopicNavigation topic={topic} />
+</article>

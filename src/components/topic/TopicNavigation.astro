@@ -1,0 +1,96 @@
+---
+import Button from "../foundation/Button.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import {
+  getRecommendedTopicAction,
+  getTopicNavigation,
+  type TopicNeighbor,
+  type TopicPageViewModel,
+} from "../../fixtures/topic-page";
+
+interface Props {
+  topic: TopicPageViewModel;
+}
+
+const { topic } = Astro.props;
+const navigation = getTopicNavigation(topic);
+const recommended = getRecommendedTopicAction(topic);
+
+const stateLabel: Record<TopicNeighbor["state"], string> = {
+  available: "Verfügbar",
+  planned: "Geplant",
+  archived: "Archiviert",
+};
+---
+
+<section class="topic-section topic-navigation" aria-labelledby="navigation">
+  <SectionHeader
+    id="navigation"
+    title="Vorheriges und nächstes Thema"
+    summary="Geplante oder archivierte Inhalte werden nicht als primäre Empfehlung dargestellt."
+  />
+  <div class="topic-navigation-grid">
+    <article>
+      <h3>Vorheriges Thema</h3>
+      {
+        navigation.previous ? (
+          <>
+            <p>{navigation.previous.title}</p>
+            <p>{navigation.previous.explanation}</p>
+            {navigation.previous.href && (
+              <Button href={navigation.previous.href} variant="secondary">
+                Vorheriges Thema öffnen
+              </Button>
+            )}
+          </>
+        ) : (
+          <p>Kein vorheriges Thema in dieser Fixture-Reihenfolge.</p>
+        )
+      }
+    </article>
+    <article>
+      <h3>Nächstes Thema</h3>
+      {
+        navigation.next ? (
+          <>
+            <StatusLabel
+              label={stateLabel[navigation.next.state]}
+              tone="info"
+            />
+            <p>
+              <strong>{navigation.next.title}</strong>
+            </p>
+            <p>{navigation.next.explanation}</p>
+            {navigation.next.state === "available" && navigation.next.href && (
+              <Button href={navigation.next.href} variant="secondary">
+                Nächstes Thema öffnen
+              </Button>
+            )}
+          </>
+        ) : (
+          <p>Kein nächstes Thema vorhanden.</p>
+        )
+      }
+    </article>
+  </div>
+  <div class="home-actions">
+    <Button href={navigation.backToModule.href} variant="secondary">
+      {navigation.backToModule.label}
+    </Button>
+  </div>
+</section>
+
+<section
+  class="topic-section next-step-panel"
+  aria-labelledby="naechster-schritt"
+>
+  <SectionHeader
+    id="naechster-schritt"
+    title="Nächster Schritt"
+    summary={recommended.explanation}
+  />
+  <div class="home-actions">
+    <Button href={recommended.href}>{recommended.label}</Button>
+  </div>
+</section>

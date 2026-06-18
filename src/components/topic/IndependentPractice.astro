@@ -1,0 +1,41 @@
+---
+import MetadataList from "../foundation/MetadataList.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import SolutionDisclosure from "../learning/SolutionDisclosure.astro";
+import { type TopicIndependentPractice } from "../../fixtures/topic-page";
+
+interface Props {
+  practice: TopicIndependentPractice;
+}
+
+const { practice } = Astro.props;
+---
+
+<section
+  class="topic-section topic-practice topic-practice--independent"
+  aria-labelledby="selbststaendige-uebung"
+>
+  <SectionHeader
+    id="selbststaendige-uebung"
+    title={practice.title}
+    summary="Bearbeite diese Aufgabe zuerst ohne Schrittfolge."
+  />
+  <MetadataList
+    items={[
+      { term: "Zeit", value: practice.estimatedTime },
+      { term: "Schwierigkeit", value: practice.difficulty },
+    ]}
+  />
+  <p>{practice.prompt}</p>
+  <details>
+    <summary>Optionalen Hinweis anzeigen</summary>
+    <p>{practice.hint}</p>
+  </details>
+  <SolutionDisclosure summary="Mögliche Lösung anzeigen">
+    <ol>
+      {practice.solution.map((step) => <li>{step}</li>)}
+    </ol>
+    {practice.transferQuestion && <p>{practice.transferQuestion}</p>}
+  </SolutionDisclosure>
+  <p class="card__meta">{practice.storageNote}</p>
+</section>

@@ -1,15 +1,40 @@
 ---
 interface Props {
+  id?: string;
   title?: string;
   mistake: string;
+  whyWrong?: string;
   correction: string;
+  recognition?: string;
 }
 
-const { title = "Häufiger Fehler", mistake, correction } = Astro.props;
+const {
+  id,
+  title = "Häufiger Fehler",
+  mistake,
+  whyWrong,
+  correction,
+  recognition,
+} = Astro.props;
+const headingId = id ?? `${title}-mistake`;
 ---
 
-<section class="callout callout--warning" aria-labelledby={`${title}-mistake`}>
-  <h2 id={`${title}-mistake`}>{title}</h2>
+<section class="callout callout--warning" aria-labelledby={headingId}>
+  <h2 id={headingId}>{title}</h2>
   <p>{mistake}</p>
+  {
+    whyWrong && (
+      <p>
+        <strong>Warum das problematisch ist:</strong> {whyWrong}
+      </p>
+    )
+  }
   <p><strong>Korrektur:</strong> {correction}</p>
+  {
+    recognition && (
+      <p>
+        <strong>Erkennen:</strong> {recognition}
+      </p>
+    )
+  }
 </section>
