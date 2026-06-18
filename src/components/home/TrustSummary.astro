@@ -1,0 +1,28 @@
+---
+import SectionHeader from "../foundation/SectionHeader.astro";
+import TextLink from "../foundation/TextLink.astro";
+---
+
+<section class="home-section trust-summary" aria-labelledby="trust-title">
+  <SectionHeader
+    id="trust-title"
+    title="Vertrauen und Methodik"
+    summary="Das Portal ist ein unabhängiges Studentenprojekt. Offizielle Kursunterlagen bleiben für verbindliche Inhalte und Prüfungsangaben maßgeblich."
+  />
+  <div class="trust-summary__grid">
+    <p>
+      Veröffentlichte Inhalte brauchen Quellenangaben, sichtbare Prüfstände und
+      eine klare Unterscheidung zwischen offiziellen, angepassten und eigenen
+      Aufgaben.
+    </p>
+    <p>
+      Fehlerhinweise gehören zum Produkt: unsichere Aussagen, Quellenkonflikte
+      und Korrekturen sollen nachvollziehbar dokumentiert werden.
+    </p>
+  </div>
+  <ul class="inline-link-list" aria-label="Vertrauenslinks">
+    <li><TextLink href="/methodik/">Methodik ansehen</TextLink></li>
+    <li><TextLink href="/quellen/">Quellenbasis prüfen</TextLink></li>
+    <li><TextLink href="/fehler-melden/">Fehler melden</TextLink></li>
+  </ul>
+</section>

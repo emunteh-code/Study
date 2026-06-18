@@ -1,0 +1,20 @@
+---
+import Button from "../foundation/Button.astro";
+import Card from "../foundation/Card.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  ctaLabel: string;
+  href: string;
+}
+
+const { title, description, ctaLabel, href } = Astro.props;
+---
+
+<Card title={title}>
+  <p>{description}</p>
+  <div slot="footer" class="card-actions">
+    <Button href={href} variant="secondary">{ctaLabel}</Button>
+  </div>
+</Card>

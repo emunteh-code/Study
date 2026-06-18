@@ -1,0 +1,33 @@
+---
+import Button from "../foundation/Button.astro";
+import ProgressBar from "../foundation/ProgressBar.astro";
+import type { ReturningLearnerFixture } from "../../fixtures/homepage";
+
+interface Props {
+  fixture: ReturningLearnerFixture;
+}
+
+const { fixture } = Astro.props;
+---
+
+<section class="continue-learning" aria-labelledby="page-title">
+  <p class="fixture-note">
+    Entwicklungsfixture: keine gespeicherten Nutzerdaten.
+  </p>
+  <h1 id="page-title">Dort weitermachen, wo du aufgehört hast</h1>
+  <p>
+    {fixture.moduleTitle}: <strong>{fixture.topicTitle}</strong>
+  </p>
+  <ProgressBar
+    label="Vorschau-Fortschritt"
+    value={fixture.progressValue}
+    max={fixture.progressMax}
+    description={`${fixture.progressLabel}. ${fixture.nextStep}`}
+  />
+  <div class="home-actions" aria-label="Fortsetzungsaktionen">
+    <Button href={fixture.continueHref}>Lernen fortsetzen</Button>
+    <Button href={fixture.alternateHref} variant="secondary">
+      Anderes Modul wählen
+    </Button>
+  </div>
+</section>

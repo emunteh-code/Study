@@ -1,31 +1,28 @@
 ---
-import Button from "../components/foundation/Button.astro";
-import Callout from "../components/foundation/Callout.astro";
-import PageHeader from "../components/foundation/PageHeader.astro";
+import HomepageSurface from "../components/home/HomepageSurface.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { toBasePath } from "../lib/routes";
+
+const returningFixtureHref = toBasePath("/fixtures/homepage/returning/");
 ---
 
 <BaseLayout
-  title="Start"
-  description="Entwicklungsstatus des unabhängigen VWL Lernbegleiters."
+  title="VWL Lernbegleiter Göttingen"
+  description="Unabhängiger Lernbegleiter für Göttinger VWL-Studierende mit strukturierten Lernpfaden, Übungen und transparenter Quellenbasis."
   canonicalPath="/"
+  ogTitle="VWL Lernbegleiter Göttingen"
+  ogDescription="Unabhängiger Lernbegleiter für Göttinger VWL-Studierende mit strukturierten Lernpfaden, Übungen und transparenter Quellenbasis."
+  pageId="homepage"
+  rawTitle
 >
-  <section class="placeholder-page" aria-labelledby="page-title">
-    <PageHeader
-      title="VWL Lernbegleiter im Aufbau"
-      summary="Die öffentliche Seitenschale und Navigation sind vorbereitet; echte Lerninhalte folgen in späteren geprüften Schritten."
-    />
-    <Callout title="Entwicklungsstatus" variant="note">
-      <p>
-        Es wurden noch keine realen Module, Themen, Übungen oder Quellen
-        hinzugefügt. Diese Startseite ist bewusst minimal und nicht die finale
-        Lernstartseite.
-      </p>
-    </Callout>
-    <div class="placeholder-actions">
-      <Button href="/lernen/">Lernen ansehen</Button>
-      <Button href="/ueben/" variant="secondary">Üben ansehen</Button>
-      <Button href="/suche/" variant="secondary">Suche ansehen</Button>
-    </div>
-  </section>
+  <HomepageSurface fixtureMode="new" />
+  <script is:inline define:vars={{ returningFixtureHref }}>
+    const homepageFixture = new URLSearchParams(window.location.search).get(
+      "fixture",
+    );
+
+    if (homepageFixture === "returning") {
+      window.location.replace(returningFixtureHref);
+    }
+  </script>
 </BaseLayout>

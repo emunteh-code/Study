@@ -6,7 +6,7 @@ This is not an official university platform. It must not imply official affiliat
 
 ## Status
 
-The repository currently contains the product constitution, product specification, information architecture, content-schema specification, design-system foundation, public site shell, and a minimum Astro foundation. It does not contain real course content or the final homepage.
+The repository currently contains the product constitution, product specification, information architecture, content-schema specification, design-system foundation, public site shell, final homepage structure with neutral fixture data, and a minimum Astro foundation. It does not contain real course content.
 
 ## Prerequisites
 
@@ -60,6 +60,7 @@ docs/                 Product and technical documentation
 public/               Static public assets
 src/components/       Shared Astro components
 src/content/          Future Astro content collections
+src/fixtures/         Neutral development fixtures
 src/layouts/          Shared page layouts
 src/lib/              Pure utilities
 src/pages/            Astro routes

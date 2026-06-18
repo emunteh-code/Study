@@ -1,0 +1,98 @@
+---
+import ContinueLearning from "./ContinueLearning.astro";
+import HomepageIntro from "./HomepageIntro.astro";
+import HomeSection from "./HomeSection.astro";
+import LearningGoalCard from "./LearningGoalCard.astro";
+import LearningProcess from "./LearningProcess.astro";
+import ModulePreviewCard from "./ModulePreviewCard.astro";
+import ReviewDue from "./ReviewDue.astro";
+import TrustSummary from "./TrustSummary.astro";
+import {
+  dueReviewFixture,
+  homepageModules,
+  isReturningHomepageFixture,
+  learningGoals,
+  learningProcessSteps,
+  type HomepageFixtureMode,
+  returningLearnerFixture,
+} from "../../fixtures/homepage";
+
+interface Props {
+  fixtureMode: HomepageFixtureMode;
+}
+
+const { fixtureMode } = Astro.props;
+const isReturningFixture = isReturningHomepageFixture(fixtureMode);
+const currentModuleFixture = homepageModules[0];
+---
+
+<div class="home-page">
+  {
+    isReturningFixture ? (
+      <>
+        <ContinueLearning fixture={returningLearnerFixture} />
+        <ReviewDue review={dueReviewFixture} />
+        <HomeSection
+          id="current-module-progress-title"
+          title="Aktueller Modulfortschritt"
+          summary="Diese Vorschau zeigt nur eine statische Fixture, keine echte Lerndatenspeicherung."
+        >
+          <div class="home-grid home-grid--modules">
+            {currentModuleFixture && (
+              <ModulePreviewCard module={currentModuleFixture} />
+            )}
+          </div>
+        </HomeSection>
+        <HomeSection
+          id="learning-goals-title"
+          title="Anderes Lernziel wählen"
+          summary="Wechsle jederzeit zwischen Verstehen, Üben und Klausurtransfer."
+        >
+          <div class="home-grid">
+            {learningGoals.map((goal) => (
+              <LearningGoalCard {...goal} />
+            ))}
+          </div>
+        </HomeSection>
+      </>
+    ) : (
+      <>
+        <HomepageIntro
+          eyebrow="VWL-Lernbegleiter für Göttingen"
+          title="Verstehen, üben und gezielt für die Klausur lernen."
+          summary="Arbeite dich Schritt für Schritt durch Theorie, Formeln und Aufgaben. Der Lernpfad zeigt dir, was du als Nächstes bearbeiten solltest."
+          primaryHref="/lernen/"
+          primaryLabel="Lernsession starten"
+          secondaryHref="/lernen/"
+          secondaryLabel="Module ansehen"
+          trustNote="Unabhängiges Studentenprojekt. Die offiziellen Kursunterlagen bleiben für verbindliche Inhalte und Prüfungsangaben maßgeblich."
+        />
+        <HomeSection
+          id="learning-goals-title"
+          title="Was möchtest du heute machen?"
+          summary="Wähle den Einstieg, der zu deiner aktuellen Lernsituation passt."
+        >
+          <div class="home-grid">
+            {learningGoals.map((goal) => (
+              <LearningGoalCard {...goal} />
+            ))}
+          </div>
+        </HomeSection>
+      </>
+    )
+  }
+
+  <HomeSection
+    id="modules-title"
+    title="Verfügbare Lernbereiche"
+    summary="Die Startseite zeigt neutrale Fixture-Module, bis geprüfte akademische Inhalte veröffentlicht werden."
+  >
+    <div class="home-grid home-grid--modules">
+      {homepageModules.map((module) => <ModulePreviewCard module={module} />)}
+    </div>
+  </HomeSection>
+
+  {!isReturningFixture && <LearningProcess steps={learningProcessSteps} />}
+
+  <TrustSummary />
+</div>

@@ -17,7 +17,7 @@ test("root page loads with shell landmarks", async ({ page }) => {
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "VWL Lernbegleiter im Aufbau",
+      name: "Verstehen, üben und gezielt für die Klausur lernen.",
     }),
   ).toBeVisible();
   await expect(page.getByRole("banner")).toBeVisible();

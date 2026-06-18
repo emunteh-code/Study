@@ -1,0 +1,56 @@
+---
+import Button from "../foundation/Button.astro";
+import Card from "../foundation/Card.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import type {
+  ModuleFixture,
+  ModuleFixtureStatus,
+} from "../../fixtures/homepage";
+
+interface Props {
+  module: ModuleFixture;
+}
+
+const { module } = Astro.props;
+
+const statusTone: Record<ModuleFixtureStatus, "success" | "warning" | "note"> =
+  {
+    verfügbar: "success",
+    "in Prüfung": "warning",
+    geplant: "note",
+  };
+---
+
+<Card
+  title={module.title}
+  metadata={module.recommended ? "Empfohlener Einstieg" : undefined}
+>
+  <div class="module-card__status">
+    <StatusLabel label={module.status} tone={statusTone[module.status]} />
+  </div>
+  <p>{module.summary}</p>
+  <dl class="module-card__meta">
+    <div>
+      <dt>Formate</dt>
+      <dd>{module.formats.join(", ")}</dd>
+    </div>
+    <div>
+      <dt>Statushinweis</dt>
+      <dd>{module.note}</dd>
+    </div>
+  </dl>
+  <div slot="footer" class="card-actions">
+    {
+      module.href && module.actionLabel ? (
+        <Button href={module.href} variant="secondary">
+          {module.actionLabel}
+        </Button>
+      ) : (
+        <p class="module-card__unavailable">
+          Dieser Bereich ist geplant. Starte stattdessen mit einem verfügbaren
+          Lernbereich.
+        </p>
+      )
+    }
+  </div>
+</Card>

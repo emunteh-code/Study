@@ -1,0 +1,36 @@
+---
+import Button from "../foundation/Button.astro";
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  summary: string;
+  primaryHref: string;
+  primaryLabel: string;
+  secondaryHref: string;
+  secondaryLabel: string;
+  trustNote: string;
+}
+
+const {
+  eyebrow,
+  title,
+  summary,
+  primaryHref,
+  primaryLabel,
+  secondaryHref,
+  secondaryLabel,
+  trustNote,
+} = Astro.props;
+---
+
+<section class="home-intro" aria-labelledby="page-title">
+  <p class="eyebrow">{eyebrow}</p>
+  <h1 id="page-title">{title}</h1>
+  <p class="home-intro__summary">{summary}</p>
+  <div class="home-actions" aria-label="Startaktionen">
+    <Button href={primaryHref}>{primaryLabel}</Button>
+    <Button href={secondaryHref} variant="secondary">{secondaryLabel}</Button>
+  </div>
+  <p class="home-intro__trust">{trustNote}</p>
+</section>

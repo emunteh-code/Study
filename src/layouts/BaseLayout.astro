@@ -13,7 +13,7 @@ interface Props {
   title?: string;
   description?: string;
   canonicalPath?: string;
-  robots?: string;
+  robots?: string | undefined;
   ogTitle?: string;
   ogDescription?: string;
   ogType?: "website" | "article";
@@ -21,6 +21,7 @@ interface Props {
   bodyClass?: string;
   pageId?: string;
   breadcrumbs?: Crumb[];
+  rawTitle?: boolean;
 }
 
 const {
@@ -35,11 +36,12 @@ const {
   bodyClass,
   pageId,
   breadcrumbs = [],
+  rawTitle = false,
 } = Astro.props;
 
 const currentPath = stripBasePath(Astro.url.pathname);
 const resolvedCanonicalPath = canonicalPath ?? currentPath;
-const pageTitle = buildPageTitle(title);
+const pageTitle = rawTitle ? (title ?? siteConfig.name) : buildPageTitle(title);
 const canonical = buildCanonicalUrl(resolvedCanonicalPath);
 const resolvedOgTitle = ogTitle ?? pageTitle;
 const resolvedOgDescription = ogDescription ?? description;

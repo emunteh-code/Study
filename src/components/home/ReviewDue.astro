@@ -1,0 +1,27 @@
+---
+import Button from "../foundation/Button.astro";
+import Callout from "../foundation/Callout.astro";
+import type { DueReviewFixture } from "../../fixtures/homepage";
+
+interface Props {
+  review: DueReviewFixture;
+}
+
+const { review } = Astro.props;
+---
+
+{
+  review.isDue && (
+    <section class="home-section" aria-labelledby="review-due-title">
+      <h2 id="review-due-title">Heute wiederholen</h2>
+      <Callout variant="note">
+        <p>{review.count} Wiederholungen sind in dieser Vorschau fällig.</p>
+        <div class="card-actions">
+          <Button href={review.href} variant="secondary">
+            Wiederholung öffnen
+          </Button>
+        </div>
+      </Callout>
+    </section>
+  )
+}

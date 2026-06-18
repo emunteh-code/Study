@@ -1,0 +1,28 @@
+---
+import SectionHeader from "../foundation/SectionHeader.astro";
+import type { LearningProcessStepFixture } from "../../fixtures/homepage";
+
+interface Props {
+  steps: LearningProcessStepFixture[];
+}
+
+const { steps } = Astro.props;
+---
+
+<section class="home-section" aria-labelledby="learning-process-title">
+  <SectionHeader
+    id="learning-process-title"
+    title="So lernst du mit dem Portal"
+    summary="Der Lernpfad folgt immer derselben nachvollziehbaren Reihenfolge."
+  />
+  <ol class="learning-process">
+    {
+      steps.map((step) => (
+        <li>
+          <h3>{step.title}</h3>
+          <p>{step.description}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>

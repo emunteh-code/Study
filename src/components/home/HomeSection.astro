@@ -1,0 +1,16 @@
+---
+import SectionHeader from "../foundation/SectionHeader.astro";
+
+interface Props {
+  id: string;
+  title: string;
+  summary?: string;
+}
+
+const { id, title, summary } = Astro.props;
+---
+
+<section class="home-section" aria-labelledby={id}>
+  <SectionHeader id={id} title={title} summary={summary} />
+  <slot />
+</section>
