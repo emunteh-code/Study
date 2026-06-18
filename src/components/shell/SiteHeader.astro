@@ -1,0 +1,62 @@
+---
+import { siteConfig } from "../../config/site";
+import { isRouteCurrent, toBasePath } from "../../lib/routes";
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="brand" href={toBasePath("/")}>
+      <span class="brand__name">{siteConfig.name}</span>
+      <span class="brand__descriptor">{siteConfig.descriptor}</span>
+    </a>
+
+    <nav class="primary-nav primary-nav--desktop" aria-label="Hauptnavigation">
+      <ul>
+        {
+          siteConfig.primaryNavigation.map((item) => {
+            const current = isRouteCurrent(item.route, currentPath);
+            return (
+              <li>
+                <a
+                  href={toBasePath(item.route)}
+                  aria-current={current ? "page" : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <details class="mobile-nav">
+      <summary>Menü</summary>
+      <nav aria-label="Hauptnavigation mobil">
+        <ul>
+          {
+            siteConfig.primaryNavigation.map((item) => {
+              const current = isRouteCurrent(item.route, currentPath);
+              return (
+                <li>
+                  <a
+                    href={toBasePath(item.route)}
+                    aria-current={current ? "page" : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>

@@ -7,6 +7,8 @@ interface Props {
   alternativeLabel?: string;
 }
 
+import { toBasePath } from "../../lib/routes";
+
 const { action, explanation, href, alternativeHref, alternativeLabel } =
   Astro.props;
 ---
@@ -15,10 +17,10 @@ const { action, explanation, href, alternativeHref, alternativeLabel } =
   <h2 id="next-step">Nächster Schritt</h2>
   <p>{explanation}</p>
   <div class="cluster">
-    <a class="button button--primary" href={href}>{action}</a>
+    <a class="button button--primary" href={toBasePath(href)}>{action}</a>
     {
       alternativeHref && alternativeLabel && (
-        <a class="button button--secondary" href={alternativeHref}>
+        <a class="button button--secondary" href={toBasePath(alternativeHref)}>
           {alternativeLabel}
         </a>
       )

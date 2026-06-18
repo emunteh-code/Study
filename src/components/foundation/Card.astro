@@ -7,6 +7,8 @@ interface Props {
   current?: boolean;
 }
 
+import { toBasePath } from "../../lib/routes";
+
 const {
   title,
   href,
@@ -26,7 +28,7 @@ const classes = [
 <article class={classes} aria-current={current ? "page" : undefined}>
   <header>
     <h3 class="card__title">
-      {href ? <a href={href}>{title}</a> : title}
+      {href ? <a href={toBasePath(href)}>{title}</a> : title}
     </h3>
     {metadata && <p class="card__meta">{metadata}</p>}
   </header>

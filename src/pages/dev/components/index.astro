@@ -35,14 +35,15 @@ const contents = [
 ---
 
 <BaseLayout
-  title="Development component showcase | Study"
+  title="Development component showcase"
   description="Development-only showcase for foundational Study components."
+  canonicalPath="/dev/components/"
   robots="noindex, nofollow"
 >
   <ContentContainer class="stack">
     <Breadcrumbs
       items={[
-        { label: "Startseite", href: "/Study/" },
+        { label: "Startseite", href: "/" },
         { label: "Development component showcase" },
       ]}
     />
@@ -94,7 +95,7 @@ const contents = [
       <div class="showcase-grid">
         <Card title="Button" metadata="Actions and navigation">
           <div class="cluster">
-            <Button href="/Study/dev/components/">Primary link</Button>
+            <Button href="/dev/components/">Primary link</Button>
             <Button href="#states" variant="secondary">Secondary link</Button>
             <Button variant="quiet">Quiet action</Button>
             <Button variant="danger">Danger action</Button>

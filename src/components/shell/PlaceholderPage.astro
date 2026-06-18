@@ -1,0 +1,30 @@
+---
+import Button from "../foundation/Button.astro";
+import Callout from "../foundation/Callout.astro";
+import PageHeader from "../foundation/PageHeader.astro";
+
+interface Props {
+  title: string;
+  summary: string;
+  status: string;
+  nextHref?: string;
+  nextLabel?: string;
+}
+
+const { title, summary, status, nextHref, nextLabel } = Astro.props;
+---
+
+<section class="placeholder-page" aria-labelledby="page-title">
+  <PageHeader title={title} summary={summary} />
+  <Callout title="Status" variant="note">
+    <p>{status}</p>
+  </Callout>
+  <slot />
+  {
+    nextHref && nextLabel && (
+      <div class="placeholder-actions">
+        <Button href={nextHref}>{nextLabel}</Button>
+      </div>
+    )
+  }
+</section>

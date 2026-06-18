@@ -1,0 +1,27 @@
+---
+import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Über das Portal"
+  description="Projektstatus und Unabhängigkeit des VWL Lernbegleiters."
+  canonicalPath="/ueber-das-portal/"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Über das Portal" },
+  ]}
+>
+  <PlaceholderPage
+    title="Über das Portal"
+    summary="Der VWL Lernbegleiter ist ein unabhängiges Studentenprojekt im Aufbau."
+    status="Diese Seite beschreibt derzeit nur den Projektstatus. Ausführliche Methodik und Quellenlogik werden separat dokumentiert."
+    nextHref="/methodik/"
+    nextLabel="Methodik ansehen"
+  >
+    <p>
+      Das Projekt ist keine offizielle Plattform der Universität Göttingen und
+      impliziert keine Freigabe durch Lehrende.
+    </p>
+  </PlaceholderPage>
+</BaseLayout>

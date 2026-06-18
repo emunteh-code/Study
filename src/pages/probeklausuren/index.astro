@@ -1,0 +1,22 @@
+---
+import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Probeklausuren"
+  description="Platzhalter für zukünftige examensorientierte Praxis."
+  canonicalPath="/probeklausuren/"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Probeklausuren" },
+  ]}
+>
+  <PlaceholderPage
+    title="Probeklausuren"
+    summary="Examensorientierte Praxis wird erst nach geklärter Provenienz und Quellenlage aufgebaut."
+    status="Es sind noch keine Probeklausuren veröffentlicht. Diese Seite enthält keine offiziellen Prüfungsangaben."
+    nextHref="/ueben/"
+    nextLabel="Zum Übungsbereich"
+  />
+</BaseLayout>

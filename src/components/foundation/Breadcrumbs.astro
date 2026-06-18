@@ -4,6 +4,8 @@ export interface Crumb {
   href?: string;
 }
 
+import { toBasePath } from "../../lib/routes";
+
 interface Props {
   items: Crumb[];
 }
@@ -19,7 +21,7 @@ const { items } = Astro.props;
         return (
           <li>
             {item.href && !isCurrent ? (
-              <a href={item.href}>{item.label}</a>
+              <a href={toBasePath(item.href)}>{item.label}</a>
             ) : (
               <span aria-current={isCurrent ? "page" : undefined}>
                 {item.label}

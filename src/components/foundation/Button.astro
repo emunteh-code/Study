@@ -2,6 +2,8 @@
 type Variant = "primary" | "secondary" | "quiet" | "danger";
 type Size = "standard" | "compact";
 
+import { toBasePath } from "../../lib/routes";
+
 interface Props {
   href?: string;
   variant?: Variant;
@@ -36,7 +38,7 @@ const classes = [
 
 {
   href ? (
-    <a class={classes} href={href}>
+    <a class={classes} href={toBasePath(href)}>
       <slot />
     </a>
   ) : (

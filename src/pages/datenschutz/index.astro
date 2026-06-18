@@ -1,0 +1,20 @@
+---
+import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Datenschutz"
+  description="Unvollständiger Datenschutz-Platzhalter vor dem öffentlichen Launch."
+  canonicalPath="/datenschutz/"
+  robots="noindex, follow"
+  breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Datenschutz" }]}
+>
+  <PlaceholderPage
+    title="Datenschutz"
+    summary="Diese Seite ist vor dem öffentlichen Launch rechtlich und fachlich zu vervollständigen."
+    status="Aktuell enthält das Repository kein Kontosystem, keine absichtliche Analytics-Integration und keine Cloud-Synchronisation. Diese Seite ist trotzdem kein vollständiger Datenschutzhinweis."
+    nextHref="/"
+    nextLabel="Zur Startseite"
+  />
+</BaseLayout>

@@ -1,0 +1,20 @@
+---
+import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Fortschritt"
+  description="Platzhalter für zukünftige lokale Fortschrittsfunktionen."
+  canonicalPath="/fortschritt/"
+  robots="noindex, follow"
+  breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Fortschritt" }]}
+>
+  <PlaceholderPage
+    title="Fortschritt"
+    summary="Fortschritt wird später lokal und defensiv behandelt."
+    status="Fortschrittsanzeige und Review-Planung sind noch nicht implementiert. Es werden keine Konten oder Cloud-Synchronisation verwendet."
+    nextHref="/lernen/"
+    nextLabel="Ohne Fortschritt weiterlernen"
+  />
+</BaseLayout>

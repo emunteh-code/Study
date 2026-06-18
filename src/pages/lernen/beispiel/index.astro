@@ -1,0 +1,24 @@
+---
+import PlaceholderPage from "../../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Lernbereich-Beispiel"
+  description="Nicht-akademischer Platzhalter zur Prüfung der Navigationsmarkierung."
+  canonicalPath="/lernen/beispiel/"
+  robots="noindex, follow"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Lernen", href: "/lernen/" },
+    { label: "Beispiel" },
+  ]}
+>
+  <PlaceholderPage
+    title="Lernbereich-Beispiel"
+    summary="Diese Seite prüft nur die öffentliche Seitenschale für verschachtelte Lernrouten."
+    status="Dies ist kein Modul, kein Thema und kein Kursinhalt."
+    nextHref="/lernen/"
+    nextLabel="Zurück zu Lernen"
+  />
+</BaseLayout>

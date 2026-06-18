@@ -1,0 +1,19 @@
+---
+import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Suche"
+  description="Platzhalter für die zukünftige Suche."
+  canonicalPath="/suche/"
+  breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Suche" }]}
+>
+  <PlaceholderPage
+    title="Suche"
+    summary="Die Suche wird später beim Finden von Themen, Begriffen, Formeln und Quellen helfen."
+    status="Die Suche ist noch nicht implementiert. Inhalte können derzeit über die Lernbereiche aufgerufen werden."
+    nextHref="/lernen/"
+    nextLabel="Lernbereich öffnen"
+  />
+</BaseLayout>

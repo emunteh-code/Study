@@ -1,15 +1,23 @@
 ---
+import Button from "../components/foundation/Button.astro";
+import PlaceholderPage from "../components/shell/PlaceholderPage.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout
-  title="Seite nicht gefunden | Study"
+  title="Seite nicht gefunden"
   description="Die angeforderte Seite wurde nicht gefunden."
+  canonicalPath="/404/"
+  robots="noindex, follow"
 >
-  <section class="content-panel" aria-labelledby="page-title">
-    <p class="eyebrow">404</p>
-    <h1 id="page-title">Seite nicht gefunden</h1>
-    <p>Diese temporäre Anwendung enthält noch keine vollständige Navigation.</p>
-    <p><a href="/Study/">Zur Startseite</a></p>
-  </section>
+  <PlaceholderPage
+    title="Seite nicht gefunden"
+    summary="Die angeforderte Seite ist nicht verfügbar."
+    status="Möglicherweise ist die Seite noch nicht angelegt oder die Adresse hat sich geändert."
+  >
+    <div class="placeholder-actions">
+      <Button href="/">Zur Startseite</Button>
+      <Button href="/lernen/" variant="secondary">Zum Lernbereich</Button>
+    </div>
+  </PlaceholderPage>
 </BaseLayout>

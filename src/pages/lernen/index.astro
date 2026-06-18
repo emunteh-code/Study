@@ -1,0 +1,19 @@
+---
+import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Lernen"
+  description="Platzhalter für den zukünftigen Lernbereich."
+  canonicalPath="/lernen/"
+  breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Lernen" }]}
+>
+  <PlaceholderPage
+    title="Lernen"
+    summary="Der Lernbereich wird die Modul- und Themenstruktur bündeln."
+    status="Die Lernbereichsstruktur wird im nächsten Schritt aufgebaut."
+    nextHref="/methodik/"
+    nextLabel="Methodik ansehen"
+  />
+</BaseLayout>

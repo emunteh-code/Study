@@ -4,8 +4,10 @@ interface Props {
   class?: string;
 }
 
+import { toBasePath } from "../../lib/routes";
+
 const { href, class: className } = Astro.props;
 const classes = ["text-link", className].filter(Boolean).join(" ");
 ---
 
-<a class={classes} href={href}><slot /></a>
+<a class={classes} href={toBasePath(href)}><slot /></a>

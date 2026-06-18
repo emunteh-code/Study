@@ -1,0 +1,19 @@
+---
+import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Quellen"
+  description="Platzhalter für die zukünftige Quellenübersicht."
+  canonicalPath="/quellen/"
+  breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Quellen" }]}
+>
+  <PlaceholderPage
+    title="Quellen"
+    summary="Die Quellenübersicht wird später geprüfte Quellen- und Review-Metadaten sichtbar machen."
+    status="Es sind noch keine akademischen Quellen veröffentlicht. Es werden keine Zitate, Formeln oder Definitionen erfunden."
+    nextHref="/fehler-melden/"
+    nextLabel="Fehlerhinweise ansehen"
+  />
+</BaseLayout>

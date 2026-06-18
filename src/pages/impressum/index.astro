@@ -1,0 +1,20 @@
+---
+import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Impressum"
+  description="Unvollständiger Impressums-Platzhalter vor dem öffentlichen Launch."
+  canonicalPath="/impressum/"
+  robots="noindex, follow"
+  breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Impressum" }]}
+>
+  <PlaceholderPage
+    title="Impressum"
+    summary="Rechtlich erforderliche Angaben müssen vor einem öffentlichen Launch ergänzt werden."
+    status="Dieses Impressum ist ein Entwicklungsplatzhalter. Es enthält bewusst keine erfundenen Adressen, Namen oder Rechtsangaben."
+    nextHref="/ueber-das-portal/"
+    nextLabel="Über das Portal"
+  />
+</BaseLayout>

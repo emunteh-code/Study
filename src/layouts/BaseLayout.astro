@@ -1,45 +1,84 @@
 ---
+import Breadcrumbs, {
+  type Crumb,
+} from "../components/foundation/Breadcrumbs.astro";
+import SiteFooter from "../components/shell/SiteFooter.astro";
+import SiteHeader from "../components/shell/SiteHeader.astro";
+import { siteConfig } from "../config/site";
+import { buildCanonicalUrl, buildPageTitle } from "../lib/metadata";
+import { stripBasePath } from "../lib/routes";
 import "../styles/global.css";
 
 interface Props {
   title?: string;
   description?: string;
+  canonicalPath?: string;
   robots?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogType?: "website" | "article";
+  ogImagePath?: string;
+  bodyClass?: string;
+  pageId?: string;
+  breadcrumbs?: Crumb[];
 }
 
 const {
-  title = "Study",
-  description = "Unabhängige Lernplattform im Aufbau.",
-  robots,
+  title = siteConfig.defaultMeta.title,
+  description = siteConfig.defaultMeta.description,
+  canonicalPath,
+  robots = siteConfig.defaultMeta.robots,
+  ogTitle,
+  ogDescription,
+  ogType = siteConfig.defaultMeta.ogType,
+  ogImagePath,
+  bodyClass,
+  pageId,
+  breadcrumbs = [],
 } = Astro.props;
+
+const currentPath = stripBasePath(Astro.url.pathname);
+const resolvedCanonicalPath = canonicalPath ?? currentPath;
+const pageTitle = buildPageTitle(title);
+const canonical = buildCanonicalUrl(resolvedCanonicalPath);
+const resolvedOgTitle = ogTitle ?? pageTitle;
+const resolvedOgDescription = ogDescription ?? description;
+const shouldShowBreadcrumbs = currentPath !== "/" && breadcrumbs.length > 0;
 ---
 
 <!doctype html>
-<html lang="de">
+<html lang={siteConfig.language}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
     {robots && <meta name="robots" content={robots} />}
-    <title>{title}</title>
+    <meta property="og:title" content={resolvedOgTitle} />
+    <meta property="og:description" content={resolvedOgDescription} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    {
+      ogImagePath && (
+        <meta property="og:image" content={buildCanonicalUrl(ogImagePath)} />
+      )
+    }
+    <title>{pageTitle}</title>
+    <slot name="structured-data" />
   </head>
-  <body>
+  <body class={bodyClass} data-page-id={pageId}>
     <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
-    <header class="site-header">
-      <div class="page-shell">
-        <p class="site-name">Study</p>
-      </div>
-    </header>
+    <SiteHeader currentPath={currentPath} />
     <main id="main-content" class="page-shell" tabindex="-1">
+      {
+        shouldShowBreadcrumbs && (
+          <div class="breadcrumb-region">
+            <Breadcrumbs items={breadcrumbs} />
+          </div>
+        )
+      }
       <slot />
     </main>
-    <footer class="site-footer">
-      <div class="page-shell">
-        <p>
-          Unabhängiges Lernportal im Aufbau. Kein offizielles
-          Universitätsangebot.
-        </p>
-      </div>
-    </footer>
+    <SiteFooter />
   </body>
 </html>

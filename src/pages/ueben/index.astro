@@ -1,0 +1,19 @@
+---
+import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Üben"
+  description="Platzhalter für den zukünftigen Übungsbereich."
+  canonicalPath="/ueben/"
+  breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Üben" }]}
+>
+  <PlaceholderPage
+    title="Üben"
+    summary="Der Übungsbereich wird später geführte und unabhängige Praxis bündeln."
+    status="Es sind noch keine Übungssets veröffentlicht."
+    nextHref="/lernen/"
+    nextLabel="Zum Lernbereich"
+  />
+</BaseLayout>

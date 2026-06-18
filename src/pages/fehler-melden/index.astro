@@ -1,0 +1,24 @@
+---
+import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Fehler melden"
+  description="Platzhalter für den zukünftigen Fehlerhinweis-Prozess."
+  canonicalPath="/fehler-melden/"
+  breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Fehler melden" }]}
+>
+  <PlaceholderPage
+    title="Fehler melden"
+    summary="Später sollen fachliche, Quellen-, technische und Barrierefreiheitsprobleme gemeldet werden können."
+    status="Die Meldefunktion ist noch nicht implementiert. Es gibt bewusst kein nicht-funktionales Formular."
+    nextHref="/lernen/"
+    nextLabel="Zurück zum Lernbereich"
+  >
+    <p>
+      Reiche hier noch keine sensiblen personenbezogenen Informationen ein. Ein
+      sicherer Meldeweg wird in einem späteren Schritt definiert.
+    </p>
+  </PlaceholderPage>
+</BaseLayout>

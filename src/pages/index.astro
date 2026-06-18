@@ -1,22 +1,31 @@
 ---
+import Button from "../components/foundation/Button.astro";
+import Callout from "../components/foundation/Callout.astro";
+import PageHeader from "../components/foundation/PageHeader.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout
-  title="Study | Technische Grundlage"
-  description="Technische Grundlage der unabhängigen Lernplattform im Aufbau."
+  title="Start"
+  description="Entwicklungsstatus des unabhängigen VWL Lernbegleiters."
+  canonicalPath="/"
 >
-  <section class="content-panel" aria-labelledby="page-title">
-    <p class="eyebrow">Technische Grundlage</p>
-    <h1 id="page-title">Die Anwendungsbasis wird aufgebaut.</h1>
-    <p>
-      Diese temporäre Startseite bestätigt nur das Astro-Fundament. Die finale
-      Lernstartseite, Kursnavigation und echten Lerninhalte entstehen in
-      späteren, geprüften Arbeitsschritten.
-    </p>
-    <p>
-      Das Portal ist unabhängig und kein offizielles Angebot der
-      Georg-August-Universität Göttingen.
-    </p>
+  <section class="placeholder-page" aria-labelledby="page-title">
+    <PageHeader
+      title="VWL Lernbegleiter im Aufbau"
+      summary="Die öffentliche Seitenschale und Navigation sind vorbereitet; echte Lerninhalte folgen in späteren geprüften Schritten."
+    />
+    <Callout title="Entwicklungsstatus" variant="note">
+      <p>
+        Es wurden noch keine realen Module, Themen, Übungen oder Quellen
+        hinzugefügt. Diese Startseite ist bewusst minimal und nicht die finale
+        Lernstartseite.
+      </p>
+    </Callout>
+    <div class="placeholder-actions">
+      <Button href="/lernen/">Lernen ansehen</Button>
+      <Button href="/ueben/" variant="secondary">Üben ansehen</Button>
+      <Button href="/suche/" variant="secondary">Suche ansehen</Button>
+    </div>
   </section>
 </BaseLayout>
