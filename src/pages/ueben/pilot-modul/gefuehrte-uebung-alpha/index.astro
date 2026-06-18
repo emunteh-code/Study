@@ -1,0 +1,21 @@
+---
+import PracticeSetPage from "../../../../components/practice/PracticeSetPage.astro";
+import { guidedPracticeSet } from "../../../../fixtures/practice";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title={guidedPracticeSet.title}
+  description="Noindex Fixture für eine geführte Übung mit neutralen technischen Aufgaben und vollständigen Lösungen."
+  canonicalPath="/ueben/pilot-modul/gefuehrte-uebung-alpha/"
+  robots="noindex, nofollow"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Üben", href: "/ueben/" },
+    { label: "Pilotmodul A", href: "/ueben/pilot-modul/" },
+    { label: "Geführte Übung Alpha" },
+  ]}
+  pageId="fixture-guided-practice"
+>
+  <PracticeSetPage set={guidedPracticeSet} />
+</BaseLayout>

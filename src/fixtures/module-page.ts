@@ -239,14 +239,18 @@ export const pilotModuleFixture: ModulePageViewModel = {
         "Bearbeite Aufgaben mit Hinweisen und schrittweisen Lösungen.",
       action: {
         label: "Geführte Übungen öffnen",
-        href: "/ueben/pilot-modul/",
+        href: "/ueben/pilot-modul/gefuehrte-uebung-alpha/",
       },
     },
     {
       id: "topic-practice",
       title: "Themenübungen",
-      availability: "in-review",
+      availability: "available",
       description: "Gezielte Aufgaben zu einzelnen Lernzielen.",
+      action: {
+        label: "Themenübung öffnen",
+        href: "/ueben/pilot-modul/themenuebung-alpha/",
+      },
     },
     {
       id: "mixed-practice",

@@ -473,8 +473,8 @@ export const pilotTopicFixture: TopicPageViewModel = {
     commonErrorFeedback:
       "Wenn du mit c weitergerechnet hast, prüfe noch einmal, ob c wirklich gegeben war oder erst bestimmt werden sollte.",
     nextAction: {
-      label: "Zur selbstständigen Übung",
-      href: "#selbststaendige-uebung",
+      label: "Geführte Übung öffnen",
+      href: "/ueben/pilot-modul/gefuehrte-uebung-alpha/",
     },
   },
   independentPractice: {
@@ -565,7 +565,7 @@ export const pilotTopicFixture: TopicPageViewModel = {
   },
   recommendedNextAction: {
     label: "Geführte Übung bearbeiten",
-    href: "#gefuehrte-uebung",
+    href: "/ueben/pilot-modul/gefuehrte-uebung-alpha/",
     explanation:
       "Nach der Erklärung ist die geführte Übung der nächste sinnvolle Schritt.",
   },

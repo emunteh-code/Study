@@ -126,7 +126,7 @@ test("topic page communicates fixture integrity and no fake interactions", async
   ).toHaveCount(0);
   await expect(
     page.getByRole("link", { name: "Geführte Übung bearbeiten" }),
-  ).toHaveAttribute("href", "#gefuehrte-uebung");
+  ).toHaveAttribute("href", "/Study/ueben/pilot-modul/gefuehrte-uebung-alpha/");
 });
 
 test("topic page solution disclosures use native details", async ({ page }) => {

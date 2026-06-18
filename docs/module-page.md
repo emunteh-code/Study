@@ -104,11 +104,11 @@ Unavailable content must not use disabled links.
 
 The fixture practice section shows:
 
-- `Geführte Übungen`: available, linking to a noindex placeholder route
-- `Themenübungen`: in review, no fake functional CTA
+- `Geführte Übungen`: available, linking to the noindex guided practice fixture
+- `Themenübungen`: available, linking to the noindex topic-practice fixture
 - `Gemischte Übung`: planned, no fake functional CTA
 
-No practice-question interaction is implemented.
+Practice-question interaction remains static: no answer submission, no score, no saved attempt, and no review scheduling.
 
 ## Mock-Exam Behaviour
 
@@ -158,4 +158,4 @@ The page does not implement real course modules, real topics, persistence, searc
 
 ## Next Recommended Task
 
-Build the reusable practice-question and solution flow using neutral fixtures. Do not ingest real course material yet.
+Design the private-source audit workflow and course-material ingestion safeguards before any real course materials are processed.

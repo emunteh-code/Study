@@ -164,9 +164,9 @@ The main worked example must be readable without disclosure controls.
 
 ## Guided Versus Independent Practice
 
-Guided practice may include step-by-step prompts, hints, a native details-based solution, reasoning, common-error feedback, and a next action.
+Guided practice may include step-by-step prompts, hints, a native details-based solution, reasoning, common-error feedback, and a next action. The fixture topic now links to the dedicated guided practice route at `/ueben/pilot-modul/gefuehrte-uebung-alpha/`.
 
-Independent practice should not show scaffolding first. It may include a hint disclosure and solution disclosure, but it must not imply answer submission, saved attempts, scoring, or persistence.
+Independent practice should not show scaffolding first. It may include a hint disclosure and solution disclosure, but it must not imply answer submission, saved attempts, scoring, or persistence. The fixture independent-practice action links to `/ueben/pilot-modul/themenuebung-alpha/`.
 
 ## Exam-Recognition Rules
 
@@ -249,4 +249,4 @@ The topic page does not implement persistent progress, answer submission, scorin
 
 ## Next Recommended Bounded Task
 
-Build the reusable practice-question and solution flow using neutral fixtures. Do not ingest real course content yet.
+Design the private-source audit workflow and course-material ingestion safeguards before any real course materials are processed.

@@ -1,0 +1,61 @@
+---
+import MetadataList from "../foundation/MetadataList.astro";
+import PageHeader from "../foundation/PageHeader.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import {
+  contentStateLabels,
+  difficultyLabels,
+  practiceModeLabels,
+  provenanceLabels,
+  reviewStateLabels,
+  type PracticeSetViewModel,
+} from "../../fixtures/practice";
+
+interface Props {
+  set: PracticeSetViewModel;
+}
+
+const { set } = Astro.props;
+const difficultyText = Object.entries(set.difficultyDistribution)
+  .filter(([, count]) => Number(count) > 0)
+  .map(
+    ([difficulty, count]) =>
+      `${difficultyLabels[difficulty as keyof typeof difficultyLabels]}: ${count}`,
+  )
+  .join(", ");
+const provenanceText = Object.entries(set.provenanceSummary)
+  .filter(([, count]) => Number(count) > 0)
+  .map(
+    ([provenance, count]) =>
+      `${provenanceLabels[provenance as keyof typeof provenanceLabels]}: ${count}`,
+  )
+  .join(", ");
+---
+
+<section class="practice-set-header" aria-labelledby="page-title">
+  <PageHeader
+    eyebrow={`${set.moduleTitle} · ${set.topicTitle}`}
+    title={set.title}
+    summary={set.summary}
+  >
+    <div slot="metadata" class="module-status-strip">
+      <StatusLabel label={practiceModeLabels[set.practiceMode]} tone="info" />
+      <StatusLabel
+        label={contentStateLabels[set.contentState]}
+        tone="warning"
+      />
+      <StatusLabel label={reviewStateLabels[set.reviewState]} tone="warning" />
+    </div>
+    <MetadataList
+      slot="metadata"
+      items={[
+        { term: "Modus", value: practiceModeLabels[set.practiceMode] },
+        { term: "Dauer", value: set.estimatedDuration },
+        { term: "Fragen", value: String(set.questionCount) },
+        { term: "Schwierigkeit", value: difficultyText },
+        { term: "Provenienz", value: provenanceText },
+        { term: "Fixture-Hinweis", value: "Keine gespeicherten Versuche" },
+      ]}
+    />
+  </PageHeader>
+</section>

@@ -50,7 +50,7 @@ describe("topic page fixture view model", () => {
     const action = getRecommendedTopicAction(pilotTopicFixture);
 
     expect(pilotTopicFixture.nextTopic?.state).toBe("planned");
-    expect(action.href).toBe("#gefuehrte-uebung");
+    expect(action.href).toBe("/ueben/pilot-modul/gefuehrte-uebung-alpha/");
   });
 
   it("uses available next content only when it has a meaningful route", () => {

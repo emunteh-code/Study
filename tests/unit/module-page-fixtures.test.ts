@@ -43,6 +43,17 @@ describe("module page fixture view model", () => {
     expect(recommended?.availability).not.toBe("archived");
   });
 
+  it("links available practice modes to real fixture routes", () => {
+    const practiceLinks = pilotModuleFixture.practiceLinks.filter(
+      (option) => option.availability === "available",
+    );
+
+    expect(practiceLinks.map((option) => option.action?.href)).toEqual([
+      "/ueben/pilot-modul/gefuehrte-uebung-alpha/",
+      "/ueben/pilot-modul/themenuebung-alpha/",
+    ]);
+  });
+
   it("maps availability states to German visible labels", () => {
     expect(getTopicStatusLabel("available")).toBe("Verfügbar");
     expect(getTopicStatusLabel("in-review")).toBe("In Prüfung");

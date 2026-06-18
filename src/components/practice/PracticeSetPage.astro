@@ -1,0 +1,113 @@
+---
+import Button from "../foundation/Button.astro";
+import Callout from "../foundation/Callout.astro";
+import MetadataList from "../foundation/MetadataList.astro";
+import PracticeSetHeader from "./PracticeSetHeader.astro";
+import ProvenanceNotice from "./ProvenanceNotice.astro";
+import QuestionCard from "./QuestionCard.astro";
+import {
+  getRecommendedPracticeAction,
+  sourceVerificationLabels,
+  type PracticeSetViewModel,
+} from "../../fixtures/practice";
+
+interface Props {
+  set: PracticeSetViewModel;
+}
+
+const { set } = Astro.props;
+const recommended = getRecommendedPracticeAction(set);
+---
+
+<div class="practice-page practice-set-page">
+  <PracticeSetHeader set={set} />
+  <ProvenanceNotice />
+
+  <section class="practice-section" aria-labelledby="learning-objectives-title">
+    <h2 id="learning-objectives-title">Lernzielbezug</h2>
+    <p>
+      Diese Vorschau bezieht sich auf stabile Lernziel-IDs zum neutralen
+      Beispielthema. Die IDs bleiben unabhängig von späteren Titeln stabil.
+    </p>
+    <ul>
+      {
+        Array.from(
+          new Set(set.questions.flatMap((question) => question.objectiveIds)),
+        ).map((id) => <li>{id}</li>)
+      }
+    </ul>
+  </section>
+
+  <section class="practice-section" aria-labelledby="instructions-title">
+    <h2 id="instructions-title">Bearbeitungshinweise</h2>
+    <ol>
+      {set.instructions.map((instruction) => <li>{instruction}</li>)}
+    </ol>
+    <Callout title="Keine Antwortabgabe" variant="information">
+      <p>
+        Diese Vorschau enthält keine Formulare, keine Auswertung, keine Punkte
+        und keine gespeicherten Versuche.
+      </p>
+    </Callout>
+  </section>
+
+  <div class="question-list">
+    {
+      set.questions.map((question) => (
+        <QuestionCard question={question} set={set} />
+      ))
+    }
+  </div>
+
+  <section
+    class="practice-completion"
+    id="abschluss"
+    aria-labelledby="completion-title"
+  >
+    <h2 id="completion-title">Abschluss der Vorschau</h2>
+    <p>{set.completionGuidance}</p>
+    <div class="home-actions">
+      <Button href={`#${set.questionOrder[0]}`} variant="secondary">
+        Lösung noch einmal prüfen
+      </Button>
+      <Button
+        href="/lernen/pilot-modul/beispielthema-alpha/"
+        variant="secondary"
+      >
+        Zum Thema zurückkehren
+      </Button>
+      <Button href="/ueben/pilot-modul/" variant="secondary">
+        Weitere Übungsarten ansehen
+      </Button>
+    </div>
+  </section>
+
+  <section
+    class="practice-section practice-source-summary"
+    aria-labelledby="practice-source-title"
+  >
+    <h2 id="practice-source-title">Quellen und Prüfstand</h2>
+    <MetadataList
+      items={[
+        {
+          term: "Quellenprüfung",
+          value: sourceVerificationLabels[set.sourceVerificationState],
+        },
+        { term: "Übungsprovenienz", value: "Original" },
+        {
+          term: "Fixture-Warnung",
+          value: "Keine offizielle Kurs- oder Klausuraufgabe",
+        },
+        { term: "Review", value: "In Prüfung" },
+      ]}
+    />
+    <p>
+      Es gibt keinen Quellenlocator, weil diese Aufgaben technische
+      Originalfixtures ohne akademische Quelle sind.
+    </p>
+    <div class="home-actions">
+      <Button href="/fehler-melden/" variant="secondary">Fehler melden</Button>
+      <Button href={recommended.href}>{recommended.label}</Button>
+    </div>
+  </section>
+</div>

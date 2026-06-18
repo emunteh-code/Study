@@ -131,7 +131,10 @@ test("module practice, mock-exam, references, and trust sections are honest", as
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Geführte Übungen öffnen" }),
-  ).toHaveAttribute("href", "/Study/ueben/pilot-modul/");
+  ).toHaveAttribute("href", "/Study/ueben/pilot-modul/gefuehrte-uebung-alpha/");
+  await expect(
+    page.getByRole("link", { name: "Themenübung öffnen" }),
+  ).toHaveAttribute("href", "/Study/ueben/pilot-modul/themenuebung-alpha/");
   await expect(
     page.getByRole("link", { name: "Mehr über Probeklausuren erfahren" }),
   ).toHaveAttribute("href", "/Study/probeklausuren/");

@@ -1,0 +1,21 @@
+---
+import PracticeSetPage from "../../../../components/practice/PracticeSetPage.astro";
+import { topicPracticeSet } from "../../../../fixtures/practice";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title={topicPracticeSet.title}
+  description="Noindex Fixture für eine Themenübung mit neutralen technischen Aufgaben und vollständigen Lösungen."
+  canonicalPath="/ueben/pilot-modul/themenuebung-alpha/"
+  robots="noindex, nofollow"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Üben", href: "/ueben/" },
+    { label: "Pilotmodul A", href: "/ueben/pilot-modul/" },
+    { label: "Themenübung Alpha" },
+  ]}
+  pageId="fixture-topic-practice"
+>
+  <PracticeSetPage set={topicPracticeSet} />
+</BaseLayout>

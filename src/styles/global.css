@@ -1279,6 +1279,143 @@ details > * {
   margin: 0;
 }
 
+.practice-page {
+  display: grid;
+  gap: var(--space-48);
+  min-inline-size: 0;
+  max-inline-size: var(--layout-reading);
+}
+
+.practice-set-header {
+  max-inline-size: var(--layout-narrow);
+}
+
+.practice-section,
+.practice-completion,
+.question-card {
+  display: grid;
+  gap: var(--space-16);
+  min-inline-size: 0;
+}
+
+.practice-option-grid {
+  display: grid;
+  gap: var(--space-16);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.practice-option {
+  display: grid;
+  gap: var(--space-12);
+  min-inline-size: 0;
+  padding: var(--space-24);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+}
+
+.practice-option header,
+.question-card__header {
+  display: grid;
+  gap: var(--space-12);
+  min-inline-size: 0;
+}
+
+.practice-option h3,
+.question-card h2,
+.question-card h3 {
+  margin-block-end: 0;
+}
+
+.question-list {
+  display: grid;
+  gap: var(--space-32);
+  min-inline-size: 0;
+}
+
+.question-card {
+  padding: var(--space-24);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+  scroll-margin-block-start: var(--space-24);
+}
+
+.question-card__position {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-0);
+  font-weight: 700;
+}
+
+.question-part,
+.question-solution {
+  display: grid;
+  gap: var(--space-12);
+  min-inline-size: 0;
+}
+
+.practice-data-list {
+  display: grid;
+  grid-template-columns: minmax(5rem, max-content) minmax(0, 1fr);
+  gap: var(--space-8) var(--space-16);
+  max-inline-size: 100%;
+  padding: var(--space-12);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-4);
+  background: var(--color-surface-raised);
+}
+
+.practice-data-list dt,
+.practice-data-list dd {
+  margin: 0;
+}
+
+.practice-data-list dd {
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+}
+
+.choice-list,
+.solution-step-list,
+.self-assessment-list {
+  display: grid;
+  gap: var(--space-8);
+  max-inline-size: var(--layout-content);
+}
+
+.choice-list li,
+.self-assessment-list li {
+  padding: var(--space-12);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-4);
+  background: var(--color-surface-raised);
+}
+
+.question-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  align-items: center;
+  padding-block-start: var(--space-16);
+  border-block-start: var(--border-width) solid var(--color-border);
+}
+
+.question-navigation p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-0);
+}
+
+.practice-completion,
+.practice-source-summary {
+  max-inline-size: var(--layout-content);
+  padding: var(--space-24);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+}
+
 .showcase-grid {
   display: grid;
   gap: var(--space-16);
@@ -1367,8 +1504,20 @@ summary {
   .topic-practice,
   .topic-toc,
   .topic-navigation-grid article,
-  .next-step-panel {
+  .next-step-panel,
+  .practice-option,
+  .question-card,
+  .practice-completion,
+  .practice-source-summary {
     padding: var(--space-16);
+  }
+
+  .practice-data-list {
+    grid-template-columns: 1fr;
+  }
+
+  .question-navigation .button {
+    inline-size: 100%;
   }
 }
 
@@ -1400,7 +1549,12 @@ summary {
   .topic-toc,
   .topic-practice,
   .topic-navigation-grid article,
-  .next-step-panel {
+  .next-step-panel,
+  .practice-option,
+  .question-card,
+  .practice-completion,
+  .practice-source-summary,
+  .practice-data-list {
     border: 1px solid CanvasText;
   }
 }
@@ -1416,6 +1570,7 @@ summary {
   .skip-link,
   .breadcrumb-region,
   .topic-toc,
+  .question-navigation,
   .home-actions {
     display: none;
   }
@@ -1439,10 +1594,17 @@ summary {
   }
 
   .topic-page,
+  .practice-page,
   .topic-section,
   .learning-block,
   .topic-practice,
-  .topic-source-summary {
+  .topic-source-summary,
+  .practice-section,
+  .question-card,
+  .question-part,
+  .question-solution,
+  .practice-completion,
+  .practice-source-summary {
     max-inline-size: none;
     break-inside: avoid;
   }

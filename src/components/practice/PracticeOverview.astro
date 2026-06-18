@@ -1,0 +1,93 @@
+---
+import Button from "../foundation/Button.astro";
+import Callout from "../foundation/Callout.astro";
+import PageHeader from "../foundation/PageHeader.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import { type PracticeOverviewViewModel } from "../../fixtures/practice";
+
+interface Props {
+  overview: PracticeOverviewViewModel;
+}
+
+const { overview } = Astro.props;
+const statusTone = {
+  available: "success",
+  planned: "info",
+  archived: "note",
+} as const;
+const statusLabel = {
+  available: "Verfügbar",
+  planned: "Geplant",
+  archived: "Archiviert",
+} as const;
+---
+
+<div class="practice-page practice-overview">
+  <PageHeader
+    eyebrow="Technisches Übungs-Fixture"
+    title={overview.title}
+    summary={overview.summary}
+  >
+    <Button slot="actions" href={overview.recommendedFirstPractice.href}>
+      {overview.recommendedFirstPractice.label}
+    </Button>
+    <Button
+      slot="actions"
+      href={overview.moduleLearningPathAction.href}
+      variant="secondary"
+    >
+      {overview.moduleLearningPathAction.label}
+    </Button>
+  </PageHeader>
+
+  <Callout title="Fixture-Hinweis" variant="note">
+    <p>{overview.fixtureNotice}</p>
+    <p>{overview.provenanceExplanation}</p>
+  </Callout>
+
+  <section class="practice-section" aria-labelledby="practice-options-title">
+    <h2 id="practice-options-title">Übungsarten</h2>
+    <div class="practice-option-grid">
+      {
+        overview.options.map((option) => (
+          <article class="practice-option">
+            <header>
+              <h3>{option.title}</h3>
+              <StatusLabel
+                label={statusLabel[option.status]}
+                tone={statusTone[option.status]}
+              />
+            </header>
+            <p>{option.description}</p>
+            {option.action ? (
+              <Button href={option.action.href} variant="secondary">
+                {option.action.label}
+              </Button>
+            ) : (
+              <p class="module-card__unavailable">
+                Geplant. Für diese Vorschau gibt es keine Aktion.
+              </p>
+            )}
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="practice-section" aria-labelledby="practice-trust-title">
+    <h2 id="practice-trust-title">Provenienz und Vertrauen</h2>
+    <p>
+      Veröffentlichte Übungsinhalte müssen später zwischen offiziellen,
+      angepassten und eigenen Aufgaben unterscheiden. Diese Vorschau zeigt nur
+      technische Originalaufgaben.
+    </p>
+    <div class="home-actions">
+      <Button href={overview.methodologyAction.href} variant="secondary">
+        {overview.methodologyAction.label}
+      </Button>
+      <Button href={overview.errorReportAction.href} variant="secondary">
+        {overview.errorReportAction.label}
+      </Button>
+    </div>
+  </section>
+</div>

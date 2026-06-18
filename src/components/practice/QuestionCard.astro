@@ -1,0 +1,292 @@
+---
+import MetadataList from "../foundation/MetadataList.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import SolutionDisclosure from "../learning/SolutionDisclosure.astro";
+import {
+  contentStateLabels,
+  difficultyLabels,
+  getAdjacentQuestionActions,
+  getQuestionPosition,
+  provenanceLabels,
+  questionTypeLabels,
+  reviewStateLabels,
+  sourceVerificationLabels,
+  type PracticeQuestionViewModel,
+  type PracticeSetViewModel,
+} from "../../fixtures/practice";
+import { toBasePath } from "../../lib/routes";
+
+interface Props {
+  question: PracticeQuestionViewModel;
+  set: PracticeSetViewModel;
+}
+
+const { question, set } = Astro.props;
+const position = getQuestionPosition(set, question.id);
+const navigation = getAdjacentQuestionActions(set, question.id);
+---
+
+<article
+  class="question-card"
+  id={question.id}
+  aria-labelledby={`${question.id}-title`}
+>
+  <header class="question-card__header">
+    <p class="question-card__position">
+      Frage {position} von {set.questionCount}
+    </p>
+    <h2 id={`${question.id}-title`}>{question.label}</h2>
+    <div class="module-status-strip">
+      <StatusLabel
+        label={questionTypeLabels[question.questionType]}
+        tone="info"
+      />
+      <StatusLabel label={provenanceLabels[question.provenance]} tone="note" />
+    </div>
+    <MetadataList
+      items={[
+        { term: "Lernziel-ID", value: question.objectiveIds.join(", ") },
+        { term: "Schwierigkeit", value: difficultyLabels[question.difficulty] },
+        { term: "Zeit", value: question.estimatedTime },
+        {
+          term: "Quellenprüfung",
+          value: sourceVerificationLabels[question.sourceVerificationState],
+        },
+        {
+          term: "Inhaltsstand",
+          value: contentStateLabels[question.contentState],
+        },
+        { term: "Review", value: reviewStateLabels[question.reviewState] },
+      ]}
+    />
+  </header>
+
+  <div class="question-part">
+    <h3 id={`${question.id}-prompt`}>Aufgabe</h3>
+    <p>{question.prompt}</p>
+    {
+      question.context.length > 0 && (
+        <ul>
+          {question.context.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+
+  {
+    question.dataProvided.length > 0 && (
+      <div class="question-part">
+        <h3 id={`${question.id}-data`}>Gegebene Daten</h3>
+        <dl class="practice-data-list">
+          {question.dataProvided.map((item) => (
+            <>
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </>
+          ))}
+        </dl>
+      </div>
+    )
+  }
+
+  {
+    question.symbols && question.symbols.length > 0 && (
+      <div class="question-part">
+        <h3 id={`${question.id}-symbols`}>Symboldefinitionen</h3>
+        <dl class="practice-data-list">
+          {question.symbols.map((item) => (
+            <>
+              <dt>{item.symbol}</dt>
+              <dd>{item.meaning}</dd>
+            </>
+          ))}
+        </dl>
+      </div>
+    )
+  }
+
+  <div class="question-part">
+    <h3 id={`${question.id}-answer`}>Antwortformat</h3>
+    <p>{question.answerInstructions}</p>
+    {question.expectedUnit && <p>Erwartete Einheit: {question.expectedUnit}</p>}
+    {question.tolerance && <p>Toleranzhinweis: {question.tolerance}</p>}
+  </div>
+
+  {
+    question.choices && question.choices.length > 0 && (
+      <div class="question-part">
+        <h3 id={`${question.id}-choices`}>Papier-Auswahlliste</h3>
+        <p>
+          Die erwartete Option wird erst in der vollständigen Lösung erklärt.
+        </p>
+        <ol class="choice-list">
+          {question.choices.map((choice) => (
+            <li>{choice.label}</li>
+          ))}
+        </ol>
+      </div>
+    )
+  }
+
+  <div class="question-part">
+    <h3 id={`${question.id}-hints`}>Hinweise</h3>
+    <p class="card__meta">
+      Hinweise bleiben ohne JavaScript verfügbar. Das Öffnen wird nicht
+      gespeichert.
+    </p>
+    {
+      question.hints.map((hint) => (
+        <details>
+          <summary>{hint.label}</summary>
+          <p>{hint.text}</p>
+        </details>
+      ))
+    }
+  </div>
+
+  <SolutionDisclosure summary="Vollständige Lösung anzeigen">
+    <section
+      class="question-solution"
+      aria-label={`Lösung zu ${question.label}`}
+    >
+      <h3>Gewählte Methode</h3>
+      <p>{question.solution.method}</p>
+      <h3>Schritte</h3>
+      <ol class="solution-step-list">
+        {
+          question.solution.steps.map((step) => (
+            <li id={step.id}>
+              <strong>{step.label}:</strong> {step.text}
+            </li>
+          ))
+        }
+      </ol>
+      <h3>Zwischenergebnisse</h3>
+      <ul>
+        {question.solution.intermediateResults.map((item) => <li>{item}</li>)}
+      </ul>
+      <h3>Endergebnis</h3>
+      <p>{question.solution.finalAnswer}</p>
+      <h3>Begründung und Einordnung</h3>
+      <p>{question.solution.reasoning}</p>
+      <p>{question.solution.interpretation}</p>
+      {
+        question.choices && (
+          <>
+            <h3>Warum die Optionen passen oder nicht passen</h3>
+            <ul>
+              {question.choices.map((choice) => (
+                <li>
+                  <strong>{choice.label}:</strong> {choice.explanation}
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+      {
+        question.solution.expectedCorePoints && (
+          <>
+            <h3>Erwartete Kernpunkte</h3>
+            <ul>
+              {question.solution.expectedCorePoints.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+      {
+        question.solution.acceptableVariations && (
+          <>
+            <h3>Akzeptable Varianten</h3>
+            <ul>
+              {question.solution.acceptableVariations.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+      {
+        question.solution.commonOmissions && (
+          <>
+            <h3>Häufige Auslassungen</h3>
+            <ul>
+              {question.solution.commonOmissions.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+    </section>
+  </SolutionDisclosure>
+
+  <div class="question-part">
+    <h3 id={`${question.id}-mistakes`}>Häufige Fehler und Feedback</h3>
+    <p>
+      <strong>Ein häufiger Fehler ist:</strong>
+      {question.solution.commonWrongMethod}
+    </p>
+    <p>
+      <strong>Warum das nicht funktioniert:</strong>
+      {question.solution.whyWrongMethodFails}
+    </p>
+    <ul>
+      {question.feedbackExplanations.map((item) => <li>{item}</li>)}
+    </ul>
+  </div>
+
+  <div class="question-part">
+    <h3 id={`${question.id}-self-assessment`}>Selbsteinschätzung</h3>
+    <p>
+      Diese Kategorien sind nur eine Orientierung für dich. Es wird nichts
+      gespeichert und keine Meisterschaft berechnet.
+    </p>
+    <ul class="self-assessment-list">
+      <li>Ohne Hilfe gelöst</li>
+      <li>Mit Hinweis gelöst</li>
+      <li>Lösung benötigt</li>
+      <li>Noch unsicher</li>
+    </ul>
+  </div>
+
+  <div class="question-part">
+    <h3 id={`${question.id}-transfer`}>Transfer</h3>
+    <p>{question.transferPrompt}</p>
+    {question.solution.transferNote && <p>{question.solution.transferNote}</p>}
+  </div>
+
+  <nav
+    class="question-navigation"
+    aria-label={`Navigation für ${question.label}`}
+  >
+    {
+      navigation.previous ? (
+        <a
+          class="button button--secondary"
+          href={toBasePath(navigation.previous.href)}
+        >
+          {navigation.previous.label}
+        </a>
+      ) : (
+        <p>Keine vorherige Frage in dieser Übung.</p>
+      )
+    }
+    {
+      navigation.next ? (
+        <a
+          class="button button--secondary"
+          href={toBasePath(navigation.next.href)}
+        >
+          {navigation.next.label}
+        </a>
+      ) : (
+        <p>Keine weitere Frage in dieser Übung.</p>
+      )
+    }
+  </nav>
+</article>
