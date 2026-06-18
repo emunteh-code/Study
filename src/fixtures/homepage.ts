@@ -79,7 +79,7 @@ export const homepageModules: ModuleFixture[] = [
       "Ein neutraler Vorschaubereich für den späteren Makroökonomik-II-Pilotpfad.",
     status: "verfügbar",
     formats: ["Lernpfad", "Übungsmodus", "Quellenstatus"],
-    href: "/lernen/beispiel/",
+    href: "/lernen/pilot-modul/",
     actionLabel: "Pilotmodul A öffnen",
     recommended: true,
     note: "Fixture-Inhalt zur Prüfung der Navigation, keine echten Kursinhalte.",
@@ -114,7 +114,7 @@ export const returningLearnerFixture: ReturningLearnerFixture = {
   progressLabel: "3 von 8 Abschnitten bearbeitet",
   nextStep:
     "Als Nächstes folgt eine geführte Übung in der statischen Vorschau.",
-  continueHref: "/lernen/beispiel/",
+  continueHref: "/lernen/pilot-modul/",
   alternateHref: "/lernen/",
 };
 

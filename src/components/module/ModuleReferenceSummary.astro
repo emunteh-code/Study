@@ -1,0 +1,39 @@
+---
+import SectionHeader from "../foundation/SectionHeader.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import {
+  availabilityTones,
+  getTopicStatusLabel,
+  type ReferenceOptionViewModel,
+} from "../../fixtures/module-page";
+
+interface Props {
+  references: ReferenceOptionViewModel[];
+}
+
+const { references } = Astro.props;
+---
+
+<section class="module-section" aria-labelledby="reference-title">
+  <SectionHeader
+    id="reference-title"
+    title="Formeln und Referenzen"
+    summary="Referenzseiten ergänzen spätere Lektionen, ersetzen aber nicht den Lernpfad."
+  />
+  <div class="module-option-grid">
+    {
+      references.map((reference) => (
+        <article class="module-option">
+          <header>
+            <h3>{reference.title}</h3>
+            <StatusLabel
+              label={getTopicStatusLabel(reference.availability)}
+              tone={availabilityTones[reference.availability]}
+            />
+          </header>
+          <p>{reference.description}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>

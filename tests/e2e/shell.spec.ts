@@ -61,7 +61,7 @@ test("current route uses aria-current and nested learning marks Lernen", async (
       .getByRole("link", { name: "Lernen" }),
   ).toHaveAttribute("aria-current", "page");
 
-  await page.goto("/Study/lernen/beispiel/");
+  await page.goto("/Study/lernen/pilot-modul/");
   await expect(
     page
       .getByRole("navigation", { name: "Hauptnavigation" })

@@ -1,0 +1,20 @@
+---
+import ModulePageLayout from "../../../components/module/ModulePageLayout.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { pilotModuleFixture } from "../../../fixtures/module-page";
+---
+
+<BaseLayout
+  title={pilotModuleFixture.title}
+  description="Technische Fixture-Modulseite für Lernpfad, Fortschrittsvorschau, Übungsstatus und Quellenkommunikation."
+  canonicalPath="/lernen/pilot-modul/"
+  robots="noindex, nofollow"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Lernen", href: "/lernen/" },
+    { label: pilotModuleFixture.title },
+  ]}
+  pageId="fixture-module-page"
+>
+  <ModulePageLayout module={pilotModuleFixture} />
+</BaseLayout>

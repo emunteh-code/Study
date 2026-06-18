@@ -1,0 +1,26 @@
+---
+import SectionHeader from "../foundation/SectionHeader.astro";
+import ModuleTopicItem from "./ModuleTopicItem.astro";
+import {
+  getOrderedTopics,
+  type ModulePageViewModel,
+} from "../../fixtures/module-page";
+
+interface Props {
+  module: ModulePageViewModel;
+}
+
+const { module } = Astro.props;
+const topics = getOrderedTopics(module);
+---
+
+<section class="module-section" aria-labelledby="lernpfad">
+  <SectionHeader
+    id="lernpfad"
+    title="Lernpfad"
+    summary="Bearbeite die Themen in der empfohlenen Reihenfolge oder öffne gezielt einen bereits verfügbaren Abschnitt."
+  />
+  <ol class="module-learning-path">
+    {topics.map((topic) => <ModuleTopicItem topic={topic} />)}
+  </ol>
+</section>

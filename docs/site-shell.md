@@ -107,7 +107,7 @@ Rules:
 
 - `/` requires exact root match
 - section routes match nested descendants
-- `/lernen/beispiel/` marks `Lernen`
+- `/lernen/pilot-modul/` marks `Lernen`
 - `/ueben/example/` marks `Üben`
 - development routes do not mark public navigation
 - query strings and fragments do not affect matching
@@ -203,7 +203,7 @@ They must:
 - avoid fake search or progress interfaces
 - include a useful next link where possible
 
-The nested `/lernen/beispiel/` route is a non-academic shell-validation page only. It is `noindex, follow` and must not become a module dashboard.
+The nested `/lernen/pilot-modul/` route is a non-academic fixture module page only. It is `noindex, nofollow`, must not imply real course coverage, and must stay clearly separated from published academic content until source-checked module content exists.
 
 ## Known Limitations
 

@@ -6,19 +6,27 @@ This is not an official university platform. It must not imply official affiliat
 
 ## Status
 
-The repository currently contains the product constitution, product specification, information architecture, content-schema specification, design-system foundation, public site shell, final homepage structure with neutral fixture data, and a minimum Astro foundation. It does not contain real course content.
+The repository currently contains the product constitution, product specification, information architecture, content-schema specification, design-system foundation, public site shell, final homepage structure with neutral fixture data, a neutral fixture module-page template, and a minimum Astro foundation. It does not contain real course content.
 
 ## Prerequisites
 
-- Node.js compatible with the current Astro release
-- npm
+- Node.js 24 LTS
+- npm 11 or newer
 
-Astro `6.4.8` requires Node.js `>=22.12.0`. The scaffold was created with Node.js `v25.8.1` and npm `11.11.0`.
+This repository is standardized on Node.js 24 LTS. Do not use Node.js 25 for development; the odd-numbered release has shown unreliable Astro and TypeScript validation behavior in this project.
+
+If your shell supports version files, use:
+
+```sh
+nvm use
+```
+
+or activate Node 24 with your existing version manager. With Homebrew, ensure `node@24` is first on `PATH`.
 
 ## Installation
 
 ```sh
-npm install
+npm ci
 ```
 
 ## Development
@@ -45,6 +53,15 @@ npm run validate
 ```sh
 npm run test:e2e
 npm run test:e2e:ui
+```
+
+To diagnose runtime mismatches, check:
+
+```sh
+node --version
+npm --version
+which node
+which npm
 ```
 
 If Chromium is not installed for Playwright, run:

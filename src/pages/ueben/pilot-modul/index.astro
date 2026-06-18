@@ -1,0 +1,38 @@
+---
+import Button from "../../../components/foundation/Button.astro";
+import Callout from "../../../components/foundation/Callout.astro";
+import PageHeader from "../../../components/foundation/PageHeader.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Geführte Übungen Pilotmodul A"
+  description="Noindex Fixture-Platzhalter für spätere geführte Übungen ohne Aufgabenlogik."
+  canonicalPath="/ueben/pilot-modul/"
+  robots="noindex, nofollow"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Üben", href: "/ueben/" },
+    { label: "Pilotmodul A" },
+  ]}
+>
+  <section class="placeholder-page" aria-labelledby="page-title">
+    <PageHeader
+      eyebrow="Technisches Übungs-Fixture"
+      title="Geführte Übungen Pilotmodul A"
+      summary="Dieser Platzhalter prüft nur den Übungslink vom Modul-Dashboard."
+    />
+    <Callout title="Keine Übungslogik" variant="note">
+      <p>
+        Es gibt hier noch keine Aufgaben, Lösungen, Punkte, Eingaben oder
+        fachlichen Inhalte. Interaktive Übungslogik gehört nicht zu diesem
+        Schritt.
+      </p>
+    </Callout>
+    <div class="placeholder-actions">
+      <Button href="/lernen/pilot-modul/" variant="secondary">
+        Zurück zu Pilotmodul A
+      </Button>
+    </div>
+  </section>
+</BaseLayout>

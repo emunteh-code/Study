@@ -1,0 +1,49 @@
+---
+import Button from "../foundation/Button.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import {
+  availabilityTones,
+  getTopicStatusLabel,
+  type PracticeOptionViewModel,
+} from "../../fixtures/module-page";
+
+interface Props {
+  options: PracticeOptionViewModel[];
+}
+
+const { options } = Astro.props;
+---
+
+<section class="module-section" aria-labelledby="practice-title">
+  <SectionHeader
+    id="practice-title"
+    title="Üben"
+    summary="Übungsformate werden erst aktiviert, wenn ihre Inhalte und Lösungen geprüft sind."
+  />
+  <div class="module-option-grid">
+    {
+      options.map((option) => (
+        <article class="module-option">
+          <header>
+            <h3>{option.title}</h3>
+            <StatusLabel
+              label={getTopicStatusLabel(option.availability)}
+              tone={availabilityTones[option.availability]}
+            />
+          </header>
+          <p>{option.description}</p>
+          {option.action ? (
+            <Button href={option.action.href} variant="secondary">
+              {option.action.label}
+            </Button>
+          ) : (
+            <p class="module-card__unavailable">
+              Noch nicht als funktionaler Übungsbereich verfügbar.
+            </p>
+          )}
+        </article>
+      ))
+    }
+  </div>
+</section>

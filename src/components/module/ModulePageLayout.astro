@@ -1,0 +1,76 @@
+---
+import Callout from "../foundation/Callout.astro";
+import Button from "../foundation/Button.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import ModuleHeader from "./ModuleHeader.astro";
+import ModuleProgressSummary from "./ModuleProgressSummary.astro";
+import ContinueLearningPanel from "./ContinueLearningPanel.astro";
+import ModuleLearningPath from "./ModuleLearningPath.astro";
+import ModulePracticeOptions from "./ModulePracticeOptions.astro";
+import ModuleReferenceSummary from "./ModuleReferenceSummary.astro";
+import ModuleTrustSummary from "./ModuleTrustSummary.astro";
+import {
+  availabilityTones,
+  getTopicStatusLabel,
+  type ModulePageViewModel,
+} from "../../fixtures/module-page";
+import StatusLabel from "../foundation/StatusLabel.astro";
+
+interface Props {
+  module: ModulePageViewModel;
+}
+
+const { module } = Astro.props;
+---
+
+<div class="module-page">
+  <ModuleHeader module={module} />
+  <Callout title="Abdeckung" variant="note">
+    <p>{module.contentCoverageNote}</p>
+  </Callout>
+  {
+    module.progress && (
+      <>
+        <ContinueLearningPanel preview={module.progress.continueLearning} />
+        <ModuleProgressSummary progress={module.progress} />
+      </>
+    )
+  }
+  <ModuleLearningPath module={module} />
+  <ModulePracticeOptions options={module.practiceLinks} />
+  <section class="module-section" aria-labelledby="mock-exam-title">
+    <SectionHeader
+      id="mock-exam-title"
+      title="Probeklausuren"
+      summary="Klausurnahe Formate bleiben zurückgestellt, bis Aufgaben, Punkteverteilung und Lösungen geprüft sind."
+    />
+    <div class="module-option">
+      <StatusLabel
+        label={getTopicStatusLabel(module.mockExamStatus)}
+        tone={availabilityTones[module.mockExamStatus]}
+      />
+      <p>{module.mockExamDescription}</p>
+      <Button href="/probeklausuren/" variant="secondary">
+        Mehr über Probeklausuren erfahren
+      </Button>
+    </div>
+  </section>
+  <ModuleReferenceSummary references={module.formulaAndReferenceAvailability} />
+  <section class="module-section" aria-labelledby="modes-title">
+    <SectionHeader
+      id="modes-title"
+      title="Lernformen"
+      summary="Die Struktur folgt dem Zyklus Verstehen, geführte Übung, selbstständige Übung, Klausurtransfer und Wiederholung."
+    />
+    <ul class="inline-link-list" aria-label="Lernformen">
+      {
+        module.learningModes.map((mode) => (
+          <li>
+            <span class="badge">{mode}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+  <ModuleTrustSummary module={module} />
+</div>

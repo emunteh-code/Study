@@ -1,0 +1,39 @@
+---
+import Button from "../../../../components/foundation/Button.astro";
+import Callout from "../../../../components/foundation/Callout.astro";
+import PageHeader from "../../../../components/foundation/PageHeader.astro";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Beispielthema Alpha"
+  description="Noindex Fixture-Platzhalter für ein späteres Thema ohne akademische Inhalte."
+  canonicalPath="/lernen/pilot-modul/beispielthema-alpha/"
+  robots="noindex, nofollow"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Lernen", href: "/lernen/" },
+    { label: "Pilotmodul A", href: "/lernen/pilot-modul/" },
+    { label: "Beispielthema Alpha" },
+  ]}
+>
+  <section class="placeholder-page" aria-labelledby="page-title">
+    <PageHeader
+      eyebrow="Technisches Thema-Fixture"
+      title="Beispielthema Alpha"
+      summary="Dieser Platzhalter prüft nur die Navigation vom Modul-Dashboard zu einem verfügbaren Thema."
+    />
+    <Callout title="Fixture-only" variant="note">
+      <p>
+        Diese Seite enthält keine akademischen Inhalte, keine Formeln, keine
+        Definitionen, keine Aufgaben und keine Quellenbehauptungen. Der
+        generische Topic-Page-Template folgt in einem separaten Schritt.
+      </p>
+    </Callout>
+    <div class="placeholder-actions">
+      <Button href="/lernen/pilot-modul/" variant="secondary">
+        Zurück zu Pilotmodul A
+      </Button>
+    </div>
+  </section>
+</BaseLayout>

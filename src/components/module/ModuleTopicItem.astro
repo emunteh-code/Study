@@ -1,0 +1,71 @@
+---
+import Button from "../foundation/Button.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import {
+  availabilityTones,
+  getTopicStatusLabel,
+  type ModuleTopicItemViewModel,
+} from "../../fixtures/module-page";
+
+interface Props {
+  topic: ModuleTopicItemViewModel;
+}
+
+const { topic } = Astro.props;
+---
+
+<li class="module-topic-item">
+  <div class="module-topic-item__main">
+    <p class="module-topic-item__order">Schritt {topic.order}</p>
+    <h3>{topic.title}</h3>
+    <p>{topic.learnerOutcome}</p>
+    <dl class="module-inline-meta">
+      <div>
+        <dt>Zeit</dt>
+        <dd>{topic.estimatedTime}</dd>
+      </div>
+      <div>
+        <dt>Inhaltsstatus</dt>
+        <dd>{topic.contentState}</dd>
+      </div>
+      <div>
+        <dt>Review</dt>
+        <dd>{topic.reviewState}</dd>
+      </div>
+      {
+        topic.progressText && (
+          <div>
+            <dt>Fortschritt</dt>
+            <dd>{topic.progressText}</dd>
+          </div>
+        )
+      }
+    </dl>
+    <p class="card__meta">{topic.prerequisiteNote}</p>
+    {topic.statusExplanation && <p>{topic.statusExplanation}</p>}
+  </div>
+  <div class="module-topic-item__aside">
+    {
+      topic.recommended && (
+        <p class="recommended-marker">Empfohlener nächster Schritt</p>
+      )
+    }
+    <StatusLabel
+      label={getTopicStatusLabel(topic.availability)}
+      tone={availabilityTones[topic.availability]}
+    />
+    {
+      topic.primaryAction ? (
+        <Button href={topic.primaryAction.href} variant="secondary">
+          {topic.primaryAction.label}
+        </Button>
+      ) : topic.alternativeAction ? (
+        <Button href={topic.alternativeAction.href} variant="quiet">
+          {topic.alternativeAction.label}
+        </Button>
+      ) : (
+        <p class="module-card__unavailable">Keine Aktion für diesen Status.</p>
+      )
+    }
+  </div>
+</li>

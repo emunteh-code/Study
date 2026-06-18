@@ -41,8 +41,8 @@ describe("toBasePath", () => {
 
 describe("normalizeInternalRoute", () => {
   it("removes duplicate slashes and adds a trailing slash", () => {
-    expect(normalizeInternalRoute("/lernen//beispiel")).toBe(
-      "/lernen/beispiel/",
+    expect(normalizeInternalRoute("/lernen//pilot-modul")).toBe(
+      "/lernen/pilot-modul/",
     );
   });
 });
@@ -60,8 +60,8 @@ describe("isRouteCurrent", () => {
   });
 
   it("uses section matching for nested routes", () => {
-    expect(isRouteCurrent("/lernen/", "/Study/lernen/beispiel/")).toBe(true);
-    expect(isRouteCurrent("/ueben/", "/Study/lernen/beispiel/")).toBe(false);
+    expect(isRouteCurrent("/lernen/", "/Study/lernen/pilot-modul/")).toBe(true);
+    expect(isRouteCurrent("/ueben/", "/Study/lernen/pilot-modul/")).toBe(false);
   });
 
   it("ignores query strings and fragments", () => {

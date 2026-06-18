@@ -1,0 +1,39 @@
+---
+import Button from "../foundation/Button.astro";
+import type { ContinueLearningPreview } from "../../fixtures/module-page";
+
+interface Props {
+  preview: ContinueLearningPreview;
+}
+
+const { preview } = Astro.props;
+---
+
+<section class="continue-panel" aria-labelledby="continue-learning-title">
+  <div>
+    <p class="fixture-note">Fixture-Vorschau, keine echte Lernhistorie.</p>
+    <h2 id="continue-learning-title">Weiterlernen</h2>
+    <p>
+      <strong>{preview.topicTitle}</strong> · {preview.currentStep}
+    </p>
+    <p>{preview.reason}</p>
+    <dl class="module-inline-meta">
+      <div>
+        <dt>Nächste Aktion</dt>
+        <dd>{preview.nextAction}</dd>
+      </div>
+      <div>
+        <dt>Geschätzte Zeit</dt>
+        <dd>{preview.estimatedTime}</dd>
+      </div>
+    </dl>
+  </div>
+  <div class="home-actions" aria-label="Weiterlern-Aktionen">
+    <Button href={preview.primaryAction.href}
+      >{preview.primaryAction.label}</Button
+    >
+    <Button href={preview.secondaryAction.href} variant="secondary">
+      {preview.secondaryAction.label}
+    </Button>
+  </div>
+</section>

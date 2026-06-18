@@ -928,6 +928,177 @@ details > * {
   max-inline-size: none;
 }
 
+.module-page {
+  display: grid;
+  gap: var(--space-48);
+  min-inline-size: 0;
+}
+
+.module-header {
+  display: grid;
+  gap: var(--space-16);
+  max-inline-size: var(--layout-narrow);
+}
+
+.module-status-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.module-context-note {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-0);
+}
+
+.module-section {
+  display: grid;
+  gap: var(--space-16);
+  min-inline-size: 0;
+}
+
+.module-section .section-header {
+  margin-block-end: 0;
+}
+
+.continue-panel {
+  display: grid;
+  gap: var(--space-16);
+  max-inline-size: var(--layout-narrow);
+  padding: var(--space-24);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+}
+
+.continue-panel h2 {
+  margin-block-end: var(--space-8);
+}
+
+.module-inline-meta,
+.module-progress-grid {
+  display: grid;
+  gap: var(--space-12);
+  margin: 0;
+}
+
+.module-inline-meta {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+}
+
+.module-inline-meta div,
+.module-progress-grid div {
+  min-inline-size: 0;
+}
+
+.module-inline-meta dt,
+.module-inline-meta dd,
+.module-progress-grid dt,
+.module-progress-grid dd {
+  margin: 0;
+}
+
+.module-inline-meta dt,
+.module-progress-grid dt {
+  color: var(--color-heading);
+  font-size: var(--font-size-0);
+}
+
+.module-inline-meta dd,
+.module-progress-grid dd {
+  color: var(--color-text-muted);
+}
+
+.module-progress-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.module-progress-grid div {
+  padding: var(--space-16);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+}
+
+.module-learning-path {
+  display: grid;
+  gap: var(--space-16);
+  max-inline-size: var(--layout-reading);
+  padding: 0;
+  list-style: none;
+  counter-reset: module-topic;
+}
+
+.module-topic-item {
+  display: grid;
+  gap: var(--space-16);
+  grid-template-columns: minmax(0, 1fr) minmax(12rem, 16rem);
+  max-inline-size: none;
+  padding: var(--space-24);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+  counter-increment: module-topic;
+}
+
+.module-topic-item__main,
+.module-topic-item__aside {
+  display: grid;
+  gap: var(--space-12);
+  min-inline-size: 0;
+  align-content: start;
+}
+
+.module-topic-item__order {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-0);
+  font-weight: 700;
+}
+
+.module-topic-item h3 {
+  margin-block-end: 0;
+}
+
+.recommended-marker {
+  width: fit-content;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: var(--space-4) var(--space-8);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-4);
+  background: var(--color-surface-raised);
+  color: var(--color-heading);
+  font-size: var(--font-size-0);
+  font-weight: 700;
+}
+
+.module-option-grid {
+  display: grid;
+  gap: var(--space-16);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.module-option {
+  display: grid;
+  gap: var(--space-12);
+  min-inline-size: 0;
+  padding: var(--space-24);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+}
+
+.module-option header {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.module-option h3 {
+  margin: 0;
+  font-size: var(--font-size-2);
+}
+
 .empty-state {
   padding: var(--space-24);
   border: var(--border-width) dashed var(--color-border-strong);
@@ -1035,6 +1206,16 @@ summary {
     padding-inline-start: var(--space-16);
     padding-block-start: 3.75rem;
   }
+
+  .module-topic-item {
+    grid-template-columns: 1fr;
+    padding: var(--space-16);
+  }
+
+  .module-option,
+  .continue-panel {
+    padding: var(--space-16);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1058,7 +1239,10 @@ summary {
   .status-label,
   .card,
   .callout,
-  .learning-block {
+  .learning-block,
+  .module-topic-item,
+  .module-option,
+  .continue-panel {
     border: 1px solid CanvasText;
   }
 }

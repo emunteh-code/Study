@@ -1,0 +1,40 @@
+---
+import ProgressBar from "../foundation/ProgressBar.astro";
+import type { ModulePageViewModel } from "../../fixtures/module-page";
+
+interface Props {
+  progress: NonNullable<ModulePageViewModel["progress"]>;
+}
+
+const { progress } = Astro.props;
+const progressBarDimension = progress.dimensions.find(
+  (dimension) => typeof dimension.max === "number",
+);
+---
+
+<section class="module-section" aria-labelledby="module-progress-title">
+  <header class="section-header">
+    <h2 id="module-progress-title">{progress.label}</h2>
+    <p class="section-header__summary">{progress.note}</p>
+  </header>
+  {
+    progressBarDimension && progressBarDimension.max && (
+      <ProgressBar
+        label={progressBarDimension.label}
+        value={progressBarDimension.value}
+        max={progressBarDimension.max}
+        description={progressBarDimension.visibleText}
+      />
+    )
+  }
+  <dl class="module-progress-grid">
+    {
+      progress.dimensions.map((dimension) => (
+        <div>
+          <dt>{dimension.label}</dt>
+          <dd>{dimension.visibleText}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>

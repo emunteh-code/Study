@@ -1,0 +1,47 @@
+---
+import Button from "../foundation/Button.astro";
+import MetadataList from "../foundation/MetadataList.astro";
+import PageHeader from "../foundation/PageHeader.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import type { ModulePageViewModel } from "../../fixtures/module-page";
+
+interface Props {
+  module: ModulePageViewModel;
+}
+
+const { module } = Astro.props;
+---
+
+<section class="module-header" aria-labelledby="page-title">
+  <PageHeader
+    eyebrow={module.category}
+    title={module.title}
+    summary={module.summary}
+  >
+    <div slot="metadata" class="module-status-strip">
+      <StatusLabel label={module.versionLabel} tone="info" />
+      <StatusLabel label={module.versionStatus} tone="note" />
+      <StatusLabel label={module.reviewStatus} tone="warning" />
+    </div>
+    <MetadataList
+      slot="metadata"
+      items={[
+        { term: "Version", value: module.versionLabel },
+        { term: "Versionsstatus", value: module.versionStatus },
+        { term: "Reviewstatus", value: module.reviewStatus },
+        { term: "Letzte Fixture-Prüfung", value: module.lastReviewedDate },
+      ]}
+    />
+    <Button slot="actions" href={module.recommendedNextAction.href}>
+      {module.recommendedNextAction.label}
+    </Button>
+    <Button
+      slot="actions"
+      href={module.secondaryAction.href}
+      variant="secondary"
+    >
+      {module.secondaryAction.label}
+    </Button>
+  </PageHeader>
+  <p class="module-context-note">{module.independentProjectContext}</p>
+</section>

@@ -4,6 +4,8 @@ This document records the minimum production-ready Astro foundation for the lear
 
 ## Dependency choices
 
+- Node.js 24 LTS is the supported development runtime. Node.js 25 is not used because the odd-numbered release has shown unreliable Astro and TypeScript validation behavior in this project.
+- Dependencies are installed from the lockfile with `npm ci`.
 - Astro provides static site generation, file-based routing, and future content collections.
 - `@astrojs/mdx` enables MDX topic bodies without adding a component framework.
 - TypeScript is configured strictly for future schema and application code.
@@ -14,6 +16,34 @@ This document records the minimum production-ready Astro foundation for the lear
 - `@axe-core/playwright` provides accessibility smoke checks.
 
 No React, Vue, Svelte, Tailwind, component framework, external design system, analytics, AI features, accounts, cloud synchronization, gamification, or community functionality is included.
+
+## Runtime setup
+
+Use Node.js 24 LTS with npm 11 or newer.
+
+The repository includes `.nvmrc` and `.node-version` with `24` so common version managers can activate the correct runtime. With Homebrew, install `node@24` and put its `bin` directory before the default Homebrew `node` on `PATH`.
+
+Useful diagnostics:
+
+```sh
+node --version
+npm --version
+which node
+which npm
+npm config get prefix
+```
+
+Validation commands:
+
+```sh
+npm run format:check
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+npm run validate
+npm run test:e2e
+```
 
 ## Astro configuration
 

@@ -1,19 +1,59 @@
 ---
-import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import Button from "../../components/foundation/Button.astro";
+import Callout from "../../components/foundation/Callout.astro";
+import Card from "../../components/foundation/Card.astro";
+import PageHeader from "../../components/foundation/PageHeader.astro";
+import SectionHeader from "../../components/foundation/SectionHeader.astro";
+import StatusLabel from "../../components/foundation/StatusLabel.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { pilotModuleFixture } from "../../fixtures/module-page";
 ---
 
 <BaseLayout
   title="Lernen"
-  description="Platzhalter für den zukünftigen Lernbereich."
+  description="Minimaler Lernbereich mit neutralem Fixture-Modul."
   canonicalPath="/lernen/"
   breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Lernen" }]}
 >
-  <PlaceholderPage
-    title="Lernen"
-    summary="Der Lernbereich wird die Modul- und Themenstruktur bündeln."
-    status="Die Lernbereichsstruktur wird im nächsten Schritt aufgebaut."
-    nextHref="/methodik/"
-    nextLabel="Methodik ansehen"
-  />
+  <section class="module-page" aria-labelledby="page-title">
+    <PageHeader
+      eyebrow="Lernbereich"
+      title="Lernen"
+      summary="Wähle einen Lernbereich und starte mit dem nächsten sinnvollen Schritt."
+    >
+      <Button slot="actions" href="/lernen/pilot-modul/">
+        Pilotmodul A öffnen
+      </Button>
+    </PageHeader>
+    <Callout title="Fixture-Hinweis" variant="note">
+      <p>
+        Derzeit ist nur ein neutrales technisches Fixture sichtbar. Es sind noch
+        keine echten Kursinhalte, Themen, Übungen oder Quellen veröffentlicht.
+      </p>
+    </Callout>
+    <section class="home-section" aria-labelledby="learning-modules-title">
+      <SectionHeader
+        id="learning-modules-title"
+        title="Verfügbare Lernbereiche"
+        summary="Aktuell ist nur ein technisches Fixture-Modul sichtbar."
+      />
+      <div class="home-grid home-grid--modules">
+        <Card
+          title={pilotModuleFixture.title}
+          metadata={pilotModuleFixture.versionLabel}
+        >
+          <div class="module-card__status">
+            <StatusLabel label="Verfügbar" tone="success" />
+          </div>
+          <p>{pilotModuleFixture.summary}</p>
+          <p class="card__meta">{pilotModuleFixture.contentCoverageNote}</p>
+          <div slot="footer" class="card-actions">
+            <Button href="/lernen/pilot-modul/" variant="secondary">
+              Modul-Dashboard öffnen
+            </Button>
+          </div>
+        </Card>
+      </div>
+    </section>
+  </section>
 </BaseLayout>

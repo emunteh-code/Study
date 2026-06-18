@@ -106,7 +106,7 @@ test("returning fixture shows continuation and due review without persistence cl
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Lernen fortsetzen" }),
-  ).toHaveAttribute("href", "/Study/lernen/beispiel/");
+  ).toHaveAttribute("href", "/Study/lernen/pilot-modul/");
   await expect(
     page.getByRole("link", { name: "Wiederholung öffnen" }),
   ).toHaveAttribute("href", "/Study/fortschritt/");
@@ -155,7 +155,7 @@ test("homepage links remain available without JavaScript", async ({ page }) => {
   ).toHaveAttribute("href", "/Study/lernen/");
   await expect(
     page.getByRole("link", { name: "Pilotmodul A öffnen" }),
-  ).toHaveAttribute("href", "/Study/lernen/beispiel/");
+  ).toHaveAttribute("href", "/Study/lernen/pilot-modul/");
 });
 
 test("returning fixture remains readable without JavaScript", async ({

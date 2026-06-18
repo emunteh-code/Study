@@ -1,0 +1,50 @@
+---
+import Button from "../foundation/Button.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import TextLink from "../foundation/TextLink.astro";
+import type { ModulePageViewModel } from "../../fixtures/module-page";
+
+interface Props {
+  module: ModulePageViewModel;
+}
+
+const { module } = Astro.props;
+---
+
+<section
+  class="module-section trust-summary"
+  aria-labelledby="module-trust-title"
+>
+  <SectionHeader
+    id="module-trust-title"
+    title="Quellen und Prüfstand"
+    summary="Veröffentlichte Inhalte zeigen ihre Quellen und ihren Prüfstatus. Offizielle, angepasste und selbst erstellte Aufgaben werden eindeutig gekennzeichnet."
+  />
+  <dl class="module-progress-grid">
+    <div>
+      <dt>Quellenstand</dt>
+      <dd>{module.sourceSummary}</dd>
+    </div>
+    <div>
+      <dt>Quellenset</dt>
+      <dd>{module.sourceSetStatus}</dd>
+    </div>
+    <div>
+      <dt>Inhaltsprüfung</dt>
+      <dd>{module.contentReviewState}</dd>
+    </div>
+    <div>
+      <dt>Übungsprüfung</dt>
+      <dd>{module.exerciseReviewState}</dd>
+    </div>
+  </dl>
+  <ul class="inline-link-list" aria-label="Modul-Vertrauenslinks">
+    <li><TextLink href="/methodik/">Methodik ansehen</TextLink></li>
+    <li><TextLink href="/quellen/">Quellenbasis prüfen</TextLink></li>
+  </ul>
+  <div class="home-actions">
+    <Button href={module.errorReportRoute} variant="secondary"
+      >Fehler melden</Button
+    >
+  </div>
+</section>
