@@ -1,0 +1,34 @@
+---
+interface Props {
+  title: string;
+  task: string;
+  given: string[];
+  method: string;
+  steps: string[];
+  result: string;
+  interpretation: string;
+}
+
+const { title, task, given, method, steps, result, interpretation } =
+  Astro.props;
+---
+
+<section class="learning-block" aria-labelledby={`${title}-example`}>
+  <h2 id={`${title}-example`}>{title}</h2>
+  <h3>Aufgabe</h3>
+  <p>{task}</p>
+  <h3>Gegeben</h3>
+  <ul>
+    {given.map((item) => <li>{item}</li>)}
+  </ul>
+  <h3>Methode</h3>
+  <p>{method}</p>
+  <h3>Schritte</h3>
+  <ol>
+    {steps.map((step) => <li>{step}</li>)}
+  </ol>
+  <h3>Ergebnis</h3>
+  <p>{result}</p>
+  <h3>Einordnung</h3>
+  <p>{interpretation}</p>
+</section>

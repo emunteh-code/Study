@@ -1,0 +1,40 @@
+---
+type Verification = "unverified" | "located" | "checked" | "superseded";
+
+interface Props {
+  title: string;
+  type: string;
+  locator: string;
+  verification: Verification;
+  href?: string;
+  semester?: string;
+}
+
+const { title, type, locator, verification, href, semester } = Astro.props;
+const verificationLabels: Record<Verification, string> = {
+  unverified: "Ungeprüft",
+  located: "Gefunden",
+  checked: "Geprüft",
+  superseded: "Ersetzt",
+};
+---
+
+<article class="learning-block" aria-labelledby={`${title}-source`}>
+  <h2 id={`${title}-source`}>{href ? <a href={href}>{title}</a> : title}</h2>
+  <dl class="metadata-list">
+    <dt>Typ</dt>
+    <dd>{type}</dd>
+    <dt>Fundstelle</dt>
+    <dd>{locator}</dd>
+    <dt>Prüfstatus</dt>
+    <dd>{verificationLabels[verification]}</dd>
+    {
+      semester && (
+        <>
+          <dt>Semester</dt>
+          <dd>{semester}</dd>
+        </>
+      )
+    }
+  </dl>
+</article>

@@ -1,0 +1,14 @@
+---
+interface Props {
+  summary?: string;
+}
+
+const { summary = "Lösung anzeigen" } = Astro.props;
+---
+
+<details>
+  <summary>{summary}</summary>
+  <div>
+    <slot />
+  </div>
+</details>

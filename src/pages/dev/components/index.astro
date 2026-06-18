@@ -1,0 +1,315 @@
+---
+import Badge from "../../../components/foundation/Badge.astro";
+import Breadcrumbs from "../../../components/foundation/Breadcrumbs.astro";
+import Button from "../../../components/foundation/Button.astro";
+import Callout from "../../../components/foundation/Callout.astro";
+import Card from "../../../components/foundation/Card.astro";
+import ContentContainer from "../../../components/foundation/ContentContainer.astro";
+import EmptyState from "../../../components/foundation/EmptyState.astro";
+import MetadataList from "../../../components/foundation/MetadataList.astro";
+import PageHeader from "../../../components/foundation/PageHeader.astro";
+import ProgressBar from "../../../components/foundation/ProgressBar.astro";
+import ReadingContainer from "../../../components/foundation/ReadingContainer.astro";
+import SectionHeader from "../../../components/foundation/SectionHeader.astro";
+import StatusLabel from "../../../components/foundation/StatusLabel.astro";
+import TextLink from "../../../components/foundation/TextLink.astro";
+import VisuallyHidden from "../../../components/foundation/VisuallyHidden.astro";
+import CommonMistake from "../../../components/learning/CommonMistake.astro";
+import DefinitionBlock from "../../../components/learning/DefinitionBlock.astro";
+import ExamTip from "../../../components/learning/ExamTip.astro";
+import FormulaBlock from "../../../components/learning/FormulaBlock.astro";
+import LearningObjectives from "../../../components/learning/LearningObjectives.astro";
+import NextStep from "../../../components/learning/NextStep.astro";
+import PracticePrompt from "../../../components/learning/PracticePrompt.astro";
+import SolutionDisclosure from "../../../components/learning/SolutionDisclosure.astro";
+import SourceReference from "../../../components/learning/SourceReference.astro";
+import WorkedExample from "../../../components/learning/WorkedExample.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+const contents = [
+  ["foundation", "Foundation components"],
+  ["states", "States"],
+  ["learning", "Learning components"],
+  ["long-content", "Long content"],
+] as const;
+---
+
+<BaseLayout
+  title="Development component showcase | Study"
+  description="Development-only showcase for foundational Study components."
+  robots="noindex, nofollow"
+>
+  <ContentContainer class="stack">
+    <Breadcrumbs
+      items={[
+        { label: "Startseite", href: "/Study/" },
+        { label: "Development component showcase" },
+      ]}
+    />
+
+    <PageHeader
+      eyebrow="Development component showcase"
+      title="Study component showcase"
+      summary="Neutral fixture states for foundational and learning components."
+    >
+      <MetadataList
+        slot="metadata"
+        items={[
+          { term: "Scope", value: "Development-only visual regression aid" },
+          {
+            term: "Content",
+            value: "Neutral fixture content, no academic claims",
+          },
+        ]}
+      />
+      <Button slot="actions" href="#foundation">Foundation</Button>
+      <Button slot="actions" href="#learning" variant="secondary"
+        >Learning</Button
+      >
+    </PageHeader>
+
+    <nav aria-label="Showcase contents">
+      <h2>Contents</h2>
+      <ul>
+        {
+          contents.map(([id, label]) => (
+            <li>
+              <a href={`#${id}`}>{label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <section
+      id="foundation"
+      class="showcase-section"
+      aria-labelledby="foundation-title"
+    >
+      <SectionHeader
+        id="foundation-title"
+        title="Foundation components"
+        summary="Shared interface pieces for calm, structured learning pages."
+      />
+      <div class="showcase-grid">
+        <Card title="Button" metadata="Actions and navigation">
+          <div class="cluster">
+            <Button href="/Study/dev/components/">Primary link</Button>
+            <Button href="#states" variant="secondary">Secondary link</Button>
+            <Button variant="quiet">Quiet action</Button>
+            <Button variant="danger">Danger action</Button>
+          </div>
+        </Card>
+        <Card title="TextLink" metadata="Native link pattern">
+          <p>
+            This paragraph uses a <TextLink href="#learning"
+              >clear text link</TextLink
+            >
+            with a visible label and ordinary browser behavior.
+          </p>
+        </Card>
+        <Card
+          title="Badge and StatusLabel"
+          metadata="Category and status are separate"
+        >
+          <div class="cluster">
+            <Badge label="Lernen" />
+            <Badge label="Übung" />
+            <Badge label="Quelle" />
+            <StatusLabel label="Veröffentlicht" tone="success" />
+            <StatusLabel label="In Prüfung" tone="warning" />
+            <StatusLabel label="Geplant" tone="info" />
+            <StatusLabel label="Archiviert" tone="note" />
+          </div>
+        </Card>
+        <Card title="ProgressBar" metadata="Neutral completion language">
+          <ProgressBar
+            label="Abschnittsstatus"
+            value={3}
+            max={8}
+            description="Beschreibt Fortschritt durch bearbeitete Abschnitte, nicht durch Seitenaufrufe."
+          />
+        </Card>
+        <Card title="MetadataList" metadata="Compact semantic metadata">
+          <MetadataList
+            items={[
+              { term: "Status", value: "In Prüfung" },
+              { term: "Quelle", value: "Fixture source" },
+              { term: "ID", value: "topic-alpha" },
+            ]}
+          />
+        </Card>
+        <Card
+          title="Clickable card"
+          href="#learning"
+          metadata="One primary link"
+        >
+          <p>
+            A navigation card uses one clear link and does not nest controls.
+          </p>
+        </Card>
+      </div>
+    </section>
+
+    <section
+      id="states"
+      class="showcase-section"
+      aria-labelledby="states-title"
+    >
+      <SectionHeader
+        id="states-title"
+        title="States"
+        summary="Hover-independent, empty, warning, danger, and disabled-button examples."
+      />
+      <div class="showcase-grid">
+        <Callout title="Information" variant="information">
+          <p>
+            Static navigation and reading remain available without JavaScript.
+          </p>
+        </Callout>
+        <Callout title="Warning" variant="warning">
+          <p>Fixture material is not source-checked academic content.</p>
+        </Callout>
+        <Callout title="Danger" variant="danger">
+          <p>
+            Destructive actions require explicit button controls and visible
+            text.
+          </p>
+        </Callout>
+        <EmptyState
+          title="No review items due"
+          text="The learner can continue with the next available learning action."
+        >
+          <Button slot="action" href="#learning">Continue with fixture</Button>
+          <Button slot="secondary" href="#foundation" variant="secondary"
+            >Review components</Button
+          >
+        </EmptyState>
+        <Card title="Disabled button" metadata="Buttons only, never links">
+          <Button disabled>Unavailable action</Button>
+        </Card>
+        <Card title="VisuallyHidden" metadata="Accessible supplemental text">
+          <p>
+            Visible label
+            <VisuallyHidden
+              >Additional screen-reader-only context.</VisuallyHidden
+            >
+          </p>
+        </Card>
+      </div>
+    </section>
+
+    <section
+      id="learning"
+      class="showcase-section"
+      aria-labelledby="learning-title"
+    >
+      <SectionHeader
+        id="learning-title"
+        title="Learning components"
+        summary="Semantic learning blocks using neutral, non-academic fixture content."
+      />
+      <ReadingContainer class="stack">
+        <LearningObjectives
+          objectives={[
+            {
+              id: "objective-alpha-01",
+              text: "You can identify the next neutral practice step.",
+            },
+            {
+              id: "objective-alpha-02",
+              text: "You can distinguish a fixture source label from checked content.",
+            },
+          ]}
+        />
+        <DefinitionBlock
+          term="Begriff-Alpha"
+          definition="A neutral placeholder term used only to test component structure."
+          explanation="The plain explanation keeps the distinction between structure and academic content visible."
+          source="Fixture source, unverified"
+        />
+        <FormulaBlock
+          name="Formel-Alpha"
+          expression="a + b = c"
+          purpose="Shows formula layout with defined variables and no mathematical claim."
+          variables={[
+            { symbol: "a", meaning: "Fixture input one" },
+            { symbol: "b", meaning: "Fixture input two" },
+            { symbol: "c", meaning: "Fixture result" },
+          ]}
+          assumptions={["All values are neutral fixture values."]}
+          source="Original platform fixture"
+        />
+        <WorkedExample
+          title="Beispiel-Alpha"
+          task="Combine two neutral fixture values."
+          given={["a = 1", "b = 2"]}
+          method="Use the displayed fixture relationship."
+          steps={[
+            "Insert both fixture values.",
+            "Add the values.",
+            "State the neutral result.",
+          ]}
+          result="c = 3"
+          interpretation="The result demonstrates component structure only."
+        />
+        <CommonMistake
+          mistake="Treating fixture labels as real academic terminology."
+          correction="Use fixtures only for interface review and replace them before publication."
+        />
+        <ExamTip
+          cue="A neutral prompt asks for transfer without naming a real exam."
+          guidance="Explain the structure first, then choose the next practice action."
+        />
+        <PracticePrompt
+          label="Guided practice fixture"
+          prompt="Name the next step after understanding a neutral concept."
+          difficulty="introductory"
+          time="3 minutes"
+          hint="Use the learning loop order."
+        />
+        <SolutionDisclosure>
+          <p>The next step after understanding is guided practice.</p>
+        </SolutionDisclosure>
+        <SourceReference
+          title="Fixture Source Alpha"
+          type="original-platform-material"
+          locator="fixture-section"
+          verification="unverified"
+          semester="not applicable"
+        />
+        <NextStep
+          action="Continue to guided practice"
+          href="#states"
+          explanation="Every complete learning surface must end by naming a useful next action."
+          alternativeHref="#foundation"
+          alternativeLabel="Review components"
+        />
+      </ReadingContainer>
+    </section>
+
+    <section
+      id="long-content"
+      class="showcase-section"
+      aria-labelledby="long-content-title"
+    >
+      <SectionHeader
+        id="long-content-title"
+        title="Long content"
+        summary="Overflow checks for long words, links, and expressions at narrow widths."
+      />
+      <Card
+        title="Long URL and expression"
+        metadata="Wraps without horizontal page overflow"
+      >
+        <p>
+          https://example.invalid/neutral-fixture-path-with-a-very-long-segment-that-must-wrap-on-small-viewports
+        </p>
+        <div class="formula-expression">
+          alpha_beta_gamma_delta_epsilon + very_long_fixture_variable_name =
+          neutral_result
+        </div>
+      </Card>
+    </section>
+  </ContentContainer>
+</BaseLayout>

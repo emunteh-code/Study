@@ -1,0 +1,20 @@
+---
+interface Props {
+  term: string;
+  definition: string;
+  explanation?: string;
+  source?: string;
+}
+
+const { term, definition, explanation, source } = Astro.props;
+---
+
+<section class="learning-block" aria-labelledby={`${term}-definition`}>
+  <h2 id={`${term}-definition`}>Definition</h2>
+  <dl>
+    <dt>{term}</dt>
+    <dd>{definition}</dd>
+  </dl>
+  {explanation && <p>{explanation}</p>}
+  {source && <p class="card__meta">Quelle: {source}</p>}
+</section>

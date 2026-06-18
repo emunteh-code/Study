@@ -1,0 +1,37 @@
+---
+interface Props {
+  title: string;
+  href?: string;
+  padding?: "standard" | "compact";
+  metadata?: string;
+  current?: boolean;
+}
+
+const {
+  title,
+  href,
+  padding = "standard",
+  metadata,
+  current = false,
+} = Astro.props;
+const classes = [
+  "card",
+  href ? "card--clickable" : "",
+  padding === "compact" ? "card--compact" : "",
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<article class={classes} aria-current={current ? "page" : undefined}>
+  <header>
+    <h3 class="card__title">
+      {href ? <a href={href}>{title}</a> : title}
+    </h3>
+    {metadata && <p class="card__meta">{metadata}</p>}
+  </header>
+  <div>
+    <slot />
+  </div>
+  <slot name="footer" />
+</article>

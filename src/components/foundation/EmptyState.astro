@@ -1,0 +1,20 @@
+---
+interface Props {
+  title: string;
+  text: string;
+}
+
+const { title, text } = Astro.props;
+---
+
+<section
+  class="empty-state"
+  aria-labelledby={`${title.replaceAll(" ", "-")}-empty`}
+>
+  <h3 id={`${title.replaceAll(" ", "-")}-empty`}>{title}</h3>
+  <p>{text}</p>
+  <div class="cluster">
+    <slot name="action" />
+    <slot name="secondary" />
+  </div>
+</section>

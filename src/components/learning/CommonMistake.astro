@@ -1,0 +1,15 @@
+---
+interface Props {
+  title?: string;
+  mistake: string;
+  correction: string;
+}
+
+const { title = "Häufiger Fehler", mistake, correction } = Astro.props;
+---
+
+<section class="callout callout--warning" aria-labelledby={`${title}-mistake`}>
+  <h2 id={`${title}-mistake`}>{title}</h2>
+  <p>{mistake}</p>
+  <p><strong>Korrektur:</strong> {correction}</p>
+</section>

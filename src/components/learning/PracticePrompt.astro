@@ -1,0 +1,23 @@
+---
+interface Props {
+  label: string;
+  prompt: string;
+  difficulty: string;
+  time: string;
+  hint?: string;
+}
+
+const { label, prompt, difficulty, time, hint } = Astro.props;
+---
+
+<section class="learning-block" aria-labelledby={`${label}-practice`}>
+  <h2 id={`${label}-practice`}>{label}</h2>
+  <dl class="metadata-list">
+    <dt>Schwierigkeit</dt>
+    <dd>{difficulty}</dd>
+    <dt>Zeit</dt>
+    <dd>{time}</dd>
+  </dl>
+  <p>{prompt}</p>
+  {hint && <p class="card__meta">Hinweis: {hint}</p>}
+</section>

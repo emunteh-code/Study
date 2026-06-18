@@ -1,0 +1,12 @@
+---
+type Tone = "info" | "success" | "warning" | "danger" | "note";
+
+interface Props {
+  label: "Veröffentlicht" | "In Prüfung" | "Geplant" | "Archiviert" | string;
+  tone?: Tone;
+}
+
+const { label, tone = "info" } = Astro.props;
+---
+
+<span class={`status-label status-label--${tone}`}>{label}</span>

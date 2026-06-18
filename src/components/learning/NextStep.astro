@@ -1,0 +1,27 @@
+---
+interface Props {
+  action: string;
+  explanation: string;
+  href: string;
+  alternativeHref?: string;
+  alternativeLabel?: string;
+}
+
+const { action, explanation, href, alternativeHref, alternativeLabel } =
+  Astro.props;
+---
+
+<section class="learning-block" aria-labelledby="next-step">
+  <h2 id="next-step">Nächster Schritt</h2>
+  <p>{explanation}</p>
+  <div class="cluster">
+    <a class="button button--primary" href={href}>{action}</a>
+    {
+      alternativeHref && alternativeLabel && (
+        <a class="button button--secondary" href={alternativeHref}>
+          {alternativeLabel}
+        </a>
+      )
+    }
+  </div>
+</section>

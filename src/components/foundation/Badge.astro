@@ -1,0 +1,9 @@
+---
+interface Props {
+  label: "Lernen" | "Übung" | "Quelle" | string;
+}
+
+const { label } = Astro.props;
+---
+
+<span class="badge">{label}</span>

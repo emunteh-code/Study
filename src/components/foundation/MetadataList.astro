@@ -1,0 +1,23 @@
+---
+export interface Item {
+  term: string;
+  value: string;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+
+<dl class="metadata-list">
+  {
+    items.map((item) => (
+      <>
+        <dt>{item.term}</dt>
+        <dd>{item.value}</dd>
+      </>
+    ))
+  }
+</dl>

@@ -6,7 +6,7 @@ This is not an official university platform. It must not imply official affiliat
 
 ## Status
 
-The repository currently contains the product constitution, product specification, information architecture, content-schema specification, and a minimum Astro foundation. It does not contain real course content or the final homepage.
+The repository currently contains the product constitution, product specification, information architecture, content-schema specification, design-system foundation, and a minimum Astro foundation. It does not contain real course content or the final homepage.
 
 ## Prerequisites
 
@@ -68,6 +68,8 @@ src/types/            Shared TypeScript types
 tests/unit/           Vitest unit tests
 tests/e2e/            Playwright browser tests
 ```
+
+The development-only component showcase is available at `/dev/components/` when running the site. It is not linked from public navigation and contains neutral fixture content only.
 
 ## Content Integrity
 

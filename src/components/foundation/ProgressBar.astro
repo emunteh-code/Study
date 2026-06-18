@@ -1,0 +1,19 @@
+---
+interface Props {
+  label: string;
+  value: number;
+  max: number;
+  description?: string;
+}
+
+const { label, value, max, description } = Astro.props;
+---
+
+<div class="progress">
+  <label>
+    <strong>{label}</strong>
+    <span>{value} von {max} Abschnitten</span>
+    <progress value={value} max={max}>{value} von {max}</progress>
+  </label>
+  {description && <p>{description}</p>}
+</div>

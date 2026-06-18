@@ -1,0 +1,19 @@
+---
+interface Props {
+  title: string;
+  level?: 2 | 3 | 4;
+  summary?: string;
+  id?: string;
+}
+
+const { title, level = 2, summary, id } = Astro.props;
+const Heading = `h${level}` as const;
+---
+
+<header class="section-header">
+  <Heading id={id}>{title}</Heading>
+  {summary && <p class="section-header__summary">{summary}</p>}
+  <div class="cluster">
+    <slot name="action" />
+  </div>
+</header>

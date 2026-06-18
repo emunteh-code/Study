@@ -1,0 +1,15 @@
+---
+interface Props {
+  title?: string;
+  cue: string;
+  guidance: string;
+}
+
+const { title = "Exam Transfer", cue, guidance } = Astro.props;
+---
+
+<section class="callout callout--note" aria-labelledby={`${title}-tip`}>
+  <h2 id={`${title}-tip`}>{title}</h2>
+  <p><strong>Erkennen:</strong> {cue}</p>
+  <p><strong>Übertragen:</strong> {guidance}</p>
+</section>

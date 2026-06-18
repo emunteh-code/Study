@@ -1,0 +1,11 @@
+---
+interface Props {
+  href: string;
+  class?: string;
+}
+
+const { href, class: className } = Astro.props;
+const classes = ["text-link", className].filter(Boolean).join(" ");
+---
+
+<a class={classes} href={href}><slot /></a>

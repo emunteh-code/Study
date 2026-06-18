@@ -1,0 +1,56 @@
+---
+export interface Variable {
+  symbol: string;
+  meaning: string;
+}
+
+interface Props {
+  name: string;
+  expression: string;
+  purpose: string;
+  variables: Variable[];
+  assumptions?: string[];
+  source?: string;
+}
+
+const {
+  name,
+  expression,
+  purpose,
+  variables,
+  assumptions = [],
+  source,
+} = Astro.props;
+---
+
+<section class="learning-block" aria-labelledby={`${name}-formula`}>
+  <h2 id={`${name}-formula`}>{name}</h2>
+  <p>{purpose}</p>
+  <div class="formula-expression" aria-label={`Formel ${name}`}>
+    {expression}
+  </div>
+  <h3>Variablen</h3>
+  <dl class="metadata-list">
+    {
+      variables.map((variable) => (
+        <>
+          <dt>{variable.symbol}</dt>
+          <dd>{variable.meaning}</dd>
+        </>
+      ))
+    }
+  </dl>
+  {
+    assumptions.length > 0 && (
+      <>
+        <h3>Annahmen</h3>
+        <ul>
+          {assumptions.map((assumption) => (
+            <li>{assumption}</li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+  {source && <p class="card__meta">Quelle: {source}</p>}
+</section>

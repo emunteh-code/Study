@@ -1,0 +1,47 @@
+---
+type Variant = "primary" | "secondary" | "quiet" | "danger";
+type Size = "standard" | "compact";
+
+interface Props {
+  href?: string;
+  variant?: Variant;
+  size?: Size;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
+  class?: string;
+}
+
+const {
+  href,
+  variant = "primary",
+  size = "standard",
+  disabled = false,
+  type = "button",
+  class: className,
+} = Astro.props;
+
+if (href && disabled) {
+  throw new Error("Button cannot render disabled links.");
+}
+
+const classes = [
+  "button",
+  `button--${variant}`,
+  size === "compact" ? "button--compact" : "",
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+{
+  href ? (
+    <a class={classes} href={href}>
+      <slot />
+    </a>
+  ) : (
+    <button class={classes} type={type} disabled={disabled}>
+      <slot />
+    </button>
+  )
+}
