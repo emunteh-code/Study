@@ -1,0 +1,42 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Study",
+  description = "Unabhängige Lernplattform im Aufbau.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+    <header class="site-header">
+      <div class="page-shell">
+        <p class="site-name">Study</p>
+      </div>
+    </header>
+    <main id="main-content" class="page-shell" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="page-shell">
+        <p>
+          Unabhängiges Lernportal im Aufbau. Kein offizielles
+          Universitätsangebot.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
