@@ -60,6 +60,21 @@ No source is eligible for redistribution from this pack.
 
 The review did not use websites and did not copy private source wording into the repository.
 
+## Targeted relation-source search
+
+The targeted review inspected the private reading inventory for a stronger source covering preference relations, strict and weak preference, indifference, completeness, transitivity, and indifference-curve non-intersection. No private reading stronger than the already reviewed sources was found for these basic relation and axiom claims.
+
+| Search target                               | Best private source found                 | Result                        | Audit decision                                                        |
+| ------------------------------------------- | ----------------------------------------- | ----------------------------- | --------------------------------------------------------------------- |
+| formal preference-relation definition       | `mikro1-slides-11` p2                     | course-located only           | keep as course-specific until an approved textbook source is supplied |
+| strict, weak, and indifference notation     | `mikro1-slides-11` p2                     | course-located only           | preserve valid course notation, but do not mark cross-checked         |
+| completeness definition                     | `mikro1-slides-11` p3                     | course-located only           | keep as course-specific                                               |
+| transitivity definition                     | `mikro1-slides-11` p3                     | course-located only           | keep as course-specific                                               |
+| non-intersection of indifference curves     | `mikro1-slides-11` p8                     | course statement only         | exclude from source-backed outline until proof source is supplied     |
+| stronger textbook or scholarly verification | none found in the private reading records | adequate source not available | retain `verification-required` evidence-pack status                   |
+
+This targeted search does not change the previously reviewed utility, graph, example, or exercise records except where relation definitions are dependencies.
+
 ## Source-locator map
 
 | Locator ID            | Source ID           | Locator              | Evidence role                                                       | Scope decision                                            |
@@ -92,28 +107,29 @@ Claim review results used in this pack:
 - `confirmed-with-condition`: reviewed source supports the claim only under a named scope, assumption, or sequencing limit.
 - `course-specific`: the course source supports the claim, but the reviewed authoritative reading does not independently verify it.
 - `notation-difference`: the source review found a notation or presentation difference that must be handled explicitly.
+- `scope-adjustment-required`: the claim may remain in the broader evidence pack but must be excluded from a source-backed outline unless a named source gap is closed.
 - `unsupported`: the available reviewed sources do not support the proposed claim.
 - `blocked`: the claim cannot proceed because the source cannot be inspected or the evidence is unusable.
 
-| Claim ID        | Proposed claim                                                                                                                     | Course locator                       | Review locator                           | Review result              | Condition or difference                                                                                      | Readiness                        |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | ---------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------- |
-| `claim-pref-01` | A preference relation models how a consumer ranks pairs of consumption bundles.                                                    | `locator-pref-02`                    | none located                             | `course-specific`          | needs an authoritative source that starts with basic preference relations                                    | `external-verification-required` |
-| `claim-pref-02` | The bounded source distinguishes strict preference, weak preference, and indifference as separate relations.                       | `locator-pref-02`                    | `locator-review-02`                      | `notation-difference`      | reviewed textbook extract uses utility or preference-function framing, not the same relation-symbol sequence | `external-verification-required` |
-| `claim-pref-03` | Completeness means the model can compare any two relevant bundles in a pairwise ranking.                                           | `locator-pref-03`                    | none located                             | `course-specific`          | basic axiom not covered in reviewed extract                                                                  | `external-verification-required` |
-| `claim-pref-04` | Transitivity states that weak preference rankings remain consistent across linked bundle comparisons.                              | `locator-pref-03`                    | none located                             | `course-specific`          | basic axiom not covered in reviewed extract                                                                  | `external-verification-required` |
-| `claim-pref-05` | The source treats completeness plus transitivity as the rationality condition for the preference model.                            | `locator-pref-03`                    | none located                             | `course-specific`          | course terminology needs independent textbook check                                                          | `external-verification-required` |
-| `claim-pref-06` | A utility representation assigns utility values to bundles so that weak preference is represented by weakly higher utility.        | `locator-pref-04`                    | `locator-review-02`                      | `confirmed-with-condition` | safe as course-aligned bridge; do not present a full representation theorem                                  | `conditional`                    |
-| `claim-pref-07` | Utility is used here as an ordinal ranking device rather than as a meaningful cardinal measurement.                                | `locator-pref-10`                    | `locator-review-04`, `locator-review-02` | `confirmed`                | use as learner-facing warning after notation review                                                          | `cross-checked`                  |
-| `claim-pref-08` | Positive monotone transformations preserve the represented preference order and the indifference-curve family.                     | `locator-pref-10`, `locator-pref-11` | none located                             | `course-specific`          | ordinal utility is supported, but the transformation statement still needs formula review                    | `external-verification-required` |
-| `claim-pref-09` | Non-satiation is introduced as the assumption that more of each good raises utility in the modeled setting.                        | `locator-pref-05`                    | none located                             | `course-specific`          | reviewed extract does not establish the basic more-is-better assumption                                      | `external-verification-required` |
-| `claim-pref-10` | Convex preferences are introduced to justify a preference for mixtures between two equally ranked bundles.                         | `locator-pref-05`, `locator-pref-09` | `locator-review-02`                      | `confirmed-with-condition` | safe only as an assumption or graph-property condition, not as a universal property                          | `conditional`                    |
-| `claim-pref-11` | An indifference curve collects bundles that share the same utility level in the representation.                                    | `locator-pref-06`                    | `locator-review-03`                      | `confirmed`                | source supports fixed-level curve interpretation                                                             | `cross-checked`                  |
-| `claim-pref-12` | Indifference curves can be interpreted as contour lines of a utility surface.                                                      | `locator-pref-06`, `locator-pref-07` | none located                             | `course-specific`          | source figure must be replaced; contour interpretation needs independent verification                        | `external-verification-required` |
-| `claim-pref-13` | In the displayed two-good graph convention, curves farther from the origin represent higher utility.                               | `locator-pref-07`, `locator-pref-08` | `locator-review-03`                      | `confirmed-with-condition` | safe only in the two-good goods setting with the relevant monotonicity condition                             | `conditional`                    |
-| `claim-pref-14` | With non-satiation in the two-good setting, an indifference curve should not be positively sloped.                                 | `locator-pref-08`                    | `locator-review-01`                      | `confirmed-with-condition` | reviewed extract supports slope/MRS context; exception handling still needs verification                     | `conditional`                    |
-| `claim-pref-15` | Indifference curves should not intersect under the stated preference-order assumptions.                                            | `locator-pref-08`                    | none located                             | `course-specific`          | proof or authoritative explanation not found in reviewed reading                                             | `external-verification-required` |
-| `claim-pref-16` | Convexity of indifference curves is conditional on convex preferences.                                                             | `locator-pref-08`, `locator-pref-09` | `locator-review-02`                      | `confirmed-with-condition` | safe only as a conditional property                                                                          | `conditional`                    |
-| `claim-pref-17` | Marginal rate of substitution follows after the basic indifference-curve concept and should be treated as the next topic boundary. | `locator-pref-12`                    | `locator-review-01`                      | `confirmed`                | keep as dependency boundary; do not draft MRS here                                                           | `cross-checked`                  |
+| Claim ID        | Proposed claim                                                                                                                     | Course locator                       | Review locator                           | Review result               | Condition or difference                                                                                             | Readiness                        |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | ---------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `claim-pref-01` | A preference relation models how a consumer ranks pairs of consumption bundles.                                                    | `locator-pref-02`                    | none located                             | `course-specific`           | targeted search found no stronger private source for the basic relation definition                                  | `external-verification-required` |
+| `claim-pref-02` | The bounded source distinguishes strict preference, weak preference, and indifference as separate relations.                       | `locator-pref-02`                    | none located                             | `course-specific`           | course notation was visually resolved; no authoritative private reading matched the relation-symbol sequence        | `external-verification-required` |
+| `claim-pref-03` | Completeness means the model can compare any two relevant bundles in a pairwise ranking.                                           | `locator-pref-03`                    | none located                             | `course-specific`           | targeted search found no stronger private source for the axiom                                                      | `external-verification-required` |
+| `claim-pref-04` | Transitivity states that weak preference rankings remain consistent across linked bundle comparisons.                              | `locator-pref-03`                    | none located                             | `course-specific`           | targeted search found no stronger private source for the axiom                                                      | `external-verification-required` |
+| `claim-pref-05` | The source treats completeness plus transitivity as the rationality condition for the preference model.                            | `locator-pref-03`                    | none located                             | `course-specific`           | course terminology remains valid course alignment but needs authoritative verification                              | `external-verification-required` |
+| `claim-pref-06` | A utility representation assigns utility values to bundles so that weak preference is represented by weakly higher utility.        | `locator-pref-04`                    | `locator-review-02`                      | `confirmed-with-condition`  | safe as course-aligned bridge; do not present a full representation theorem                                         | `conditional`                    |
+| `claim-pref-07` | Utility is used here as an ordinal ranking device rather than as a meaningful cardinal measurement.                                | `locator-pref-10`                    | `locator-review-04`, `locator-review-02` | `confirmed`                 | use as learner-facing warning after notation review                                                                 | `cross-checked`                  |
+| `claim-pref-08` | Positive monotone transformations preserve the represented preference order and the indifference-curve family.                     | `locator-pref-10`, `locator-pref-11` | none located                             | `course-specific`           | ordinal utility is supported, but the transformation statement still needs formula review                           | `external-verification-required` |
+| `claim-pref-09` | Non-satiation is introduced as the assumption that more of each good raises utility in the modeled setting.                        | `locator-pref-05`                    | none located                             | `course-specific`           | reviewed extract does not establish the basic more-is-better assumption                                             | `external-verification-required` |
+| `claim-pref-10` | Convex preferences are introduced to justify a preference for mixtures between two equally ranked bundles.                         | `locator-pref-05`, `locator-pref-09` | `locator-review-02`                      | `confirmed-with-condition`  | safe only as an assumption or graph-property condition, not as a universal property                                 | `conditional`                    |
+| `claim-pref-11` | An indifference curve collects bundles that share the same utility level in the representation.                                    | `locator-pref-06`                    | `locator-review-03`                      | `confirmed`                 | source supports fixed-level curve interpretation                                                                    | `cross-checked`                  |
+| `claim-pref-12` | Indifference curves can be interpreted as contour lines of a utility surface.                                                      | `locator-pref-06`, `locator-pref-07` | none located                             | `course-specific`           | source figure must be replaced; contour interpretation needs independent verification                               | `external-verification-required` |
+| `claim-pref-13` | In the displayed two-good graph convention, curves farther from the origin represent higher utility.                               | `locator-pref-07`, `locator-pref-08` | `locator-review-03`                      | `confirmed-with-condition`  | safe only in the two-good goods setting with the relevant monotonicity condition                                    | `conditional`                    |
+| `claim-pref-14` | With non-satiation in the two-good setting, an indifference curve should not be positively sloped.                                 | `locator-pref-08`                    | `locator-review-01`                      | `confirmed-with-condition`  | reviewed extract supports slope/MRS context; exception handling still needs verification                            | `conditional`                    |
+| `claim-pref-15` | Indifference curves should not intersect under the stated preference-order assumptions.                                            | `locator-pref-08`                    | none located                             | `scope-adjustment-required` | course source states the property but does not provide a proof; exclude unless an approved proof source is supplied | `external-verification-required` |
+| `claim-pref-16` | Convexity of indifference curves is conditional on convex preferences.                                                             | `locator-pref-08`, `locator-pref-09` | `locator-review-02`                      | `confirmed-with-condition`  | safe only as a conditional property                                                                                 | `conditional`                    |
+| `claim-pref-17` | Marginal rate of substitution follows after the basic indifference-curve concept and should be treated as the next topic boundary. | `locator-pref-12`                    | `locator-review-01`                      | `confirmed`                 | keep as dependency boundary; do not draft MRS here                                                                  | `cross-checked`                  |
 
 Review totals:
 
@@ -121,7 +137,8 @@ Review totals:
 - Claims confirmed: 3
 - Claims confirmed with conditions: 5
 - Course-specific claims still requiring verification: 8
-- Notation differences found: 1
+- Notation differences found: 0
+- Scope adjustments required: 1
 - Unsupported claims: 0
 - Blocked claims: 0
 
@@ -140,20 +157,36 @@ Review totals:
 | `concept-pref-09` | completeness                      | located              | not independently verified        | keep as required axiom; do not draft until source gap is closed               | `external-verification-required` |
 | `concept-pref-10` | transitivity                      | located              | not independently verified        | keep as required axiom; do not draft until source gap is closed               | `external-verification-required` |
 
-Definitions resolved for source-backed outline: 2 of 10 concepts. One optional concept is omitted from the first scope. The unresolved concepts are foundational enough to block a source-backed outline.
+Definitions resolved for source-backed outline: 2 of 10 concepts. Relation definitions located in the course source: 5 of 5 targeted relation concepts. Relation definitions independently verified by a stronger source: 0 of 5 targeted relation concepts. One optional concept is omitted from the first scope. The unresolved concepts are foundational enough to block a source-backed outline.
+
+## Targeted relation-definition review
+
+| Review ID            | Claim or concept ID                 | Course locator    | Authoritative-source locator | Logical structure recorded in course source                                                                        | Notation     | Dependency                                       | Agreement status      | Final recommended interpretation                                                                 | Unresolved issue                                                               |
+| -------------------- | ----------------------------------- | ----------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------ | ------------------------------------------------ | --------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| `relation-review-01` | `claim-pref-01`, `concept-pref-02`  | `locator-pref-02` | none located                 | relation over consumption bundles or alternatives; course uses pairwise bundle ordering                            | `≿`          | primitive relation in course source              | course-located only   | use as course-aligned weak preference relation after authoritative verification                  | no stronger private source verifies domain and primitive/derived treatment     |
+| `relation-review-02` | `claim-pref-02`, `concept-pref-03`  | `locator-pref-02` | none located                 | strict preference is named separately in the course source                                                         | `≻`          | may later be derived from weak preference        | course-located only   | preserve course symbol; decide primitive versus derived status after source supply               | no stronger private source verifies strict-preference derivation               |
+| `relation-review-03` | `claim-pref-02`, `concept-pref-04`  | `locator-pref-02` | none located                 | weak preference is the displayed preference relation used in later axiom notation                                  | `≿`          | parent relation for axioms                       | course-located only   | preserve course symbol as future default if verified                                             | no stronger private source verifies exact logical definition                   |
+| `relation-review-04` | `claim-pref-02`, `concept-pref-05`  | `locator-pref-02` | none located                 | indifference is named as separate relation in course notation                                                      | `~`          | may later be derived from weak preference        | course-located only   | preserve course symbol; derive from weak preference only after approved source                   | no stronger private source verifies derivation from weak preference            |
+| `relation-review-05` | `claim-pref-03`, `concept-pref-09`  | `locator-pref-03` | none located                 | for two bundles, at least one of the strict or indifferent comparison cases must be possible in the course framing | `≻`, `~`     | completeness assumption                          | course-located only   | record as course-specific completeness statement                                                 | exact formal weak-preference statement and reflexivity relationship unresolved |
+| `relation-review-06` | `claim-pref-04`, `concept-pref-10`  | `locator-pref-03` | none located                 | for arbitrary bundles, weak-preference chains imply weak preference between first and third bundles                | `≿`          | transitivity assumption                          | course-located only   | record as weak-preference transitivity; do not collapse with strict or indifference transitivity | strict-preference and indifference transitivity not separately verified        |
+| `relation-review-07` | `claim-pref-15`, `property-pref-04` | `locator-pref-08` | none located                 | course source states non-intersection of indifference curves without proof                                         | curve labels | depends on relation definitions and transitivity | course statement only | exclude from source-backed outline unless proof source is supplied                               | proof conditions remain unverified                                             |
 
 ## Notation inventory
 
-| Notation item                  | Course source              | Reviewed source                          | Difference found                       | Decision                                                                |
-| ------------------------------ | -------------------------- | ---------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------- |
-| strict preference relation     | `locator-pref-02`          | not matched directly                     | course uses relation notation          | verify with another textbook source before drafting                     |
-| weak preference relation       | `locator-pref-02`-`03`     | not matched directly                     | course uses relation notation          | verify with another textbook source before drafting                     |
-| indifference relation          | `locator-pref-02`          | indirectly through curves                | relation symbol not matched directly   | verify with another textbook source before drafting                     |
-| utility or preference function | `locator-pref-04`, p10-p11 | `locator-review-02`, `locator-review-03` | reviewed extract uses function framing | safe only for ordinal bridge and curve context                          |
-| utility level labels           | `locator-pref-06`-`07`     | `locator-review-03`                      | no material conflict                   | may be used in a future graph spec after source-backed outline is ready |
-| MRS notation                   | `locator-pref-12`          | `locator-review-01`                      | outside topic boundary                 | record only as next-step dependency                                     |
+| Notation item                  | Course source              | Course symbol   | Unicode rendering | Later LaTeX rendering | Reviewed source                          | Equivalence and ambiguity decision                                                         | Readiness                        |
+| ------------------------------ | -------------------------- | --------------- | ----------------- | --------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------- |
+| strict preference relation     | `locator-pref-02`          | `≻`             | unambiguous       | `\succ`               | not matched directly                     | valid course notation; do not replace without reason                                       | `external-verification-required` |
+| weak preference relation       | `locator-pref-02`-`03`     | `≿`             | unambiguous       | `\succeq`             | not matched directly                     | valid course notation and parent relation for course axiom notation                        | `external-verification-required` |
+| indifference relation          | `locator-pref-02`          | `~`             | potentially broad | `\sim`                | indirectly through curves                | valid if explicitly defined as indifference; avoid using bare tilde without definition     | `external-verification-required` |
+| alternatives or bundles        | `locator-pref-02`-`03`     | `a`, `b`, `c`   | unambiguous       | `a`, `b`, `c`         | not matched directly                     | use as generic bundle labels only after domain statement is verified                       | `external-verification-required` |
+| ordered vector notation        | `locator-pref-04`          | `(x_1,...,x_n)` | unambiguous       | `(x_1,\ldots,x_n)`    | `locator-review-02`                      | safe only for utility-function bridge; not needed for relation-definition outline yet      | `conditional`                    |
+| utility or preference function | `locator-pref-04`, p10-p11 | `u`, `v`, `U`   | unambiguous       | source-specific       | `locator-review-02`, `locator-review-03` | reviewed extract uses function framing; do not use to replace unresolved relation notation | `conditional`                    |
+| utility level labels           | `locator-pref-06`-`07`     | curve labels    | unambiguous       | source-specific       | `locator-review-03`                      | safe only after relation-source gap is closed                                              | `conditional`                    |
+| MRS notation                   | `locator-pref-12`          | source-specific | unassessed        | source-specific       | `locator-review-01`                      | outside topic boundary                                                                     | `located`                        |
 
-Notation differences resolved: 0. Notation differences documented: 1. The difference is presentational rather than a substantive contradiction, but it still blocks learner-facing prose until the relation notation is verified.
+Notation policy: preserve the academically valid course notation `≻`, `≿`, and `~` for future course-aligned content if an approved source confirms the logical definitions. The notation is visually resolved but not independently verified for a source-backed outline.
+
+Notation records visually resolved: 4 targeted records. Notation records independently verified: 0 targeted records.
 
 ## Assumption inventory
 
@@ -168,17 +201,64 @@ Notation differences resolved: 0. Notation differences documented: 1. The differ
 
 Assumptions resolved for a source-backed first outline: 0 core assumptions. Conditional graph assumptions resolved: 2. Omitted assumptions: 1.
 
+## Completeness review
+
+| Review ID                | Claim ID        | Course locator    | Authoritative-source locator | Domain recorded              | Logical statement status                                                                                                                  | Relation to indifference                                                | Reflexivity status    | Final readiness                  |
+| ------------------------ | --------------- | ----------------- | ---------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------- | -------------------------------- |
+| `completeness-review-01` | `claim-pref-03` | `locator-pref-03` | none located                 | pairwise consumption bundles | course source states pairwise ranking and excludes inability to decide; formal weak-preference disjunction still needs an approved source | both strict directions and indifference are course-listed possibilities | not stated separately | `external-verification-required` |
+
+Completeness status: course-located, not independently verified. Do not draft informal learner wording that changes the logical meaning.
+
+## Transitivity review
+
+| Review ID                | Claim ID        | Course locator    | Authoritative-source locator | Relation reviewed   | Logical statement status                                                                                     | Strict or indifference transitivity status                                   | Final readiness                  |
+| ------------------------ | --------------- | ----------------- | ---------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- | -------------------------------- |
+| `transitivity-review-01` | `claim-pref-04` | `locator-pref-03` | none located                 | weak preference `≿` | course source states a weak-preference chain from first to second and second to third implies first to third | strict-preference and indifference transitivity are not separately discussed | `external-verification-required` |
+
+Transitivity status: weak-preference transitivity is course-located, not independently verified. Do not collapse weak-preference, strict-preference, and indifference transitivity without a source.
+
+## Logical dependency map
+
+| Dependency ID        | Parent claim or concept                        | Dependent claim or concept          | Logical necessity                                                                                         | Source support                             | Confidence | Belongs in pilot outline        |
+| -------------------- | ---------------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------ | ---------- | ------------------------------- |
+| `dependency-pref-01` | weak preference relation `concept-pref-04`     | strict preference `concept-pref-03` | possible derived relation in standard theory, but course treats symbols separately                        | course notation only; no derivation source | medium     | no, until verified              |
+| `dependency-pref-02` | weak preference relation `concept-pref-04`     | indifference `concept-pref-05`      | possible derived relation in standard theory, but course treats symbols separately                        | course notation only; no derivation source | medium     | no, until verified              |
+| `dependency-pref-03` | preference relation `claim-pref-01`            | completeness `claim-pref-03`        | completeness constrains the relation's domain of comparability                                            | course-located                             | high       | yes, after verification         |
+| `dependency-pref-04` | weak preference `concept-pref-04`              | transitivity `claim-pref-04`        | transitivity is stated for weak-preference chains                                                         | course-located                             | high       | yes, after verification         |
+| `dependency-pref-05` | completeness and transitivity                  | rationality `claim-pref-05`         | course source treats the joint assumptions as rationality                                                 | course-located                             | medium     | yes, after verification         |
+| `dependency-pref-06` | utility representation `claim-pref-06`         | indifference curve `claim-pref-11`  | equal utility level defines curve membership                                                              | course-located and partly reviewed         | high       | yes, after relation gap         |
+| `dependency-pref-07` | transitivity plus distinct indifference levels | non-intersection `claim-pref-15`    | proof requires converting a hypothetical intersection into inconsistent indifference/preference relations | course statement only                      | medium     | no, excluded until proof source |
+| `dependency-pref-08` | ordinal ranking `claim-pref-07`                | indifference-curve comparison       | ranking interpretation prevents cardinal reading                                                          | previously reviewed                        | high       | yes, after relation gap         |
+
+Dependency records created: 8. Graphical intuition is not treated as proof.
+
+## Non-intersection review
+
+| Review ID                   | Claim ID        | Course locator    | Authoritative-source locator | Course support level    | Required assumptions or definitions                                                     | Review decision                                                                |
+| --------------------------- | --------------- | ----------------- | ---------------------------- | ----------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `nonintersection-review-01` | `claim-pref-15` | `locator-pref-08` | none located                 | statement without proof | defined indifference relation, distinct indifference curves or levels, and transitivity | exclude from source-backed outline unless an approved proof source is supplied |
+
+Proof skeleton, not learner prose:
+
+1. Assumptions: indifference relation is defined; curves represent distinct indifference classes or utility levels; transitivity applies to the relevant preference relation.
+2. Hypothetical intersection: two distinct indifference curves share one bundle.
+3. Implied indifference relations: the shared bundle is indifferent to representative bundles on both curves.
+4. Transitivity implication: the representative bundles would be indifferent to each other.
+5. Contradiction: distinct curves or levels cannot both be distinct and mutually indifferent.
+
+Non-intersection status: course statement located, proof not verified. The statement must not be presented as universal or proof-backed until an approved source supplies the logical argument.
+
 ## Conditional property review
 
-| Property ID        | Property                                                   | Review result              | Condition that must appear in future content                     | Source gap remaining                              |
-| ------------------ | ---------------------------------------------------------- | -------------------------- | ---------------------------------------------------------------- | ------------------------------------------------- |
-| `property-pref-01` | an indifference curve represents equal utility level       | `confirmed`                | valid ordinal utility representation                             | relation-notation bridge still needs verification |
-| `property-pref-02` | higher curves represent preferred bundles in the graph     | `confirmed-with-condition` | two-good goods setting and more-is-better condition              | non-satiation source gap remains                  |
-| `property-pref-03` | downward or non-positive slope under non-satiation         | `confirmed-with-condition` | goods setting; exception cases must not be overgeneralized       | exception handling remains                        |
-| `property-pref-04` | curves do not intersect under preference-order assumptions | `course-specific`          | completeness and transitivity proof must be verified             | authoritative proof still required                |
-| `property-pref-05` | convexity toward the origin                                | `confirmed-with-condition` | convex preferences only                                          | non-convex counterexample omitted                 |
-| `property-pref-06` | contour-line interpretation of a utility surface           | `course-specific`          | independently redrawn graph and verified contour-language source | visual source replacement remains                 |
-| `property-pref-07` | thinness or related curve-set property                     | `unsupported`              | none                                                             | omit from first topic                             |
+| Property ID        | Property                                                   | Review result               | Condition that must appear in future content                       | Source gap remaining                              |
+| ------------------ | ---------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------ | ------------------------------------------------- |
+| `property-pref-01` | an indifference curve represents equal utility level       | `confirmed`                 | valid ordinal utility representation                               | relation-notation bridge still needs verification |
+| `property-pref-02` | higher curves represent preferred bundles in the graph     | `confirmed-with-condition`  | two-good goods setting and more-is-better condition                | non-satiation source gap remains                  |
+| `property-pref-03` | downward or non-positive slope under non-satiation         | `confirmed-with-condition`  | goods setting; exception cases must not be overgeneralized         | exception handling remains                        |
+| `property-pref-04` | curves do not intersect under preference-order assumptions | `scope-adjustment-required` | exclude from source-backed outline unless proof source is supplied | authoritative proof still required                |
+| `property-pref-05` | convexity toward the origin                                | `confirmed-with-condition`  | convex preferences only                                            | non-convex counterexample omitted                 |
+| `property-pref-06` | contour-line interpretation of a utility surface           | `course-specific`           | independently redrawn graph and verified contour-language source   | visual source replacement remains                 |
+| `property-pref-07` | thinness or related curve-set property                     | `unsupported`               | none                                                               | omit from first topic                             |
 
 Conditional properties resolved: 3 conditionally plus 1 directly. Conditional properties still requiring external verification: 2. Unsupported properties retained for omission only: 1.
 
@@ -235,29 +315,30 @@ No exercise prompt, answer, or solution is created in this task.
 
 ## Conflicts
 
-| Conflict ID        | Source IDs                                    | Locators                               | Nature of conflict or gap                                                                       | Status   | Required resolution                                                | Publication blocked                    |
-| ------------------ | --------------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------ | -------------------------------------- |
-| `conflict-pref-01` | `mikro1-slides-11`, `mikro1-reading-02`       | `locator-pref-02`, `locator-review-02` | course relation notation is not matched directly in the reviewed textbook extract               | open     | find or approve an authoritative source covering relation notation | yes for outline and prose              |
-| `conflict-pref-02` | `mikro1-slides-11`, `mikro1-reading-02`       | `locator-pref-05`, `locator-review-02` | convexity appears near later utility material but belongs here only as a conditional property   | resolved | keep convexity conditional and do not present it as universal      | no for review; yes for publication     |
-| `conflict-pref-03` | `mikro1-slides-11`, `mikro1-cdf-06`           | `locator-pref-cdf-01`                  | CDF relationship is known from structural audit, not from executed content                      | open     | decide replacement graph strategy without executing or reusing CDF | yes for implementation                 |
-| `conflict-pref-04` | `mikro1-slides-11`                            | `locator-pref-06`, `locator-pref-11`   | cited or source-specific visual/example structures appear in the course source                  | open     | create independent replacement examples and graphs                 | yes for copying; no for private review |
-| `conflict-pref-05` | `mikro1-slides-11`, reviewed private readings | `locator-pref-02`, `locator-pref-03`   | reviewed authoritative source begins after the basic preference-relation definitions and axioms | open     | obtain an authoritative source for basic preferences and axioms    | yes for source-backed outline          |
+| Conflict ID        | Source IDs                                    | Locators                               | Nature of conflict or gap                                                                               | Status   | Required resolution                                                | Publication blocked                    |
+| ------------------ | --------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------ | -------------------------------------- |
+| `conflict-pref-01` | `mikro1-slides-11`, `mikro1-reading-02`       | `locator-pref-02`, `locator-review-02` | course relation notation is visually resolved but not matched directly in the reviewed textbook extract | narrowed | find or approve an authoritative source covering relation notation | yes for source-backed outline          |
+| `conflict-pref-02` | `mikro1-slides-11`, `mikro1-reading-02`       | `locator-pref-05`, `locator-review-02` | convexity appears near later utility material but belongs here only as a conditional property           | resolved | keep convexity conditional and do not present it as universal      | no for review; yes for publication     |
+| `conflict-pref-03` | `mikro1-slides-11`, `mikro1-cdf-06`           | `locator-pref-cdf-01`                  | CDF relationship is known from structural audit, not from executed content                              | open     | decide replacement graph strategy without executing or reusing CDF | yes for implementation                 |
+| `conflict-pref-04` | `mikro1-slides-11`                            | `locator-pref-06`, `locator-pref-11`   | cited or source-specific visual/example structures appear in the course source                          | open     | create independent replacement examples and graphs                 | yes for copying; no for private review |
+| `conflict-pref-05` | `mikro1-slides-11`, reviewed private readings | `locator-pref-02`, `locator-pref-03`   | reviewed authoritative source begins after the basic preference-relation definitions and axioms         | open     | obtain an authoritative source for basic preferences and axioms    | yes for source-backed outline          |
+| `conflict-pref-06` | `mikro1-slides-11`, reviewed private readings | `locator-pref-08`                      | course source states non-intersection without a proof and no reviewed reading supplies one              | open     | obtain an authoritative source or exclude the property             | yes if non-intersection is included    |
 
-Conflicts resolved: 1. Conflicts remaining: 4. No substantive academic contradiction was found; the main issue is incomplete source coverage and notation mismatch.
+Targeted conflicts resolved: 0. Targeted conflicts narrowed: 1. Targeted conflicts remaining: 3. No substantive academic contradiction was found; the main issue is incomplete source coverage.
 
 ## External verification requirements
 
-| Requirement ID   | Claim ID                                          | What must be verified                                                                  | Review result from this task  | Mandatory before outline | Course source remains primary for alignment |
-| ---------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------- | ----------------------------- | ------------------------ | ------------------------------------------- |
-| `verify-pref-01` | `claim-pref-03`, `claim-pref-04`                  | standard definitions and formal notation for completeness and transitivity             | still required                | yes                      | yes                                         |
-| `verify-pref-02` | `claim-pref-06`, `claim-pref-08`                  | utility-representation notation and positive monotone transformation statement         | partly resolved               | yes                      | yes                                         |
-| `verify-pref-03` | `claim-pref-09`, `claim-pref-13`, `claim-pref-14` | conditions under which more-is-better implies higher curves and non-positive slopes    | partly resolved               | yes                      | yes                                         |
-| `verify-pref-04` | `claim-pref-15`                                   | proof or explanation for non-intersection of indifference curves                       | still required                | yes                      | yes                                         |
-| `verify-pref-05` | `claim-pref-16`                                   | convexity of indifference curves under convex preferences and possible exceptions      | partly resolved               | no, if kept conditional  | yes                                         |
-| `verify-pref-06` | `concept-pref-06`                                 | whether an indifference set should be introduced separately from an indifference curve | no longer required if omitted | no                       | yes                                         |
-| `verify-pref-07` | `property-pref-07`                                | thinness or related curve-set property if desired                                      | no longer required if omitted | no                       | yes                                         |
+| Requirement ID   | Claim ID                                                           | What must be verified                                                                                                                  | Review result from this task  | Mandatory before outline | Course source remains primary for alignment |
+| ---------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------------------------ | ------------------------------------------- |
+| `verify-pref-01` | `claim-pref-01`, `claim-pref-02`, `claim-pref-03`, `claim-pref-04` | standard relation definitions and formal notation for weak preference, strict preference, indifference, completeness, and transitivity | still required                | yes                      | yes                                         |
+| `verify-pref-02` | `claim-pref-06`, `claim-pref-08`                                   | utility-representation notation and positive monotone transformation statement                                                         | partly resolved               | yes                      | yes                                         |
+| `verify-pref-03` | `claim-pref-09`, `claim-pref-13`, `claim-pref-14`                  | conditions under which more-is-better implies higher curves and non-positive slopes                                                    | partly resolved               | yes                      | yes                                         |
+| `verify-pref-04` | `claim-pref-15`                                                    | proof or explanation for non-intersection of indifference curves                                                                       | still required if included    | no, if excluded          | yes                                         |
+| `verify-pref-05` | `claim-pref-16`                                                    | convexity of indifference curves under convex preferences and possible exceptions                                                      | partly resolved               | no, if kept conditional  | yes                                         |
+| `verify-pref-06` | `concept-pref-06`                                                  | whether an indifference set should be introduced separately from an indifference curve                                                 | no longer required if omitted | no                       | yes                                         |
+| `verify-pref-07` | `property-pref-07`                                                 | thinness or related curve-set property if desired                                                                                      | no longer required if omitted | no                       | yes                                         |
 
-External verification items fully resolved: 0. External verification items partly resolved: 3. External verification items still required: 2. External verification items no longer required for the first topic: 2. No external web research was performed in this task.
+External verification items fully resolved: 0. External verification items partly resolved: 3. External verification items still required for included scope: 1. External verification items required only if included: 1. External verification items no longer required for the first topic: 2. No external web research was performed in this task.
 
 ## Rights and transformation assessment
 
@@ -279,25 +360,26 @@ No final legal conclusion is made by this pack.
 | `external-verification-required` | course source supports the claim, but source gap or notation gap remains | 9     |
 | `blocked`                        | cannot proceed because evidence is unusable                              | 0     |
 
-The count of `external-verification-required` includes the notation-difference claim. Claim extraction is complete for the bounded evidence pack. Source checking is partial and blocks a source-backed outline.
+The count of `external-verification-required` includes the targeted relation, axiom, and non-intersection claims. Claim extraction is complete for the bounded evidence pack. Source checking is partial and blocks a source-backed outline.
 
 ## Topic-stage readiness
 
-| Stage                          | Readiness           | Reason                                                                                                  |
-| ------------------------------ | ------------------- | ------------------------------------------------------------------------------------------------------- |
-| source review                  | partially complete  | reviewed available private readings; core relation and axiom source gap remains                         |
-| source-backed lesson outlining | not ready           | basic preference-relation definitions, completeness, transitivity, and notation are not verified        |
-| prose drafting                 | not ready           | outline is not source-backed and formula/notation review remains open                                   |
-| graph specification            | conditionally ready | graph purposes and several curve claims are reviewed conditionally, but core assumptions remain open    |
-| original worked-example design | not ready           | source examples are private-reference-only and replacements depend on verified claims                   |
-| original exercise design       | not ready           | exercises need verified definitions, checked solutions, and provenance records                          |
-| exercise review                | not ready           | no exercise prompt, answer, or solution is source-checked                                               |
-| publication                    | not ready           | rights review, source checking, exercise checking, graph verification, and editorial review remain open |
+| Stage                          | Readiness           | Reason                                                                                                          |
+| ------------------------------ | ------------------- | --------------------------------------------------------------------------------------------------------------- |
+| source review                  | partially complete  | targeted private search found no adequate stronger source for relation definitions, axioms, or non-intersection |
+| source-backed lesson outlining | not ready           | basic preference-relation definitions, completeness, transitivity, and notation are course-located only         |
+| prose drafting                 | not ready           | outline is not source-backed and formula/notation review remains open                                           |
+| graph specification            | conditionally ready | graph purposes and several curve claims are reviewed conditionally, but core assumptions remain open            |
+| original worked-example design | not ready           | source examples are private-reference-only and replacements depend on verified claims                           |
+| original exercise design       | not ready           | exercises need verified definitions, checked solutions, and provenance records                                  |
+| exercise review                | not ready           | no exercise prompt, answer, or solution is source-checked                                                       |
+| publication                    | not ready           | rights review, source checking, exercise checking, graph verification, and editorial review remain open         |
 
 ## Drafting blockers
 
 - Core relation notation is not independently verified.
 - Completeness and transitivity are course-specific in this pack and need authoritative verification.
+- Non-intersection is excluded from any source-backed outline until a proof source is supplied.
 - The utility-representation bridge is only conditionally verified and must not become a full representation theorem.
 - Positive monotone transformations require formula workflow before learner-facing use.
 - Non-satiation and higher-curve statements remain conditional and need exception handling.
@@ -309,7 +391,7 @@ The count of `external-verification-required` includes the notation-difference c
 
 ## Recommended next task
 
-Find, approve, or inspect an authoritative microeconomics source that covers basic preference relations, strict and weak preference, indifference, completeness, transitivity, and non-intersection of indifference curves. Then update only this evidence pack's relation-notation, definition, axiom, and conflict records.
+Obtain or approve one specific authoritative microeconomic theory source that covers basic preference relations, strict and weak preference, indifference, completeness, transitivity, and, if desired in the first outline, non-intersection of indifference curves. Then update only this evidence pack's relation-notation, definition, axiom, non-intersection, and conflict records.
 
 Do not create a source-backed outline yet because the evidence pack is not `ready-for-outline`.
 
@@ -359,7 +441,7 @@ No private source path is recorded in this repository audit.
 
 ## Source Classification
 
-`mikro1-slides-11` is the course-source range for preference representation and indifference curves. `mikro1-reading-02` is a reviewed textbook extract that supports utility, indifference-curve, convexity, and MRS-boundary claims but not the basic preference-relation axioms. `mikro1-reading-06` is reviewed only for ordinal utility. `mikro1-cdf-06` is an unsupported legacy visualization or model file that may support later private graph-behaviour checking but cannot be used directly.
+`mikro1-slides-11` is the course-source range for preference representation and indifference curves. The targeted review confirmed that it is also the only private source located for relation notation, completeness, transitivity, and non-intersection. `mikro1-reading-02` is a reviewed textbook extract that supports utility, indifference-curve, convexity, and MRS-boundary claims but not the basic preference-relation axioms. `mikro1-reading-06` is reviewed only for ordinal utility. `mikro1-cdf-06` is an unsupported legacy visualization or model file that may support later private graph-behaviour checking but cannot be used directly.
 
 ## Semester Or Version Evidence
 
@@ -378,10 +460,10 @@ The proposed topic structure remains provisional:
 3. completeness and transitivity
 4. utility as ordinal representation
 5. indifference curves as equal-level curves
-6. conditional properties of indifference curves
+6. conditional properties of indifference curves except non-intersection until proof is verified
 7. next-step boundary to marginal rate of substitution
 
-This structure is not approved for source-backed outlining until the source gaps in items 1 through 3 are closed.
+This structure is not approved for source-backed outlining until the source gaps in items 1 through 3 are closed. Non-intersection is excluded from the source-backed first outline unless an approved proof source is supplied.
 
 ## Exercise And Solution Mapping
 
@@ -397,7 +479,7 @@ Graph evidence is inventoried in `Graph inventory` and `Future graph-behaviour s
 
 ## Source Conflicts
 
-Conflict records are listed in `Conflicts`. One scope conflict was resolved by keeping convexity conditional. Four source-coverage, notation, rights, or implementation conflicts remain open.
+Conflict records are listed in `Conflicts`. One scope conflict was resolved by keeping convexity conditional. One targeted notation conflict was narrowed. Three targeted relation or non-intersection conflicts remain open.
 
 ## Missing Material
 
@@ -415,7 +497,7 @@ All source use remains private-reference-only or unknown. Future public content 
 
 ## Candidate First Topic
 
-The bounded candidate remains `Preferences and indifference-curve basics`. It is not ready for source-backed outlining because foundational definitions and assumptions are not independently verified.
+The bounded candidate remains `Preferences and indifference-curve basics`. The final included pilot scope for a future source-backed outline may include preference relation, weak preference, strict preference, indifference, completeness, transitivity, indifference curves, ordinal utility warning, and the MRS boundary only after an approved source closes the relation and axiom gap. Non-intersection is excluded unless a proof source is supplied.
 
 ## Content Transformation Plan
 
@@ -423,20 +505,21 @@ Transform this pack into learner-facing content only after the relation-source g
 
 ## Verification Requirements
 
-Verification requirements are listed in `External verification requirements`. Requirements for relation notation, completeness, transitivity, and non-intersection must be completed before any lesson outline is created.
+Verification requirements are listed in `External verification requirements`. Requirements for relation notation, completeness, and transitivity must be completed before any lesson outline is created. Non-intersection must either remain excluded or receive proof verification.
 
 ## Open Questions
 
 - Which authoritative source should be used for basic preference relations and axioms?
-- Should the course relation notation or a textbook-standard notation become the platform default?
+- Should the visually resolved course relation notation be confirmed by a textbook source or by an approved course-alignment decision?
 - How should the first topic avoid utility-maximization material while still explaining indifference curves?
-- Which conditional graph properties should be deferred to a later topic?
+- Should non-intersection be omitted from the first outline or verified with an approved proof source?
 
 ## Publication Blockers
 
 - rights review is incomplete
 - source-backed outline status is not achieved
 - core relation and axiom definitions are not independently verified
+- non-intersection proof is not verified and is excluded from outline scope unless resolved
 - no formula is verified
 - graph properties remain conditional
 - CDF material is unsupported for direct use
@@ -444,7 +527,7 @@ Verification requirements are listed in `External verification requirements`. Re
 
 ## Audit Decision
 
-Keep this pack in `verification-required` evidence-pack status. Do not draft, publish, create topic records, create exercises, or implement graphs from this pack yet.
+Keep this pack in `verification-required` evidence-pack status. Do not draft, publish, create a source-backed outline, create topic records, create exercises, or implement graphs from this pack yet.
 
 ## Review History
 
@@ -453,3 +536,4 @@ Keep this pack in `verification-required` evidence-pack status. Do not draft, pu
 | `2026-06-19` | `source-ingestion` | Created sanitized claim evidence pack for preferences and curves.                              | `extracted`             |
 | `2026-06-19` | `source-ingestion` | Recorded validation-compatible audit status and publication blockers.                          | `structurally-mapped`   |
 | `2026-06-19` | `source-ingestion` | Reviewed available private authoritative and assigned readings for selected preference claims. | `verification-required` |
+| `2026-06-19` | `source-ingestion` | Performed targeted relation, axiom, notation, and non-intersection review.                     | `verification-required` |

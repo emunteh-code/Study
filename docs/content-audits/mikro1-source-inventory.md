@@ -32,7 +32,7 @@ This task did not inspect Makroökonomik II material, did not create topic or qu
 - Current state: `structurally-mapped`
 - Previous state: `inventory-created`
 - Next valid state: `rights-reviewed`
-- Blockers: rights review, unresolved relation-source verification for the selected pilot evidence pack, mock-exam provenance review, CDF replacement strategy, formula and graph verification, and exercise-solution verification for any publishable practice
+- Blockers: rights review, unresolved authoritative relation-source verification for the selected pilot evidence pack, mock-exam provenance review, CDF replacement strategy, formula and graph verification, and exercise-solution verification for any publishable practice
 
 The audit is structurally mapped because the lecture sequence, source-locator ranges, provisional topic boundaries, exercise signals, solution signals, formula-heavy ranges, graph-heavy ranges, unsupported CDF categories, first-topic exercise strategy, selected pilot claim pack, and partial source-review result have been mapped. It is not `rights-reviewed`, `source-checked`, `topic-selected`, `ready-for-outline`, or `ready-for-drafting`.
 
@@ -509,14 +509,14 @@ No final published topic is selected. The exercise pass supports a bounded first
 | Expenditure minimization and compensated demand | `mikro1-slides-16` p1-p26                                                               | partial                     | 1 task unit                      | 0                       | 1                      | partial           | high; redraw accessible graphs      | high                        | yes, after prerequisite verification     | `private-reference-only` | partial            | not first                                | later                   |
 | Costs and firm optimization                     | `mikro1-slides-05`, `mikro1-slides-06`, `mikro1-slides-07`                              | partial                     | 0 after false-positive filtering | 0                       | 0                      | partial           | high; redraw accessible graphs      | high                        | yes, after producer-side source checking | `private-reference-only` | partial            | not first                                | later                   |
 
-`Preferences and indifference-curve basics` remains the strongest candidate because its source range is bounded, required source types are accessible, the graph-reconstruction strategy is clear, and the exercise strategy can rely on original questions after claim verification. Source review found support for several utility and indifference-curve claims, but the reviewed authoritative reading does not sufficiently cover basic preference relations, strict and weak preference notation, completeness, transitivity, or non-intersection. It is not ready for a source-backed outline, drafting, public topic records, exercise publication, or official exercise claims.
+`Preferences and indifference-curve basics` remains the strongest candidate because its source range is bounded, required source types are accessible, the graph-reconstruction strategy is clear, and the exercise strategy can rely on original questions after claim verification. Source review found support for several utility and indifference-curve claims, but targeted relation-source review found no stronger private reading that covers basic preference relations, strict and weak preference notation, completeness, transitivity, or non-intersection. It is not ready for a source-backed outline, drafting, public topic records, exercise publication, or official exercise claims.
 
 Selected pilot evidence pack:
 
 - Evidence pack path: `docs/content-audits/mikro1-preferences-claims.md`
 - Evidence pack status: `verification-required`
-- Candidate status: source review partially completed; not ready for source-backed outlining, prose drafting, exercises, graph implementation, or publication
-- Remaining blockers: authoritative verification for basic preference relations and axioms, formula workflow, notation review, rights review, graph replacement strategy, and exercise solution review
+- Candidate status: targeted relation-source review completed with unresolved source gap; not ready for source-backed outlining, prose drafting, exercises, graph implementation, or publication
+- Remaining blockers: approved authoritative verification for basic preference relations and axioms, optional proof verification for non-intersection, formula workflow, notation review, rights review, graph replacement strategy, and exercise solution review
 
 ## Content Transformation Plan
 
@@ -536,7 +536,7 @@ Future drafting must:
 Required before any topic drafting:
 
 - Close the relation-source gap for preference relation, strict preference, weak preference, indifference, completeness, and transitivity.
-- Verify the non-intersection proof or explanation for indifference curves.
+- Either verify the non-intersection proof or explanation for indifference curves, or keep non-intersection outside the first source-backed outline.
 - Verify printed slide numbers where they differ from PDF viewer page numbers.
 - Verify whether a separate exercise or solution source exists outside the inspected archive.
 - Review the mock-exam sources for provenance, final page order, point structure, exact question count, topic coverage, and solution availability.
@@ -544,7 +544,7 @@ Required before any topic drafting:
 - Confirm rights status for any planned quotation, adaptation, or redistribution.
 - Use original platform exercises for early practice unless a later review identifies official or adapted material with acceptable rights and complete checked solutions.
 - Independently derive and second-check every future original exercise solution.
-- Use `docs/content-audits/mikro1-preferences-claims.md` as the starting point for the next bounded relation-source verification task.
+- Use `docs/content-audits/mikro1-preferences-claims.md` as the starting point for the next bounded relation-source verification task with an approved source not present in the current private reading set.
 - Create formula-level, graph-level, exercise-level, and publication review records before publication.
 
 ## Open Questions
@@ -574,7 +574,7 @@ Required before any topic drafting:
 
 Exercise coverage verification is complete at sanitized audit level. The first recommended bounded academic task is claim-level extraction for `Preferences and indifference-curve basics`; this is allowed because the source range is mapped, required source types are accessible, exercise strategy is defined, and no critical source conflict blocks extraction.
 
-Claim extraction and partial source review for `Preferences and indifference-curve basics` are now recorded in `docs/content-audits/mikro1-preferences-claims.md`. The audit remains `structurally-mapped`. Do not draft lessons, create a source-backed outline, create public topic records, publish exercises, imply official status, or mark content `source-checked` or `exercise-checked` from this audit alone.
+Claim extraction, partial source review, and targeted relation-source review for `Preferences and indifference-curve basics` are now recorded in `docs/content-audits/mikro1-preferences-claims.md`. The audit remains `structurally-mapped`. Do not draft lessons, create a source-backed outline, create public topic records, publish exercises, imply official status, or mark content `source-checked` or `exercise-checked` from this audit alone.
 
 ## Review History
 
@@ -585,3 +585,4 @@ Claim extraction and partial source review for `Preferences and indifference-cur
 | `2026-06-19` | `source-ingestion` | Verified exercise coverage, solution availability, and original-exercise strategy.         | `structurally-mapped` |
 | `2026-06-19` | `source-ingestion` | Linked selected preference-claims evidence pack and updated candidate status.              | `structurally-mapped` |
 | `2026-06-19` | `source-ingestion` | Recorded partial source review and relation-source gap for the selected evidence pack.     | `structurally-mapped` |
+| `2026-06-19` | `source-ingestion` | Recorded targeted relation, axiom, notation, and non-intersection review result.           | `structurally-mapped` |
