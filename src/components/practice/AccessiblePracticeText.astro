@@ -1,0 +1,53 @@
+---
+interface Props {
+  text: string;
+}
+
+type Segment =
+  | { type: "text"; value: string }
+  | { type: "notation"; value: string; label: string };
+
+const { text } = Astro.props;
+const notationPattern = /([xyz])\s*(≽|≻|∼)\s*([xyz])/g;
+const notationLabels = {
+  "≽": "is weakly preferred to",
+  "≻": "is strictly preferred to",
+  "∼": "is indifferent to",
+} as const;
+const segments: Segment[] = [];
+let previousIndex = 0;
+
+for (const match of text.matchAll(notationPattern)) {
+  const index = match.index ?? 0;
+
+  if (index > previousIndex) {
+    segments.push({ type: "text", value: text.slice(previousIndex, index) });
+  }
+
+  const [expression, left, symbol, right] = match;
+  const relationLabel = notationLabels[symbol as keyof typeof notationLabels];
+
+  segments.push({
+    type: "notation",
+    value: expression,
+    label: `${left} ${relationLabel} ${right}`,
+  });
+  previousIndex = index + expression.length;
+}
+
+if (previousIndex < text.length) {
+  segments.push({ type: "text", value: text.slice(previousIndex) });
+}
+---
+
+{
+  segments.length > 0
+    ? segments.map((segment) =>
+        segment.type === "notation" ? (
+          <span aria-label={segment.label}>{segment.value}</span>
+        ) : (
+          segment.value
+        ),
+      )
+    : text
+}

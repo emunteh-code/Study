@@ -1,0 +1,155 @@
+---
+import AccessiblePracticeText from "./AccessiblePracticeText.astro";
+import StaticPracticeResponseField from "./StaticPracticeResponseField.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import type { StaticMikro1PreferenceExercise } from "../../lib/mikro1-preferences-practice";
+
+interface Props {
+  exercise: StaticMikro1PreferenceExercise;
+  position: number;
+  total: number;
+}
+
+const { exercise, position, total } = Astro.props;
+const titleId = `${exercise.id}-title`;
+const instructionsId = `${exercise.id}-instructions`;
+const relationData = exercise.relationData;
+const displayedPairs =
+  relationData?.orderedPairs.filter((pair) => pair.display) ?? [];
+const difficultyLabels = {
+  foundational: "Grundlagen",
+  intermediate: "Anwendung",
+  transfer: "Transfer",
+} as const;
+---
+
+<article
+  class="static-practice-exercise"
+  id={exercise.id}
+  aria-labelledby={titleId}
+>
+  {
+    exercise.status === "unavailable" ? (
+      <div class="static-practice-unavailable" role="status">
+        <h2 id={titleId}>{exercise.title}</h2>
+        <p>This exercise is currently unavailable.</p>
+      </div>
+    ) : (
+      <>
+        <header class="static-practice-exercise__header">
+          <p class="question-card__position">
+            Exercise {position} of {total}
+          </p>
+          <h2 id={titleId}>{exercise.title}</h2>
+          <StatusLabel
+            label={difficultyLabels[exercise.difficulty]}
+            tone="info"
+          />
+        </header>
+
+        <div class="static-practice-section">
+          <h3 id={`${exercise.id}-prompt`}>Exercise</h3>
+          {exercise.learnerVisibleContent.prompt.map((paragraph) => (
+            <p>
+              <AccessiblePracticeText text={paragraph} />
+            </p>
+          ))}
+        </div>
+
+        {exercise.learnerVisibleContent.learnerClaim && (
+          <div class="static-practice-claim">
+            <h3 id={`${exercise.id}-claim`}>Reasoning to assess</h3>
+            <p>
+              <AccessiblePracticeText
+                text={exercise.learnerVisibleContent.learnerClaim}
+              />
+            </p>
+          </div>
+        )}
+
+        {relationData && (
+          <div class="static-practice-section">
+            <h3 id={`${exercise.id}-relation-data`}>Relation data</h3>
+            <p>Domain: {`{${relationData.domain.join(", ")}}`}.</p>
+            <p>{relationData.accessibleDescription}</p>
+            <div class="static-practice-table-wrap">
+              <table>
+                <caption>Weak comparisons stated in the exercise</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">First alternative</th>
+                    <th scope="col">Relation</th>
+                    <th scope="col">Second alternative</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {displayedPairs.map((pair) => (
+                    <tr>
+                      <td>{pair.from}</td>
+                      <td>
+                        <span
+                          aria-label={`${pair.from} is weakly preferred to ${pair.to}`}
+                        >
+                          {pair.from} ≽ {pair.to}
+                        </span>
+                      </td>
+                      <td>{pair.to}</td>
+                      <td>Holds</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p class="card__meta">
+              Displayed entries mean “holds.” Other entries are interpreted only
+              as the exercise states: the non-reflexive list is{" "}
+              {relationData.nonReflexiveListing}, and reflexive pairs are{" "}
+              {relationData.reflexivePairTreatment.replaceAll("-", " ")}.
+            </p>
+          </div>
+        )}
+
+        {exercise.derivationSteps && (
+          <div class="static-practice-section">
+            <h3 id={`${exercise.id}-steps`}>Derivation structure</h3>
+            <ol>
+              {exercise.derivationSteps.map((step) => (
+                <li id={`${exercise.id}-${step.id}`}>
+                  <strong>{step.label}:</strong>{" "}
+                  <AccessiblePracticeText text={step.prompt} />
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        <div class="static-practice-response">
+          <h3 id={`${exercise.id}-response`}>Response</h3>
+          <p id={instructionsId}>
+            {exercise.responseDefinition.responseSummary}
+          </p>
+          <ul class="static-practice-instructions">
+            {exercise.learnerVisibleContent.instructions.map((instruction) => (
+              <li>
+                <AccessiblePracticeText text={instruction} />
+              </li>
+            ))}
+          </ul>
+          <div>
+            {exercise.responseDefinition.fields.map((field) => (
+              <StaticPracticeResponseField
+                exerciseId={exercise.id}
+                instructionsId={instructionsId}
+                field={field}
+              />
+            ))}
+          </div>
+          <p class="card__meta">
+            Response evaluation is not available in this practice version.
+          </p>
+        </div>
+      </>
+    )
+  }
+</article>

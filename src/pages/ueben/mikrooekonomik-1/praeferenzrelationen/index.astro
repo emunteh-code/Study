@@ -1,0 +1,21 @@
+---
+import StaticPracticeSet from "../../../../components/practice/StaticPracticeSet.astro";
+import { staticMikro1PreferencesPracticeExercises } from "../../../../data/mikro1-preferences-practice";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Preference relations practice"
+  description="Static foundation for twelve original Mikroökonomik I preference-relations exercises."
+  canonicalPath="/ueben/mikrooekonomik-1/praeferenzrelationen/"
+  robots="noindex, nofollow"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Üben", href: "/ueben/" },
+    { label: "Mikroökonomik I" },
+    { label: "Präferenzrelationen" },
+  ]}
+  pageId="mikro1-preferences-practice-static"
+>
+  <StaticPracticeSet exercises={staticMikro1PreferencesPracticeExercises} />
+</BaseLayout>

@@ -316,6 +316,15 @@ Use schema validation for exercise data, versioned storage records, safe reset p
 
 The existing practice components are static fixture preview components. They are not an evaluator and should not be repurposed by exposing fixture `isExpected` values to learner-facing client state.
 
+The first bounded implementation uses these production paths:
+
+- data contract and validator: `src/lib/mikro1-preferences-practice.ts`
+- approved exercise records: `src/data/mikro1-preferences-practice.ts`
+- static renderer: `src/components/practice/StaticPracticeExercise.astro`, `src/components/practice/StaticPracticeResponseField.astro`, and `src/components/practice/StaticPracticeSet.astro`
+- production integration: `src/pages/ueben/mikrooekonomik-1/praeferenzrelationen/index.astro`
+
+This slice intentionally omits evaluation, feedback, solution reveal, retries, persistence, progress, and analytics.
+
 ## 22. Implementation sequence
 
 1. Define validated, versioned exercise data objects with a learner/evaluator metadata boundary.

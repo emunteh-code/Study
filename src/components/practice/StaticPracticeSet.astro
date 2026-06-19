@@ -1,0 +1,65 @@
+---
+import Callout from "../foundation/Callout.astro";
+import StaticPracticeExercise from "./StaticPracticeExercise.astro";
+import type { StaticMikro1PreferenceExercise } from "../../lib/mikro1-preferences-practice";
+
+interface Props {
+  exercises: StaticMikro1PreferenceExercise[];
+}
+
+const { exercises } = Astro.props;
+---
+
+<div class="practice-page static-practice-set">
+  <header class="static-practice-set__header">
+    <p class="eyebrow">Mikroökonomik I</p>
+    <h1>Preference relations practice</h1>
+    <p>
+      Twelve original exercises on weak preference, strict preference,
+      indifference, completeness, transitivity, rationality, and the derived
+      incompatibility result.
+    </p>
+  </header>
+
+  <Callout title="Static practice foundation" variant="information">
+    <p>
+      You can enter responses in this version, but there is no submission,
+      answer checking, score, feedback, saved progress, or solution reveal yet.
+    </p>
+  </Callout>
+
+  <section aria-labelledby="static-practice-instructions">
+    <h2 id="static-practice-instructions">How to use this practice set</h2>
+    <ol>
+      <li>Read the prompt and relation data carefully.</li>
+      <li>Use the response controls to structure your own work.</li>
+      <li>
+        Keep your notes while later feedback and self-review features are added.
+      </li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="static-practice-notation">
+    <h2 id="static-practice-notation">Notation used in this set</h2>
+    <dl class="practice-data-list">
+      <dt><span aria-label="is weakly preferred to">≽</span></dt>
+      <dd>is weakly preferred to</dd>
+      <dt><span aria-label="is strictly preferred to">≻</span></dt>
+      <dd>is strictly preferred to</dd>
+      <dt><span aria-label="is indifferent to">∼</span></dt>
+      <dd>is indifferent to</dd>
+    </dl>
+  </section>
+
+  <div class="static-practice-list">
+    {
+      exercises.map((exercise, index) => (
+        <StaticPracticeExercise
+          exercise={exercise}
+          position={index + 1}
+          total={exercises.length}
+        />
+      ))
+    }
+  </div>
+</div>

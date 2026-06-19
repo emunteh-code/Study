@@ -1416,6 +1416,120 @@ details > * {
   background: var(--color-surface);
 }
 
+.static-practice-set {
+  max-inline-size: var(--layout-reading);
+}
+
+.static-practice-set__header,
+.static-practice-list,
+.static-practice-exercise,
+.static-practice-section,
+.static-practice-response,
+.static-practice-claim,
+.static-practice-field {
+  display: grid;
+  gap: var(--space-16);
+  min-inline-size: 0;
+}
+
+.static-practice-set__header {
+  max-inline-size: var(--layout-content);
+}
+
+.static-practice-list {
+  gap: var(--space-32);
+}
+
+.static-practice-exercise {
+  padding: var(--space-24);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+  scroll-margin-block-start: var(--space-24);
+}
+
+.static-practice-exercise__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.static-practice-exercise__header h2 {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.static-practice-instructions {
+  display: grid;
+  gap: var(--space-8);
+  padding-inline-start: var(--space-24);
+}
+
+.static-practice-response {
+  padding: var(--space-16);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-4);
+  background: var(--color-surface-raised);
+}
+
+.static-practice-field {
+  padding: var(--space-12);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-4);
+}
+
+.static-practice-field legend,
+.static-practice-field label {
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
+.static-practice-field input,
+.static-practice-field select,
+.static-practice-field textarea {
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding: var(--space-8);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-4);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.static-practice-field textarea {
+  min-block-size: 7rem;
+  resize: vertical;
+}
+
+.static-practice-option {
+  display: flex;
+  gap: var(--space-8);
+  align-items: flex-start;
+}
+
+.static-practice-option input {
+  flex: 0 0 auto;
+  inline-size: 1.25rem;
+  min-block-size: 1.25rem;
+  margin-block-start: 0.15rem;
+}
+
+.static-practice-table-wrap {
+  overflow-x: auto;
+}
+
+.static-practice-table-wrap table {
+  min-inline-size: 38rem;
+}
+
+.static-practice-unavailable {
+  padding: var(--space-16);
+  border: var(--border-width) solid var(--color-status-warning-text);
+  border-radius: var(--radius-4);
+  background: var(--color-status-warning-bg);
+}
+
 .showcase-grid {
   display: grid;
   gap: var(--space-16);
@@ -1514,6 +1628,14 @@ summary {
 
   .practice-data-list {
     grid-template-columns: 1fr;
+  }
+
+  .static-practice-exercise {
+    padding: var(--space-16);
+  }
+
+  .static-practice-table-wrap table {
+    min-inline-size: 32rem;
   }
 
   .question-navigation .button {

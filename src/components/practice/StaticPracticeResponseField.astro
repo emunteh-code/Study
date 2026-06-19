@@ -1,0 +1,101 @@
+---
+import AccessiblePracticeText from "./AccessiblePracticeText.astro";
+import type { PracticeResponseField } from "../../lib/mikro1-preferences-practice";
+
+interface Props {
+  exerciseId: string;
+  instructionsId: string;
+  field: PracticeResponseField;
+}
+
+const { exerciseId, instructionsId, field } = Astro.props;
+const fieldId = `${exerciseId}-${field.id}`;
+---
+
+{
+  field.kind === "textarea" && (
+    <div class="static-practice-field">
+      <label for={fieldId}>{field.label}</label>
+      {field.description && (
+        <p id={`${fieldId}-description`}>{field.description}</p>
+      )}
+      <textarea
+        id={fieldId}
+        name={fieldId}
+        aria-describedby={
+          field.description
+            ? `${instructionsId} ${fieldId}-description`
+            : instructionsId
+        }
+        aria-required={field.required ? "true" : undefined}
+        rows="4"
+      />
+    </div>
+  )
+}
+
+{
+  field.kind === "text" && (
+    <div class="static-practice-field">
+      <label for={fieldId}>{field.label}</label>
+      {field.description && (
+        <p id={`${fieldId}-description`}>{field.description}</p>
+      )}
+      <input
+        id={fieldId}
+        name={fieldId}
+        type="text"
+        aria-describedby={
+          field.description
+            ? `${instructionsId} ${fieldId}-description`
+            : instructionsId
+        }
+        aria-required={field.required ? "true" : undefined}
+      />
+    </div>
+  )
+}
+
+{
+  field.kind === "select" && (
+    <div class="static-practice-field">
+      <label for={fieldId}>{field.label}</label>
+      <select
+        id={fieldId}
+        name={fieldId}
+        aria-describedby={instructionsId}
+        aria-required={field.required ? "true" : undefined}
+      >
+        <option value="">Bitte auswählen</option>
+        {field.options.map((option) => (
+          <option value={option.id}>{option.label}</option>
+        ))}
+      </select>
+    </div>
+  )
+}
+
+{
+  field.kind === "radio" && (
+    <fieldset class="static-practice-field" aria-describedby={instructionsId}>
+      <legend>{field.label}</legend>
+      {field.options.map((option) => {
+        const optionId = `${fieldId}-${option.id}`;
+
+        return (
+          <div class="static-practice-option">
+            <input
+              id={optionId}
+              name={fieldId}
+              type="radio"
+              value={option.id}
+            />
+            <label for={optionId}>
+              <AccessiblePracticeText text={option.label} />
+            </label>
+          </div>
+        );
+      })}
+    </fieldset>
+  )
+}
