@@ -32,9 +32,9 @@ This task did not inspect Makroökonomik II material, did not create topic or qu
 - Current state: `structurally-mapped`
 - Previous state: `inventory-created`
 - Next valid state: `rights-reviewed`
-- Blockers: rights review, exercise-solution verification, mock-exam provenance review, CDF replacement strategy, and claim-level source checking
+- Blockers: rights review, mock-exam provenance review, CDF replacement strategy, claim-level source checking, formula and graph verification, and exercise-solution verification for any publishable practice
 
-The audit is structurally mapped because the lecture sequence, source-locator ranges, provisional topic boundaries, exercise signals, solution signals, formula-heavy ranges, graph-heavy ranges, and unsupported CDF categories have been mapped at a source-structure level. It is not `rights-reviewed`, `source-checked`, `topic-selected`, or `ready-for-drafting`.
+The audit is structurally mapped because the lecture sequence, source-locator ranges, provisional topic boundaries, exercise signals, solution signals, formula-heavy ranges, graph-heavy ranges, unsupported CDF categories, and first-topic exercise strategy have been mapped at a source-structure level. It is not `rights-reviewed`, `source-checked`, `topic-selected`, or `ready-for-drafting`.
 
 ## Private-Source Location Reference
 
@@ -221,42 +221,101 @@ The locator map records presence and review needs only. Page references are PDF 
 
 ## Exercise And Solution Mapping
 
-Systematic keyword and locator search found embedded exercise signals, example signals, and mock-exam structure, but no standalone exercise-sheet source group and no standalone official-solution source group.
+Systematic keyword, locator, rendered-page, and visual-structure inspection found embedded task signals, example signals, reading examples, and mock-exam structure, but no standalone exercise-sheet source group and no standalone official-solution source group.
 
 Summary:
 
 - Exercise keyword search covered slide, reading, mock-exam, and CDF-adjacent records without relying only on filenames.
 - 20 academic sources contained exercise, example, answer, solution, or review-question keyword evidence across 69 pages.
-- 10 embedded prompt ranges were identified across 7 lecture-slide sources.
-- 6 lecture-slide sources contained solution markers; 4 of those also contained prompt markers.
-- Supplemental readings contained worked-example or reading-question signals, but they are not classified as standalone exercise sheets.
+- 10 previously identified embedded prompt ranges were re-reviewed through rendered-page inspection.
+- 3 identifiable task units remain in the embedded slide ranges after false-positive filtering.
+- Most slide prompt markers are formal setup pages, lecture demonstrations, administrative references, or references to missing external exercise sheets rather than independent exercises.
+- 6 lecture-slide sources contained solution markers; none provided a confirmed complete worked solution for an independent exercise.
+- Supplemental readings contained worked-example, exercise-word, or solution-word signals, but they are not classified as standalone exercise sheets or answer keys.
 - Confirmed official solution relationships: 0.
-- Probable solution relationships: 1 embedded slide relationship.
-- Possible solution relationships: 3 embedded slide relationships plus the mock-exam PDF.
+- Probable solution relationships: 0.
+- Possible solution relationships: 1 embedded slide derivation relationship plus mock-exam answer-box structures.
 - Exercise sources without confirmed solutions remain unresolved and must not be treated as checked.
 
-| Source record                   | Exercise evidence type                         | Locator summary            | Solution relationship | Verification need                                                                 |
-| ------------------------------- | ---------------------------------------------- | -------------------------- | --------------------- | --------------------------------------------------------------------------------- |
-| `mikro1-slides-01`              | apparent embedded prompt                       | p3                         | possible              | determine whether later marker is solution, recap, or unrelated demonstration     |
-| `mikro1-slides-11`              | embedded self-check or prompt markers          | p18, p20                   | absent                | decide whether original platform practice must replace missing solutions          |
-| `mikro1-slides-13`              | embedded prompt and worked-example-like marker | p4-p5, p9                  | possible              | verify relationship between prompt and adjacent solution-like material            |
-| `mikro1-slides-16`              | embedded prompt                                | p2                         | probable              | verify that adjacent markers solve the same prompt                                |
-| `mikro1-slides-18`              | embedded prompt                                | p2                         | absent                | create original solution only after source and rights review                      |
-| `mikro1-slides-05`              | embedded prompt                                | p4                         | possible              | verify whether later markers are solutions, demonstrations, or summary steps      |
-| `mikro1-slides-07`              | embedded prompt                                | p2                         | absent                | no solution marker found in the structural pass                                   |
-| `mikro1-mock-exam-01`           | mock-exam question groups                      | p1-p10                     | unresolved, possible  | verify provenance, official status, point structure, and possible answer sections |
-| `mikro1-mock-exam-image-set-01` | image-based exam-style source                  | 17 image pages represented | unresolved            | manual visual ordering, OCR only if needed, and provenance review required        |
+### Exercise Taxonomy
+
+Committed exercise classifications use these labels:
+
+- `worked example`: source explains or demonstrates a method and does not ask the learner to solve independently.
+- `partially worked example`: source gives a setup or intermediate derivation but not a complete learner-facing solution.
+- `comprehension prompt`: source asks for conceptual interpretation, often with answer or discussion nearby.
+- `self-check question`: source invites learner judgment or recall, with limited or no scaffolding.
+- `independent exercise`: source provides enough data for a learner to solve without immediate answer disclosure.
+- `multi-part exercise`: source contains multiple connected subparts under one task header.
+- `graphical interpretation task`: source asks for graph reading, drawing, or interpretation.
+- `calculation task`: source asks for numerical, algebraic, or symbolic computation.
+- `conceptual explanation task`: source asks for verbal reasoning or interpretation.
+- `mock-exam question`: source appears in exam-style structure with points, answer fields, or exam instructions.
+- `demonstration only`: source shows method, model, or conclusion without learner task structure.
+- `unclear`: source has task-like markers but insufficient context for classification.
+
+Do not classify an item as an exercise merely because it contains a question mark, imperative, formula, answer box, or the word exercise.
+
+### Solution Taxonomy
+
+Committed solution classifications use these labels:
+
+- `complete worked solution`: enough reasoning is present to independently verify the result.
+- `partial worked solution`: source provides setup, method, or intermediate derivation without complete reasoning.
+- `final answer only`: answer appears without sufficient reasoning.
+- `lecturer demonstration`: source demonstrates a method as lecture content, not as answer material.
+- `graphical answer`: answer appears primarily as a graph or visual result.
+- `verbal explanation`: answer is conceptual prose without full calculation detail.
+- `answer key`: source lists answers keyed to task items.
+- `no solution`: no answer relationship found.
+- `unclear`: answer-like material exists but relationship or completeness is unresolved.
+
+Displayed results, formulas, answer boxes, or later derivation pages are not complete worked solutions unless the source gives enough reasoning to verify the result.
+
+### Embedded Prompt Assessment
+
+The 10 previously identified embedded prompt ranges were re-reviewed. Counts below are structural counts only; no prompt, calculation, answer, or slide text is reproduced.
+
+| Source record      | Locator summary | Identifiable task units | Task category after review                                 | Solution relationship | Solution completeness   | Best permitted later use                                           | Independent-practice readiness |
+| ------------------ | --------------- | ----------------------- | ---------------------------------------------------------- | --------------------- | ----------------------- | ------------------------------------------------------------------ | ------------------------------ |
+| `mikro1-slides-01` | p3              | 0                       | administrative reference to tutorial or exercise logistics | absent                | no solution             | source evidence that external exercise sheets may exist elsewhere  | absent                         |
+| `mikro1-slides-11` | p18             | 0                       | worked example or lecturer demonstration                   | absent                | no solution             | worked example support after claim verification                    | absent                         |
+| `mikro1-slides-11` | p20             | 2                       | comprehension prompt with immediate verbal explanation     | possible              | verbal explanation only | review prompt or guided discussion after reconstruction            | weak                           |
+| `mikro1-slides-13` | p4-p5           | 0                       | formal setup or lecturer demonstration                     | absent                | no exercise solution    | worked example support after formula verification                  | absent                         |
+| `mikro1-slides-13` | p9              | 0                       | worked example or result demonstration                     | absent                | no exercise solution    | worked example support after formula verification                  | absent                         |
+| `mikro1-slides-16` | p2              | 1                       | conceptual and calculation setup                           | possible              | partial worked solution | guided practice or worked example after substantial reconstruction | partial                        |
+| `mikro1-slides-18` | p2              | 0                       | source reference to external exercise material             | absent                | no solution             | evidence of missing external exercise source                       | absent                         |
+| `mikro1-slides-05` | p4              | 0                       | formal derivation setup                                    | absent                | no exercise solution    | worked example support after formula verification                  | absent                         |
+| `mikro1-slides-07` | p2              | 0                       | formal decomposition setup                                 | absent                | no solution             | topic explanation support                                          | absent                         |
 
 Exercise-provenance status: not ready for drafting. No exercise should be treated as official, adapted, source-checked, or solution-checked yet. Original platform exercises may be planned later, but they must be clearly labeled original.
 
 ## Mock-Exam Structural Mapping
 
-| Sanitized source ID             | Represented form | Structural finding                                                                  | Question-count status                  | Solution status                                | Publication risk                                                    |
-| ------------------------------- | ---------------- | ----------------------------------------------------------------------------------- | -------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------- |
-| `mikro1-mock-exam-01`           | PDF, 10 pages    | exam-style source with point markers and multiple question groups                   | approximately 5-6 groups, not verified | possible embedded answer or solution structure | provenance, rights, official status, and solution status unresolved |
-| `mikro1-mock-exam-image-set-01` | image set        | 17 image pages represented; ordering and relationship to PDF source not established | unresolved                             | unresolved                                     | requires manual visual review before any academic use               |
+| Sanitized source ID             | Represented form | Provenance evidence | Question-count status                                                                                                                      | Broad task distribution                                                                             | Time and point evidence              | Solution status                                              | Publication risk                                                   |
+| ------------------------------- | ---------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `mikro1-mock-exam-01`           | PDF, 10 pages    | unknown             | 5 top-level tasks; 22 identifiable subquestions                                                                                            | true/false items, calculation tasks, graph tasks, conceptual explanation prompts                    | 90-minute limit; 100 total points    | answer fields only; no complete solution or answer key found | template-like source; private-reference-only; not official-ready   |
+| `mikro1-mock-exam-image-set-01` | image set        | unknown             | 6 top-level tasks; at least 30 identifiable subitems; exact count unresolved because page ordering and image quality require manual review | true/false items, calculation tasks, graphical interpretation tasks, conceptual explanation prompts | 90-minute limit; point table visible | answer fields only; no complete solution or answer key found | photographed source; private-reference-only; provenance unresolved |
 
 No mock-exam prompt, answer, or solution text was copied into this audit.
+
+The PDF mock source may inform exam-flow structure only. The image-set source may inform original platform question design after claim verification, but it must not be published, copied, or labeled official without separate rights and provenance evidence.
+
+## Reading And Appendix Exercise Findings
+
+The six reading records and relevant slide appendix-like sections were searched for review questions, exercises, worked examples, answer keys, graphical exercises, calculation exercises, and discussion questions.
+
+| Source group                         | Structural finding                                                                  | Solution or answer-key finding                     | Permitted later use                                          |
+| ------------------------------------ | ----------------------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
+| `mikro1-reading-01`                  | one worked-example signal                                                           | no solution signal                                 | worked-example support only after claim verification         |
+| `mikro1-reading-02`                  | repeated exercise-word and worked-example signals across multiple pages             | solution-word signals, not a standalone answer key | private reference for examples; not independent practice yet |
+| `mikro1-reading-03`                  | one exercise-word signal                                                            | one solution-word signal, relationship unresolved  | private reference only                                       |
+| `mikro1-reading-04`                  | no exercise or solution signal found in native text                                 | none found                                         | background reference only                                    |
+| `mikro1-reading-05`                  | no exercise or solution signal found in extracted native text                       | none found                                         | background reference only                                    |
+| `mikro1-reading-06`                  | one worked-example signal                                                           | no solution signal                                 | worked-example support only after claim verification         |
+| slide appendix-like or summary areas | examples, summaries, and derivation continuations, but no standalone exercise sheet | no complete official solution source               | explanation and worked-example support only                  |
+
+No reading source is currently an official exercise candidate. No reading source currently supplies a complete solution set suitable for independent practice without original reconstruction and verification.
 
 ## Formula And Definition Inventory
 
@@ -311,6 +370,29 @@ The nine CDF records were inspected only through static metadata, file type, and
 
 CDF records may help later graph reconstruction or model-behavior verification, but no public platform feature should depend on them. Any future interactive component must be original platform work with independently checked academic claims.
 
+Exercise relevance for all nine CDF records is limited to private visual support. No CDF record is currently an exercise environment, solution environment, official question source, or publishable interactive asset.
+
+| Sanitized source IDs                              | Likely exercise relevance                           | May later support                                                  | Safe-use decision                                                       |
+| ------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| `mikro1-cdf-01`, `mikro1-cdf-02`                  | visual supplement or parameter demonstration        | graph reconstruction and model verification                        | private reference only; do not execute or reuse directly                |
+| `mikro1-cdf-03`, `mikro1-cdf-04`, `mikro1-cdf-05` | visual supplement or parameter demonstration        | model verification and original exercise design                    | private reference only; do not execute or reuse directly                |
+| `mikro1-cdf-06`                                   | interactive graph or preference-geometry supplement | graph reconstruction and original exercise design                  | strongest CDF support for the first candidate topic, still private only |
+| `mikro1-cdf-07`                                   | visual supplement or production-technology model    | graph reconstruction and model verification                        | private reference only; do not execute or reuse directly                |
+| `mikro1-cdf-08`                                   | optimal-consumption visual supplement               | graph reconstruction, model verification, original exercise design | private reference only; do not execute or reuse directly                |
+| `mikro1-cdf-09`                                   | price-change decomposition visual supplement        | graph reconstruction and original exercise design                  | private reference only; do not execute or reuse directly                |
+
+## Legacy Export Findings
+
+The excluded legacy portal export was inspected only through safe listing and plain-text metadata. It appears to be old presentation or application code plus operating-system metadata, not a separate academic source package.
+
+Structural findings:
+
+- No separate exercise document, solution document, answer-key document, or reading source was identified in the legacy export.
+- Code-like files contain presentation, graph, exercise-word, and solution-word references, but those references are not independent source evidence.
+- No webR implementation was detected.
+- The legacy export must not be executed, migrated, copied, or used as the platform architecture.
+- Any later graph, interaction, or practice behavior must be rebuilt as original platform work from source-checked academic claims.
+
 ## Source Conflicts
 
 Known ambiguities:
@@ -326,6 +408,8 @@ Known ambiguities:
 
 - Separate exercise sheets were not identified in the private source set.
 - Separate official solutions were not identified in the private source set.
+- No current source provides official exercise candidates ready for publication.
+- No current source provides adapted exercise candidates with acceptable rights status, exact locator, documented changes, and complete checked solutions.
 - Source locators now exist at structural page-range level, but not at claim, formula, definition, exercise, graph, figure, or printed-slide level.
 - No rights evidence supports redistribution.
 - CDF files are unsupported for publication and require either exclusion or original replacement.
@@ -346,17 +430,86 @@ Preliminary rights assessment:
 
 No source is currently eligible for redistribution. All future learning pages should be original platform explanations with source traceability, not copied course material. Any quotation, adaptation, or asset reuse requires separate rights review.
 
+## Topic-Group Exercise Coverage Matrix
+
+Readiness labels:
+
+- `strong`: enough source-checked task structure and complete solutions exist for near-term exercise records after rights review.
+- `partial`: useful examples, prompts, or mock-exam structure exist, but original reconstruction and independent solution checking are required.
+- `weak`: only indirect, fragmentary, or demonstration-like support exists.
+- `absent`: no usable exercise support was found.
+- `unresolved`: relevant material exists but provenance, relationship, order, or completeness cannot yet be determined.
+
+| Topic group                                     | Supporting slide source IDs                                                    | Worked-example support | Guided-practice support | Independent-exercise support | Solution support | Mock-exam support | Graph-task support | Calculation-task support | Conceptual-task support | Rights status            | Overall exercise readiness |
+| ----------------------------------------------- | ------------------------------------------------------------------------------ | ---------------------- | ----------------------- | ---------------------------- | ---------------- | ----------------- | ------------------ | ------------------------ | ----------------------- | ------------------------ | -------------------------- |
+| Course orientation and consumer-choice setup    | `mikro1-slides-01`                                                             | weak                   | absent                  | absent                       | absent           | absent            | partial            | absent                   | weak                    | `private-reference-only` | absent                     |
+| Preferences and indifference-curve basics       | `mikro1-slides-11`                                                             | partial                | weak                    | absent                       | weak             | partial           | partial            | weak                     | partial                 | `private-reference-only` | partial                    |
+| Utility and substitution foundations            | `mikro1-slides-12`                                                             | partial                | absent                  | absent                       | absent           | partial           | partial            | partial                  | weak                    | `private-reference-only` | weak                       |
+| Consumer optimization and demand derivation     | `mikro1-slides-13`                                                             | partial                | weak                    | absent                       | weak             | partial           | partial            | partial                  | weak                    | `private-reference-only` | partial                    |
+| Income and price changes in demand              | `mikro1-slides-14`, `mikro1-slides-15`                                         | partial                | absent                  | absent                       | absent           | partial           | partial            | partial                  | weak                    | `private-reference-only` | weak                       |
+| Expenditure minimization and compensated demand | `mikro1-slides-16`                                                             | partial                | partial                 | absent                       | partial          | partial           | partial            | partial                  | partial                 | `private-reference-only` | partial                    |
+| Substitution and income effects                 | `mikro1-slides-17`, `mikro1-slides-18`, `mikro1-slides-19`, `mikro1-slides-02` | partial                | absent                  | absent                       | absent           | partial           | partial            | partial                  | partial                 | `private-reference-only` | weak                       |
+| Labour supply                                   | `mikro1-slides-02`                                                             | weak                   | absent                  | absent                       | absent           | absent            | weak               | weak                     | weak                    | `private-reference-only` | weak                       |
+| Welfare and price applications                  | `mikro1-slides-18`, `mikro1-slides-19`                                         | partial                | absent                  | absent                       | absent           | weak              | weak               | partial                  | weak                    | `private-reference-only` | weak                       |
+| Production technology                           | `mikro1-slides-03`, `mikro1-slides-04`                                         | partial                | absent                  | absent                       | absent           | partial           | partial            | partial                  | partial                 | `private-reference-only` | weak                       |
+| Costs and firm optimization                     | `mikro1-slides-05`, `mikro1-slides-06`, `mikro1-slides-07`                     | partial                | weak                    | absent                       | weak             | partial           | partial            | partial                  | partial                 | `private-reference-only` | partial                    |
+| Competitive market                              | `mikro1-slides-08`                                                             | weak                   | absent                  | absent                       | absent           | partial           | partial            | partial                  | weak                    | `private-reference-only` | weak                       |
+| Monopoly                                        | `mikro1-slides-09`, `mikro1-slides-10`                                         | partial                | absent                  | absent                       | absent           | partial           | partial            | partial                  | partial                 | `private-reference-only` | weak                       |
+
+No topic group is exercise-ready for publication. The partial groups can support original exercise planning only after claim-level academic verification and independent solution checking.
+
+## Exercise Provenance Decision Rules
+
+Original exercises may be recommended when:
+
+- the academic claim or model is source-checked
+- all variables and assumptions are verified
+- the correct solution can be independently derived
+- the exercise does not copy distinctive source wording
+- the numerical values or scenario are independently created
+- the provenance is labelled `original`
+- the solution is complete
+- a second verification pass confirms the answer
+- it is not presented as an official or past-exam question
+
+Original exercises must not be generated from an unverified or ambiguous formula.
+
+Adapted exercises may be used only when:
+
+- the source is identifiable
+- the exact source locator is recorded
+- the changes are documented
+- the rights status permits adaptation
+- the solution is complete and independently checked
+- the provenance is clearly labelled `adapted`
+- no wording implies that the adapted exercise is official
+
+If rights are uncertain, default to creating an independently structured original exercise instead. Changed numbers alone are not automatically enough to make an exercise independent.
+
+An exercise may be labelled `official` only when:
+
+- official status is explicitly supported
+- the source is identifiable
+- the exact locator is recorded
+- wording has not been materially changed
+- publication or use rights permit the intended presentation
+- a verified solution exists or is independently established
+- the page clearly distinguishes official source material from platform explanation
+
+No current item satisfies the official-exercise conditions. No current item satisfies the adapted-exercise conditions.
+
 ## Candidate First Topic
 
-No final topic is selected. The structural pass supports comparing candidate topics, but none is ready for claim-level extraction because rights status, solution status, and exercise provenance remain unresolved.
+No final published topic is selected. The exercise pass supports a bounded first candidate for claim-level extraction, not drafting or publication.
 
-| Candidate                                             | Supporting source IDs                                                                             | Dependencies                                 | Exercise support                        | Solution support     | Verification risk                                      | Recommendation                                                           |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------- | -------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------ |
-| Preferences and indifference-curve basics             | `mikro1-slides-11`, `mikro1-cdf-06`; orientation support from `mikro1-slides-01`                  | course orientation                           | embedded prompt markers only            | absent               | graph redraw, formula locators, CDF exclusion strategy | manageable later, but not ready for claim-level extraction               |
-| Consumer optimization and demand derivation           | `mikro1-slides-13`, `mikro1-reading-01`, `mikro1-reading-02`, `mikro1-cdf-08`                     | preference and substitution foundations      | embedded prompt markers                 | possible             | dense formula checking and source-overlap review       | strong core topic later, but too risky before exercise and rights review |
-| Price-change decomposition and related demand effects | `mikro1-slides-17`, `mikro1-slides-18`, `mikro1-reading-03`, `mikro1-reading-05`, `mikro1-cdf-09` | consumer optimization and demand foundations | one embedded prompt marker in the group | absent or unresolved | overlapping readings and graph reconstruction burden   | useful after a smaller consumer-choice topic has been source-checked     |
+| Candidate                                       | Source IDs and structural locator ranges                                                | Worked-example availability | Embedded exercise count          | Complete solution count | Partial solution count | Mock-exam support | Graph or visualisation requirements | Formula verification burden | Original exercises possible              | Rights constraints       | Exercise readiness | Claim-extraction readiness               | Recommendation strength |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------- | -------------------------------- | ----------------------- | ---------------------- | ----------------- | ----------------------------------- | --------------------------- | ---------------------------------------- | ------------------------ | ------------------ | ---------------------------------------- | ----------------------- |
+| Preferences and indifference-curve basics       | `mikro1-slides-11` p1-p21, `mikro1-cdf-06`; orientation support from `mikro1-slides-01` | partial                     | 2 weak task units                | 0                       | 0                      | partial           | high; redraw accessible graphs      | medium                      | yes, after source checking               | `private-reference-only` | partial            | ready for bounded claim-level extraction | strongest               |
+| Consumer optimization and demand derivation     | `mikro1-slides-13` p1-p15, `mikro1-reading-01`, `mikro1-reading-02`, `mikro1-cdf-08`    | partial                     | 0 after false-positive filtering | 0                       | 0                      | partial           | high; redraw accessible graphs      | high                        | yes, after prerequisite verification     | `private-reference-only` | weak to partial    | not first                                | later                   |
+| Expenditure minimization and compensated demand | `mikro1-slides-16` p1-p26                                                               | partial                     | 1 task unit                      | 0                       | 1                      | partial           | high; redraw accessible graphs      | high                        | yes, after prerequisite verification     | `private-reference-only` | partial            | not first                                | later                   |
+| Costs and firm optimization                     | `mikro1-slides-05`, `mikro1-slides-06`, `mikro1-slides-07`                              | partial                     | 0 after false-positive filtering | 0                       | 0                      | partial           | high; redraw accessible graphs      | high                        | yes, after producer-side source checking | `private-reference-only` | partial            | not first                                | later                   |
 
-Do not start claim-level extraction from these candidates until at least one bounded candidate has adequate rights posture, exact locators, exercise provenance, and solution-verification strategy.
+`Preferences and indifference-curve basics` is the strongest candidate because its source range is bounded, required source types are accessible, the graph-reconstruction strategy is clear, and the exercise strategy can rely on original questions after claim verification. It is ready only for bounded claim-level extraction. It is not ready for drafting, public topic records, exercise publication, or official exercise claims.
 
 ## Content Transformation Plan
 
@@ -378,10 +531,11 @@ Required before any topic drafting:
 - Convert structural page ranges into claim-level, formula-level, definition-level, graph-level, and exercise-level source records.
 - Verify printed slide numbers where they differ from PDF viewer page numbers.
 - Verify whether a separate exercise or solution source exists outside the inspected archive.
-- Review the mock-exam sources for provenance, order, point structure, question count, and solution availability.
+- Review the mock-exam sources for provenance, final page order, point structure, exact question count, topic coverage, and solution availability.
 - Determine whether CDF files are excluded, replaced by original visuals, or retained only as private reference.
 - Confirm rights status for any planned quotation, adaptation, or redistribution.
-- Decide whether early practice should use original platform exercises because official exercise and solution sources were not found.
+- Use original platform exercises for early practice unless a later review identifies official or adapted material with acceptable rights and complete checked solutions.
+- Independently derive and second-check every future original exercise solution.
 - Create claim-level, formula-level, definition-level, graph-level, and exercise-level records before publication.
 
 ## Open Questions
@@ -400,13 +554,18 @@ Required before any topic drafting:
 - No formulas, definitions, graphs, examples, exercises, or solutions are verified.
 - Existing source locators are structural only and not sufficient for published claim references.
 - No exercise-provenance records exist.
-- Official status, mock-exam provenance, and solution status remain unverified.
+- Official exercise candidates: 0.
+- Adapted exercise candidates: 0.
+- Original exercise planning is permitted only after claim and formula verification, independent solution derivation, and second review.
+- Mock-exam provenance, exact ordering, and solution status remain unverified.
 - Legacy implementation material must not influence the platform architecture.
 - CDF files are unsupported and must not be executed or reused directly.
 
 ## Audit Decision
 
-Structural mapping is complete at sanitized audit level. Continue to rights review and exercise-solution verification. Do not draft, transform, publish, or perform claim-level extraction yet.
+Exercise coverage verification is complete at sanitized audit level. The first recommended bounded academic task is claim-level extraction for `Preferences and indifference-curve basics`; this is allowed because the source range is mapped, required source types are accessible, exercise strategy is defined, and no critical source conflict blocks extraction.
+
+The audit remains `structurally-mapped`. Do not draft lessons, create public topic records, publish exercises, imply official status, or mark content `source-checked` or `exercise-checked` from this audit alone.
 
 ## Review History
 
@@ -414,3 +573,4 @@ Structural mapping is complete at sanitized audit level. Continue to rights revi
 | ------------ | ------------------ | ------------------------------------------------------------------------------------------ | --------------------- |
 | `2026-06-19` | `source-ingestion` | First sanitized Mikroökonomik I source inventory created from private archive inspection.  | `classified`          |
 | `2026-06-19` | `source-ingestion` | Added structural source-locator map, ordered lecture map, exercise search, and CDF review. | `structurally-mapped` |
+| `2026-06-19` | `source-ingestion` | Verified exercise coverage, solution availability, and original-exercise strategy.         | `structurally-mapped` |
