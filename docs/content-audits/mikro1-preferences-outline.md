@@ -258,18 +258,19 @@ No final exercise items or solutions are created here. Every future exercise mus
 
 ## Implementation readiness checklist
 
-| Check                                | Result | Basis                                                                                                      |
-| ------------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------- |
-| all included claims verified         | yes    | `claim-pref-01` through `claim-pref-05` are directly verified; `claim-pref-15` is verified as a derivation |
-| notation consistent                  | yes    | only `≽`, `≻`, and `∼` are used under the verified notation policy                                         |
-| all prerequisites covered            | yes    | dependency map and section order introduce alternatives and weak preference first                          |
-| dependency order valid               | yes    | derived relations precede axioms; axioms precede rationality; derivation follows its premises              |
-| examples confined to verified theory | yes    | all examples are constructed instantiations of included definitions or axioms                              |
-| misconceptions explicitly addressed  | yes    | each instructional section names a bounded non-example or misconception                                    |
-| exercise objectives mapped           | yes    | eight required exercise types are specified with reasoning and misconception targets                       |
-| source references inspectable        | yes    | every substantive claim maps to audit identifiers, PDF locators, and direct MIT PDF links                  |
-| excluded topics kept out             | yes    | exclusions are explicit and no utility, geometry, graph, or optimisation claim is included                 |
-| ready for lesson drafting            | no     | the audit permits an outline only; rights, exercise, formula, graph, and publication gates remain open     |
+| Check                                     | Result | Basis                                                                                                                                                                         |
+| ----------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| all included claims verified              | yes    | `claim-pref-01` through `claim-pref-05` are directly verified; `claim-pref-15` is verified as a derivation                                                                    |
+| notation consistent                       | yes    | only `≽`, `≻`, and `∼` are used under the verified notation policy                                                                                                            |
+| all prerequisites covered                 | yes    | dependency map and section order introduce alternatives and weak preference first                                                                                             |
+| dependency order valid                    | yes    | derived relations precede axioms; axioms precede rationality; derivation follows its premises                                                                                 |
+| examples confined to verified theory      | yes    | all examples are constructed instantiations of included definitions or axioms                                                                                                 |
+| misconceptions explicitly addressed       | yes    | each instructional section names a bounded non-example or misconception                                                                                                       |
+| exercise objectives mapped                | yes    | eight required exercise types are specified with reasoning and misconception targets                                                                                          |
+| source references inspectable             | yes    | every substantive claim maps to audit identifiers, PDF locators, and direct MIT PDF links                                                                                     |
+| excluded topics kept out                  | yes    | exclusions are explicit and no utility, geometry, graph, or optimisation claim is included                                                                                    |
+| rights and source-reuse policy documented | yes    | see `mikro1-preferences-rights-review`; it clears original drafting architecture only and prohibits source reproduction or adaptation for the potentially commercial platform |
+| ready for lesson drafting                 | no     | rights policy is documented, but exercise, formula, graph, accessibility, editorial, and publication gates remain open                                                        |
 
 ## Audit Identity
 
