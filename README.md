@@ -44,6 +44,7 @@ npm run format:check
 npm run lint
 npm run typecheck
 npm run test
+npm run audit:content
 npm run build
 npm run validate
 ```
@@ -96,3 +97,5 @@ Every published academic claim must be traceable to a source. Official, adapted,
 ## Private Source Materials
 
 Private source materials, course ZIP files, restricted PDFs, and unverified course exports must not be committed. Keep them outside the repository or inside ignored directories such as `private-sources/`, `course-materials/`, or `source-materials/`.
+
+Private course material should be stored outside the repository, normally under `~/Documents/Study-Course-Materials/`. Use `docs/source-ingestion.md` for the full ingestion workflow and `docs/content-audits/` for sanitized repository audit records. Run `npm run audit:content` before committing audit changes; it validates only repository audit Markdown and does not inspect private source directories.

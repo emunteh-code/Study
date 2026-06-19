@@ -9,8 +9,21 @@ test-results/
 !.env.example
 .DS_Store
 Thumbs.db
+
+# Private source material and local ingestion workspaces.
+# Approved public assets must live in intentionally reviewed public paths, not here.
 private-sources/
 course-materials/
 source-materials/
-*.zip
+local-sources/
+source-audits/private/
+ingestion-workspace/
+private-conversion-output/
+local-ocr-output/
 
+# Course archives and compressed private-source bundles.
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
