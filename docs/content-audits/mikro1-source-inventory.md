@@ -32,9 +32,9 @@ This task did not inspect Makroökonomik II material, did not create topic or qu
 - Current state: `structurally-mapped`
 - Previous state: `inventory-created`
 - Next valid state: `rights-reviewed`
-- Blockers: rights review, mock-exam provenance review, CDF replacement strategy, claim-level source checking, formula and graph verification, and exercise-solution verification for any publishable practice
+- Blockers: rights review, external source verification for the selected pilot evidence pack, mock-exam provenance review, CDF replacement strategy, formula and graph verification, and exercise-solution verification for any publishable practice
 
-The audit is structurally mapped because the lecture sequence, source-locator ranges, provisional topic boundaries, exercise signals, solution signals, formula-heavy ranges, graph-heavy ranges, unsupported CDF categories, and first-topic exercise strategy have been mapped at a source-structure level. It is not `rights-reviewed`, `source-checked`, `topic-selected`, or `ready-for-drafting`.
+The audit is structurally mapped because the lecture sequence, source-locator ranges, provisional topic boundaries, exercise signals, solution signals, formula-heavy ranges, graph-heavy ranges, unsupported CDF categories, first-topic exercise strategy, and selected pilot claim pack have been mapped at a source-structure level. It is not `rights-reviewed`, `source-checked`, `topic-selected`, or `ready-for-drafting`.
 
 ## Private-Source Location Reference
 
@@ -511,6 +511,13 @@ No final published topic is selected. The exercise pass supports a bounded first
 
 `Preferences and indifference-curve basics` is the strongest candidate because its source range is bounded, required source types are accessible, the graph-reconstruction strategy is clear, and the exercise strategy can rely on original questions after claim verification. It is ready only for bounded claim-level extraction. It is not ready for drafting, public topic records, exercise publication, or official exercise claims.
 
+Selected pilot evidence pack:
+
+- Evidence pack path: `docs/content-audits/mikro1-preferences-claims.md`
+- Evidence pack status: `extracted`
+- Candidate status: conditionally ready for source review and lesson outlining; not ready for prose drafting, exercises, graph implementation, or publication
+- Remaining blockers: external verification, formula workflow, notation review, rights review, graph replacement strategy, and exercise solution review
+
 ## Content Transformation Plan
 
 Future drafting must:
@@ -536,7 +543,8 @@ Required before any topic drafting:
 - Confirm rights status for any planned quotation, adaptation, or redistribution.
 - Use original platform exercises for early practice unless a later review identifies official or adapted material with acceptable rights and complete checked solutions.
 - Independently derive and second-check every future original exercise solution.
-- Create claim-level, formula-level, definition-level, graph-level, and exercise-level records before publication.
+- Use `docs/content-audits/mikro1-preferences-claims.md` as the starting point for bounded source review of the selected candidate.
+- Create formula-level, graph-level, exercise-level, and publication review records before publication.
 
 ## Open Questions
 
@@ -565,7 +573,7 @@ Required before any topic drafting:
 
 Exercise coverage verification is complete at sanitized audit level. The first recommended bounded academic task is claim-level extraction for `Preferences and indifference-curve basics`; this is allowed because the source range is mapped, required source types are accessible, exercise strategy is defined, and no critical source conflict blocks extraction.
 
-The audit remains `structurally-mapped`. Do not draft lessons, create public topic records, publish exercises, imply official status, or mark content `source-checked` or `exercise-checked` from this audit alone.
+Claim extraction for `Preferences and indifference-curve basics` is now recorded in `docs/content-audits/mikro1-preferences-claims.md`. The audit remains `structurally-mapped`. Do not draft lessons, create public topic records, publish exercises, imply official status, or mark content `source-checked` or `exercise-checked` from this audit alone.
 
 ## Review History
 
@@ -574,3 +582,4 @@ The audit remains `structurally-mapped`. Do not draft lessons, create public top
 | `2026-06-19` | `source-ingestion` | First sanitized Mikroökonomik I source inventory created from private archive inspection.  | `classified`          |
 | `2026-06-19` | `source-ingestion` | Added structural source-locator map, ordered lecture map, exercise search, and CDF review. | `structurally-mapped` |
 | `2026-06-19` | `source-ingestion` | Verified exercise coverage, solution availability, and original-exercise strategy.         | `structurally-mapped` |
+| `2026-06-19` | `source-ingestion` | Linked selected preference-claims evidence pack and updated candidate status.              | `structurally-mapped` |
