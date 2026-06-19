@@ -332,7 +332,7 @@ Every pair has at least one comparison direction. The two directions for `{x, y}
 | ------------- | -------------- | ------------------- | -------- |
 | `x ≽ y`       | `y ≽ z`        | `x ≽ z`             | yes      |
 
-There is no comparison beginning with `z` and no comparison into `x` that would form another non-reflexive two-step chain. Missing reverse comparisons do not matter without applicable premises.
+There is no comparison beginning with `z` and no comparison into `x` that would form another non-reflexive two-step chain. Chains containing a stated reflexive comparison also satisfy transitivity: they require the already stated non-reflexive comparison or the corresponding reflexive comparison. Missing reverse comparisons do not matter without applicable premises.
 
 ### `pref-practice-08`
 
