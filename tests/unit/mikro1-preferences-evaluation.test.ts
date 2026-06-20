@@ -31,6 +31,7 @@ describe("Mikro I preference evaluator", () => {
     for (const [id, selectedOptionId] of Object.entries(expectedSelections)) {
       expect(
         mikro1PreferenceEvaluator.evaluate(exercise(id), {
+          kind: "selection",
           selectedOptionId,
           requiredFieldsComplete: true,
         }),
@@ -51,6 +52,7 @@ describe("Mikro I preference evaluator", () => {
 
     for (const [id, selectedOptionId] of Object.entries(incorrectSelections)) {
       const result = mikro1PreferenceEvaluator.evaluate(exercise(id), {
+        kind: "selection",
         selectedOptionId,
         requiredFieldsComplete: true,
       });
@@ -62,9 +64,12 @@ describe("Mikro I preference evaluator", () => {
   });
 
   it("fails incomplete submissions before assessing an answer", () => {
-    for (const id of evaluableMikro1PreferenceExerciseIds) {
+    for (const id of evaluableMikro1PreferenceExerciseIds.filter(
+      (id) => id !== "pref-practice-04",
+    )) {
       expect(
         mikro1PreferenceEvaluator.evaluate(exercise(id), {
+          kind: "selection",
           selectedOptionId: "not-an-approved-option",
           requiredFieldsComplete: false,
         }),
@@ -81,6 +86,7 @@ describe("Mikro I preference evaluator", () => {
 
   it("returns the same result for repeated evaluation of the same response", () => {
     const response = {
+      kind: "selection" as const,
       selectedOptionId: "c",
       requiredFieldsComplete: true,
     };
@@ -101,9 +107,141 @@ describe("Mikro I preference evaluator", () => {
   it("does not provide an evaluator for unscoped exercises", () => {
     expect(() =>
       mikro1PreferenceEvaluator.evaluate(exercise("pref-practice-01"), {
+        kind: "selection",
         selectedOptionId: "a",
         requiredFieldsComplete: true,
       }),
     ).toThrow("No evaluator is available for pref-practice-01.");
+  });
+
+  it("evaluates every required classification as fully correct independent of order", () => {
+    const response = {
+      kind: "classification" as const,
+      requiredFieldsComplete: true,
+      classifications: [
+        { itemId: "weak", classificationId: "weak" },
+        { itemId: "strict", classificationId: "strict" },
+        { itemId: "indifference", classificationId: "indifference" },
+      ],
+    };
+
+    expect(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-04"),
+        response,
+      ),
+    ).toMatchObject({
+      status: "fully-correct",
+      feedback: { heading: "Correct" },
+    });
+    expect(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-04"),
+        response,
+      ),
+    ).toEqual(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-04"),
+        response,
+      ),
+    );
+  });
+
+  it("distinguishes partially and fully incorrect classification mappings", () => {
+    expect(
+      mikro1PreferenceEvaluator.evaluate(exercise("pref-practice-04"), {
+        kind: "classification",
+        requiredFieldsComplete: true,
+        classifications: [
+          { itemId: "strict", classificationId: "strict" },
+          { itemId: "indifference", classificationId: "weak" },
+          { itemId: "weak", classificationId: "strict" },
+        ],
+      }),
+    ).toMatchObject({
+      status: "partially-correct",
+      feedback: {
+        heading: "Partially correct",
+        explanation: expect.stringContaining(
+          "1 of 3 classifications are correct.",
+        ),
+      },
+    });
+
+    expect(
+      mikro1PreferenceEvaluator.evaluate(exercise("pref-practice-04"), {
+        kind: "classification",
+        requiredFieldsComplete: true,
+        classifications: [
+          { itemId: "strict", classificationId: "weak" },
+          { itemId: "indifference", classificationId: "strict" },
+          { itemId: "weak", classificationId: "indifference" },
+        ],
+      }),
+    ).toMatchObject({
+      status: "fully-incorrect",
+      feedback: { heading: "Not yet correct" },
+    });
+  });
+
+  it("returns one structural result for incomplete or invalid classifications", () => {
+    const invalidResponses = [
+      {
+        kind: "classification" as const,
+        requiredFieldsComplete: false,
+        classifications: [],
+      },
+      {
+        kind: "classification" as const,
+        requiredFieldsComplete: true,
+        classifications: [
+          { itemId: "strict", classificationId: "strict" },
+          { itemId: "indifference", classificationId: "indifference" },
+        ],
+      },
+      {
+        kind: "classification" as const,
+        requiredFieldsComplete: true,
+        classifications: [
+          { itemId: "strict", classificationId: "strict" },
+          { itemId: "strict", classificationId: "strict" },
+          { itemId: "weak", classificationId: "weak" },
+        ],
+      },
+      {
+        kind: "classification" as const,
+        requiredFieldsComplete: true,
+        classifications: [
+          { itemId: "unknown", classificationId: "strict" },
+          { itemId: "indifference", classificationId: "indifference" },
+          { itemId: "weak", classificationId: "weak" },
+        ],
+      },
+      {
+        kind: "classification" as const,
+        requiredFieldsComplete: true,
+        classifications: [
+          { itemId: "strict", classificationId: "unknown" },
+          { itemId: "indifference", classificationId: "indifference" },
+          { itemId: "weak", classificationId: "weak" },
+        ],
+      },
+    ];
+
+    for (const response of invalidResponses) {
+      expect(
+        mikro1PreferenceEvaluator.evaluate(
+          exercise("pref-practice-04"),
+          response,
+        ),
+      ).toEqual({
+        status: "incomplete",
+        feedback: {
+          heading: "Incomplete or invalid response",
+          explanation:
+            "Complete every required classification using an available category before checking your answer.",
+        },
+      });
+    }
   });
 });

@@ -1510,6 +1510,10 @@ details > * {
   background: var(--color-status-info-bg);
 }
 
+.static-practice-feedback[hidden] {
+  display: none;
+}
+
 .static-practice-feedback h4,
 .static-practice-feedback p {
   margin: 0;

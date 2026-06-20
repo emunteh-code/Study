@@ -47,14 +47,30 @@ function updateSubmitState(form: HTMLFormElement): void {
   );
 
   if (submit && form.dataset.submitting !== "true") {
-    submit.disabled =
-      form.dataset.submitted === "true" || !isStructurallyComplete(form);
+    const isComplete = isStructurallyComplete(form);
+    submit.disabled = !isComplete;
+
+    if (form.dataset.submitted === "true" && isComplete) {
+      submit.setAttribute("aria-disabled", "true");
+    } else {
+      submit.removeAttribute("aria-disabled");
+    }
   }
 }
 
 function selectedOptionId(form: HTMLFormElement): string | undefined {
   return form.querySelector<HTMLInputElement>('input[type="radio"]:checked')
     ?.value;
+}
+
+function classificationResponse(form: HTMLFormElement) {
+  return Array.from(
+    form.querySelectorAll<HTMLSelectElement>("select[data-response-field-id]"),
+    (field) => ({
+      itemId: field.dataset.responseFieldId ?? "",
+      classificationId: field.value,
+    }),
+  );
 }
 
 async function evaluateSubmission(form: HTMLFormElement): Promise<void> {
@@ -77,10 +93,22 @@ async function evaluateSubmission(form: HTMLFormElement): Promise<void> {
     throw new Error(`Unknown practice exercise: ${exerciseId}.`);
   }
 
-  const result = evaluationModule.mikro1PreferenceEvaluator.evaluate(exercise, {
-    selectedOptionId: selectedOptionId(form),
-    requiredFieldsComplete: isStructurallyComplete(form),
-  });
+  const classifications = classificationResponse(form);
+  const selectedOption = selectedOptionId(form);
+  const result = evaluationModule.mikro1PreferenceEvaluator.evaluate(
+    exercise,
+    classifications.length > 0
+      ? {
+          kind: "classification",
+          classifications,
+          requiredFieldsComplete: isStructurallyComplete(form),
+        }
+      : {
+          kind: "selection",
+          ...(selectedOption ? { selectedOptionId: selectedOption } : {}),
+          requiredFieldsComplete: isStructurallyComplete(form),
+        },
+  );
 
   setFeedback(form, result.feedback.heading, result.feedback.explanation);
 }
@@ -101,10 +129,19 @@ export function enhanceMikro1PreferencesEvaluation(
       clearFeedback(form);
       updateSubmitState(form);
     });
+    form.addEventListener("keydown", () => {
+      queueMicrotask(() => updateSubmitState(form));
+    });
+    form.addEventListener("keyup", () => {
+      updateSubmitState(form);
+    });
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      if (form.dataset.submitting === "true") {
+      if (
+        form.dataset.submitting === "true" ||
+        form.dataset.submitted === "true"
+      ) {
         return;
       }
 
@@ -123,7 +160,7 @@ export function enhanceMikro1PreferencesEvaluation(
       );
       form.dataset.submitting = "true";
       if (submit) {
-        submit.disabled = true;
+        submit.setAttribute("aria-busy", "true");
       }
 
       try {
@@ -137,6 +174,7 @@ export function enhanceMikro1PreferencesEvaluation(
         );
       } finally {
         delete form.dataset.submitting;
+        submit?.removeAttribute("aria-busy");
         updateSubmitState(form);
       }
     });

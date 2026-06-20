@@ -43,6 +43,7 @@ describe("Mikro I preference practice production data", () => {
     expect(evaluableIds).toEqual([
       "pref-practice-02",
       "pref-practice-03",
+      "pref-practice-04",
       "pref-practice-06",
       "pref-practice-09",
     ]);

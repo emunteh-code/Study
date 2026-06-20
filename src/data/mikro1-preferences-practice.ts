@@ -317,6 +317,11 @@ export const mikro1PreferencesPracticeExercises = [
       ],
     },
     evaluationMetadata: {
+      classificationMappings: [
+        { itemId: "strict", classificationId: "strict" },
+        { itemId: "indifference", classificationId: "indifference" },
+        { itemId: "weak", classificationId: "weak" },
+      ],
       acceptedAnswerStructure: [
         "strict -> strict",
         "indifference -> indifference",
@@ -327,6 +332,12 @@ export const mikro1PreferencesPracticeExercises = [
       misconceptionIds: ["mis-pref-02"],
       conceptualFocus:
         "Strict preference and indifference are derived from the primitive weak relation.",
+      correctExplanation:
+        "All three classifications correctly distinguish the derived relations from the primitive weak relation.",
+      partialExplanation:
+        "Reconsider which condition negates the reverse weak comparison, which includes it, and which relation is primitive.",
+      incorrectExplanation:
+        "This set may be treating the derived and primitive relations as interchangeable. Compare the role of the reverse weak comparison in each condition.",
     },
     solutionMetadata: {
       summary:
