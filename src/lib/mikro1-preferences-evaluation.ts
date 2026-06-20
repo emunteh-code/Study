@@ -28,9 +28,21 @@ export interface Mikro1PreferenceClassificationResponse {
   requiredFieldsComplete: boolean;
 }
 
+export interface Mikro1PreferenceRelationTableEntry {
+  positionId: string;
+  answerId: string;
+}
+
+export interface Mikro1PreferenceRelationTableResponse {
+  kind: "relation-table";
+  entries: Mikro1PreferenceRelationTableEntry[];
+  requiredFieldsComplete: boolean;
+}
+
 export type Mikro1PreferenceEvaluationResponse =
   | Mikro1PreferenceSelectionResponse
-  | Mikro1PreferenceClassificationResponse;
+  | Mikro1PreferenceClassificationResponse
+  | Mikro1PreferenceRelationTableResponse;
 
 export interface Mikro1PreferenceEvaluationFeedback {
   heading: string;
@@ -40,6 +52,8 @@ export interface Mikro1PreferenceEvaluationFeedback {
 export interface Mikro1PreferenceEvaluationResult {
   status: Mikro1PreferenceEvaluationStatus;
   feedback: Mikro1PreferenceEvaluationFeedback;
+  correctCount?: number;
+  totalPositions?: number;
 }
 
 export interface Mikro1PreferenceEvaluator {
@@ -54,10 +68,10 @@ const incompleteFeedback: Mikro1PreferenceEvaluationFeedback = {
   explanation: "Complete each required response before checking your answer.",
 };
 
-const invalidClassificationFeedback: Mikro1PreferenceEvaluationFeedback = {
+const invalidStructuredFeedback: Mikro1PreferenceEvaluationFeedback = {
   heading: "Incomplete or invalid response",
   explanation:
-    "Complete every required classification using an available category before checking your answer.",
+    "Complete every required response using an available option before checking your answer.",
 };
 
 function isExpectedExercise(
@@ -69,6 +83,7 @@ function isExpectedExercise(
     "pref-practice-02",
     "pref-practice-03",
     "pref-practice-04",
+    "pref-practice-05",
     "pref-practice-06",
     "pref-practice-09",
   ].includes(exercise.id);
@@ -153,7 +168,7 @@ function evaluateClassification(
     submittedItems.size !== expectedItems.size ||
     [...submittedItems].some((itemId) => !expectedItems.has(itemId))
   ) {
-    return { status: "incomplete", feedback: invalidClassificationFeedback };
+    return { status: "incomplete", feedback: invalidStructuredFeedback };
   }
 
   const correctCount = response.classifications.filter(
@@ -191,6 +206,97 @@ function evaluateClassification(
   };
 }
 
+function evaluateRelationTable(
+  exercise: Mikro1PreferenceExercise,
+  response: Mikro1PreferenceRelationTableResponse,
+): Mikro1PreferenceEvaluationResult {
+  const mappings = exercise.evaluationMetadata.relationTableMappings;
+  const feedback = exercise.feedbackMetadata;
+
+  if (
+    !mappings ||
+    mappings.length === 0 ||
+    !feedback.correctExplanation ||
+    !feedback.partialExplanation ||
+    !feedback.incorrectExplanation
+  ) {
+    throw new Error(`Evaluation metadata is unavailable for ${exercise.id}.`);
+  }
+
+  const expectedAnswers = new Map(
+    mappings.map((mapping) => [mapping.positionId, mapping.answerId]),
+  );
+  const responseFields = new Map(
+    exercise.responseDefinition.fields.map((field) => [field.id, field]),
+  );
+  const submittedPositions = new Set<string>();
+
+  if (
+    !response.requiredFieldsComplete ||
+    response.entries.length !== expectedAnswers.size ||
+    response.entries.some(({ positionId, answerId }) => {
+      const field = responseFields.get(positionId);
+
+      if (
+        !field ||
+        (field.kind !== "select" && field.kind !== "radio") ||
+        submittedPositions.has(positionId)
+      ) {
+        return true;
+      }
+
+      submittedPositions.add(positionId);
+      return !field.options.some((option) => option.id === answerId);
+    }) ||
+    submittedPositions.size !== expectedAnswers.size ||
+    [...submittedPositions].some(
+      (positionId) => !expectedAnswers.has(positionId),
+    )
+  ) {
+    return { status: "incomplete", feedback: invalidStructuredFeedback };
+  }
+
+  const correctCount = response.entries.filter(
+    ({ positionId, answerId }) => expectedAnswers.get(positionId) === answerId,
+  ).length;
+  const totalPositions = expectedAnswers.size;
+
+  // Aggregate counts prevent feedback from becoming a cell-by-cell answer oracle.
+  if (correctCount === totalPositions) {
+    return {
+      status: "fully-correct",
+      feedback: {
+        heading: "Correct",
+        explanation: feedback.correctExplanation,
+      },
+      correctCount,
+      totalPositions,
+    };
+  }
+
+  if (correctCount === 0) {
+    return {
+      status: "fully-incorrect",
+      feedback: {
+        heading: "Not yet correct",
+        explanation: feedback.incorrectExplanation,
+      },
+      correctCount,
+      totalPositions,
+    };
+  }
+
+  return {
+    status: "partially-correct",
+    feedback: {
+      heading: "Partially correct",
+      explanation: `${correctCount} of ${totalPositions} responses are correct. ${feedback.partialExplanation}`,
+    },
+    correctCount,
+    totalPositions,
+  };
+}
+
 export const mikro1PreferenceEvaluator: Mikro1PreferenceEvaluator = {
   evaluate(exercise, response) {
     if (!isExpectedExercise(exercise)) {
@@ -203,7 +309,16 @@ export const mikro1PreferenceEvaluator: Mikro1PreferenceEvaluator = {
     ) {
       return response.kind === "classification"
         ? evaluateClassification(exercise, response)
-        : { status: "incomplete", feedback: invalidClassificationFeedback };
+        : { status: "incomplete", feedback: invalidStructuredFeedback };
+    }
+
+    if (
+      exercise.interactionType === "relation-table-analysis" &&
+      exercise.id === "pref-practice-05"
+    ) {
+      return response.kind === "relation-table"
+        ? evaluateRelationTable(exercise, response)
+        : { status: "incomplete", feedback: invalidStructuredFeedback };
     }
 
     if (

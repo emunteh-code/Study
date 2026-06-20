@@ -438,6 +438,12 @@ export const mikro1PreferencesPracticeExercises = [
       ],
     },
     evaluationMetadata: {
+      relationTableMappings: [
+        { positionId: "pair-xy", answerId: "both" },
+        { positionId: "pair-xz", answerId: "x-z" },
+        { positionId: "pair-yz", answerId: "z-y" },
+        { positionId: "complete", answerId: "yes" },
+      ],
       acceptedAnswerStructure: [
         "{x,y}: both",
         "{x,z}: x ≽ z",
@@ -450,6 +456,12 @@ export const mikro1PreferencesPracticeExercises = [
       misconceptionIds: ["mis-pref-03"],
       conceptualFocus:
         "Completeness needs at least one direction for each distinct unordered pair; both directions are allowed.",
+      correctExplanation:
+        "Every distinct unordered pair has at least one listed weak-comparison direction, so the relation is complete.",
+      partialExplanation:
+        "Recheck the direction for each unordered pair and remember that completeness requires at least one direction, not exactly one.",
+      incorrectExplanation:
+        "This response may be treating completeness as requiring exactly one direction or overlooking the orientation of a listed comparison.",
     },
     solutionMetadata: {
       summary:

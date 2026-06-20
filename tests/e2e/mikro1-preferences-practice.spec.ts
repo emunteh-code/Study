@@ -19,9 +19,9 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
     page.getByRole("heading", { name: "Derive the incompatibility" }),
   ).toBeVisible();
   await expect(page.getByText("Notation used in this set")).toBeVisible();
-  await expect(page.locator('button[type="submit"]')).toHaveCount(5);
+  await expect(page.locator('button[type="submit"]')).toHaveCount(6);
   await expect(page.locator("form[data-mikro1-evaluation-form]")).toHaveCount(
-    5,
+    6,
   );
   await expect(page.getByText("Score", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Correct", { exact: true })).toHaveCount(0);
@@ -33,6 +33,7 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
   expect(html).not.toContain("acceptedAnswerStructure");
   expect(html).not.toContain("solutionMetadata");
   expect(html).not.toContain("classificationMappings");
+  expect(html).not.toContain("relationTableMappings");
   expect(html).not.toContain("claim-pref-");
   expect(html).not.toContain("The relation is complete because every");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
@@ -64,7 +65,107 @@ test("static practice controls and relation tables expose native semantics", asy
     page.getByText(
       "Response evaluation is not available in this practice version.",
     ),
-  ).toHaveCount(7);
+  ).toHaveCount(6);
+});
+
+test("pref-practice-05 evaluates the reviewed relation-table positions and supports revision", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  await page.goto(practicePath);
+
+  const exercise = page.locator("#pref-practice-05");
+  const submit = exercise.getByRole("button", { name: "Check answer" });
+  await expect(submit).toBeDisabled();
+  await expect(
+    exercise.getByLabel(
+      "For {x, y}, which comparison direction or directions are present?",
+    ),
+  ).toBeVisible();
+  await expect(
+    exercise.getByLabel(
+      "For {x, z}, which comparison direction or directions are present?",
+    ),
+  ).toBeVisible();
+  await expect(
+    exercise.getByLabel(
+      "For {y, z}, which comparison direction or directions are present?",
+    ),
+  ).toBeVisible();
+
+  await exercise
+    .getByLabel(
+      "For {x, y}, which comparison direction or directions are present?",
+    )
+    .selectOption("both");
+  await exercise
+    .getByLabel(
+      "For {x, z}, which comparison direction or directions are present?",
+    )
+    .selectOption("z-x");
+  await exercise
+    .getByLabel(
+      "For {y, z}, which comparison direction or directions are present?",
+    )
+    .selectOption("y-z");
+  await exercise.getByLabel("No", { exact: true }).check();
+  await expect(submit).toBeEnabled();
+  await submit.click();
+
+  const feedback = exercise.locator("[data-evaluation-feedback]");
+  await expect(feedback).toContainText("Partially correct");
+  await expect(feedback).toContainText("1 of 4 responses are correct.");
+  await expect(feedback).not.toContainText("pair-xz");
+  await expect(submit).toHaveAttribute("aria-disabled", "true");
+
+  await exercise
+    .getByLabel(
+      "For {x, z}, which comparison direction or directions are present?",
+    )
+    .selectOption("x-z");
+  await exercise
+    .getByLabel(
+      "For {y, z}, which comparison direction or directions are present?",
+    )
+    .selectOption("z-y");
+  await exercise.getByLabel("Yes", { exact: true }).check();
+  await expect(feedback).toBeHidden();
+  await expect(submit).toBeEnabled();
+  await submit.click();
+  await expect(feedback).toContainText("Correct");
+});
+
+test("pref-practice-05 supports focused relation controls and keyboard submission", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  await page.goto(practicePath);
+
+  const exercise = page.locator("#pref-practice-05");
+  const pairXy = exercise.getByLabel(
+    "For {x, y}, which comparison direction or directions are present?",
+  );
+  await pairXy.focus();
+  await expect(pairXy).toBeFocused();
+  await pairXy.selectOption("both");
+  await exercise
+    .getByLabel(
+      "For {x, z}, which comparison direction or directions are present?",
+    )
+    .selectOption("x-z");
+  await exercise
+    .getByLabel(
+      "For {y, z}, which comparison direction or directions are present?",
+    )
+    .selectOption("z-y");
+  await exercise.getByLabel("Yes", { exact: true }).check();
+
+  const submit = exercise.getByRole("button", { name: "Check answer" });
+  await expect(submit).toBeEnabled();
+  await submit.focus();
+  await page.keyboard.press("Enter");
+  await expect(exercise.getByRole("status")).toContainText("Correct");
+  await expect(submit).toBeFocused();
 });
 
 test("pref-practice-04 evaluates a complete classification mapping and supports revision", async ({
@@ -222,6 +323,11 @@ test("static Mikro I preferences practice remains readable without JavaScript", 
   await page.goto(practicePath);
   await expect(page.getByRole("main")).toBeVisible();
   await expect(page.locator(".static-practice-exercise")).toHaveCount(12);
+  await expect(
+    page.getByLabel(
+      "For {x, y}, which comparison direction or directions are present?",
+    ),
+  ).toBeVisible();
   await expect(page.getByLabel("x ≽ y and not y ≽ x")).toBeVisible();
   await expect(
     page.getByRole("group", { name: "Is the relation complete?" }).first(),

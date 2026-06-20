@@ -73,6 +73,27 @@ function classificationResponse(form: HTMLFormElement) {
   );
 }
 
+function relationTableResponse(form: HTMLFormElement) {
+  const selectEntries = Array.from(
+    form.querySelectorAll<HTMLSelectElement>("select[data-response-field-id]"),
+    (field) => ({
+      positionId: field.dataset.responseFieldId ?? "",
+      answerId: field.value,
+    }),
+  );
+  const radioEntries = Array.from(
+    form.querySelectorAll<HTMLInputElement>(
+      'input[type="radio"][data-response-field-id]:checked',
+    ),
+    (field) => ({
+      positionId: field.dataset.responseFieldId ?? "",
+      answerId: field.value,
+    }),
+  );
+
+  return [...selectEntries, ...radioEntries];
+}
+
 async function evaluateSubmission(form: HTMLFormElement): Promise<void> {
   const exerciseId = form.dataset.exerciseId;
 
@@ -93,21 +114,29 @@ async function evaluateSubmission(form: HTMLFormElement): Promise<void> {
     throw new Error(`Unknown practice exercise: ${exerciseId}.`);
   }
 
+  const evaluationKind = form.dataset.evaluationKind;
   const classifications = classificationResponse(form);
+  const relationTableEntries = relationTableResponse(form);
   const selectedOption = selectedOptionId(form);
   const result = evaluationModule.mikro1PreferenceEvaluator.evaluate(
     exercise,
-    classifications.length > 0
+    evaluationKind === "relation-table-analysis"
       ? {
-          kind: "classification",
-          classifications,
+          kind: "relation-table",
+          entries: relationTableEntries,
           requiredFieldsComplete: isStructurallyComplete(form),
         }
-      : {
-          kind: "selection",
-          ...(selectedOption ? { selectedOptionId: selectedOption } : {}),
-          requiredFieldsComplete: isStructurallyComplete(form),
-        },
+      : evaluationKind === "classification"
+        ? {
+            kind: "classification",
+            classifications,
+            requiredFieldsComplete: isStructurallyComplete(form),
+          }
+        : {
+            kind: "selection",
+            ...(selectedOption ? { selectedOptionId: selectedOption } : {}),
+            requiredFieldsComplete: isStructurallyComplete(form),
+          },
   );
 
   setFeedback(form, result.feedback.heading, result.feedback.explanation);

@@ -65,7 +65,7 @@ describe("Mikro I preference evaluator", () => {
 
   it("fails incomplete submissions before assessing an answer", () => {
     for (const id of evaluableMikro1PreferenceExerciseIds.filter(
-      (id) => id !== "pref-practice-04",
+      (id) => id !== "pref-practice-04" && id !== "pref-practice-05",
     )) {
       expect(
         mikro1PreferenceEvaluator.evaluate(exercise(id), {
@@ -239,9 +239,177 @@ describe("Mikro I preference evaluator", () => {
         feedback: {
           heading: "Incomplete or invalid response",
           explanation:
-            "Complete every required classification using an available category before checking your answer.",
+            "Complete every required response using an available option before checking your answer.",
         },
       });
     }
+  });
+
+  it("evaluates the relation table independent of response-entry order", () => {
+    const response = {
+      kind: "relation-table" as const,
+      requiredFieldsComplete: true,
+      entries: [
+        { positionId: "complete", answerId: "yes" },
+        { positionId: "pair-yz", answerId: "z-y" },
+        { positionId: "pair-xy", answerId: "both" },
+        { positionId: "pair-xz", answerId: "x-z" },
+      ],
+    };
+
+    const result = mikro1PreferenceEvaluator.evaluate(
+      exercise("pref-practice-05"),
+      response,
+    );
+
+    expect(result).toMatchObject({
+      status: "fully-correct",
+      feedback: { heading: "Correct" },
+      correctCount: 4,
+      totalPositions: 4,
+    });
+    expect(result).toEqual(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-05"),
+        response,
+      ),
+    );
+  });
+
+  it("distinguishes partial and fully incorrect relation-table responses", () => {
+    expect(
+      mikro1PreferenceEvaluator.evaluate(exercise("pref-practice-05"), {
+        kind: "relation-table",
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "pair-xy", answerId: "both" },
+          { positionId: "pair-xz", answerId: "z-x" },
+          { positionId: "pair-yz", answerId: "y-z" },
+          { positionId: "complete", answerId: "no" },
+        ],
+      }),
+    ).toMatchObject({
+      status: "partially-correct",
+      feedback: {
+        heading: "Partially correct",
+        explanation: expect.stringContaining("1 of 4 responses are correct."),
+      },
+      correctCount: 1,
+      totalPositions: 4,
+    });
+
+    expect(
+      mikro1PreferenceEvaluator.evaluate(exercise("pref-practice-05"), {
+        kind: "relation-table",
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "pair-xy", answerId: "x-y" },
+          { positionId: "pair-xz", answerId: "z-x" },
+          { positionId: "pair-yz", answerId: "y-z" },
+          { positionId: "complete", answerId: "no" },
+        ],
+      }),
+    ).toMatchObject({
+      status: "fully-incorrect",
+      feedback: { heading: "Not yet correct" },
+      correctCount: 0,
+      totalPositions: 4,
+    });
+  });
+
+  it("rejects malformed relation-table entries without evaluating them", () => {
+    const invalidResponses = [
+      {
+        kind: "relation-table" as const,
+        requiredFieldsComplete: false,
+        entries: [],
+      },
+      {
+        kind: "relation-table" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "pair-xy", answerId: "both" },
+          { positionId: "pair-xz", answerId: "x-z" },
+          { positionId: "pair-yz", answerId: "z-y" },
+        ],
+      },
+      {
+        kind: "relation-table" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "pair-xy", answerId: "both" },
+          { positionId: "pair-xy", answerId: "both" },
+          { positionId: "pair-yz", answerId: "z-y" },
+          { positionId: "complete", answerId: "yes" },
+        ],
+      },
+      {
+        kind: "relation-table" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "unknown", answerId: "both" },
+          { positionId: "pair-xz", answerId: "x-z" },
+          { positionId: "pair-yz", answerId: "z-y" },
+          { positionId: "complete", answerId: "yes" },
+        ],
+      },
+      {
+        kind: "relation-table" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "pair-xy", answerId: "unknown" },
+          { positionId: "pair-xz", answerId: "x-z" },
+          { positionId: "pair-yz", answerId: "z-y" },
+          { positionId: "complete", answerId: "yes" },
+        ],
+      },
+      {
+        kind: "relation-table" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "pair-xy", answerId: "both" },
+          { positionId: "pair-xz", answerId: "x-z" },
+          { positionId: "pair-yz", answerId: "z-y" },
+          { positionId: "complete", answerId: "yes" },
+          { positionId: "extra", answerId: "yes" },
+        ],
+      },
+    ];
+
+    for (const response of invalidResponses) {
+      expect(
+        mikro1PreferenceEvaluator.evaluate(
+          exercise("pref-practice-05"),
+          response,
+        ),
+      ).toEqual({
+        status: "incomplete",
+        feedback: {
+          heading: "Incomplete or invalid response",
+          explanation:
+            "Complete every required response using an available option before checking your answer.",
+        },
+      });
+    }
+  });
+
+  it("does not expose relation-table answer positions through feedback", () => {
+    const result = mikro1PreferenceEvaluator.evaluate(
+      exercise("pref-practice-05"),
+      {
+        kind: "relation-table",
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "pair-xy", answerId: "both" },
+          { positionId: "pair-xz", answerId: "z-x" },
+          { positionId: "pair-yz", answerId: "y-z" },
+          { positionId: "complete", answerId: "no" },
+        ],
+      },
+    );
+
+    expect(result).not.toHaveProperty("entries");
+    expect(result).not.toHaveProperty("mappings");
+    expect(JSON.stringify(result)).not.toContain("pair-xy");
   });
 });

@@ -20,6 +20,7 @@ export const evaluableMikro1PreferenceExerciseIds = [
   "pref-practice-02",
   "pref-practice-03",
   "pref-practice-04",
+  "pref-practice-05",
   "pref-practice-06",
   "pref-practice-09",
 ] as const;
@@ -111,6 +112,10 @@ export interface EvaluationMetadata {
   classificationMappings?: Array<{
     itemId: string;
     classificationId: string;
+  }>;
+  relationTableMappings?: Array<{
+    positionId: string;
+    answerId: string;
   }>;
   acceptedAnswerStructure: string[];
   approvedRelationPairKeys?: string[];
@@ -374,6 +379,36 @@ export function validateMikro1PreferenceExercises(
       ) {
         errors.push(
           "pref-practice-04: approved classification mappings and partial feedback are required.",
+        );
+      }
+    }
+
+    if (exercise.id === "pref-practice-05") {
+      const mappings = exercise.evaluationMetadata.relationTableMappings;
+      const responseFields = exercise.responseDefinition.fields.filter(
+        (field): field is ChoiceResponseField =>
+          field.kind === "select" || field.kind === "radio",
+      );
+
+      if (
+        !mappings ||
+        mappings.length !== responseFields.length ||
+        new Set(mappings.map((mapping) => mapping.positionId)).size !==
+          mappings.length ||
+        mappings.some((mapping) => {
+          const field = responseFields.find(
+            (candidate) => candidate.id === mapping.positionId,
+          );
+
+          return (
+            !field ||
+            !field.options.some((option) => option.id === mapping.answerId)
+          );
+        }) ||
+        !exercise.feedbackMetadata.partialExplanation
+      ) {
+        errors.push(
+          "pref-practice-05: approved relation-table mappings and partial feedback are required.",
         );
       }
     }

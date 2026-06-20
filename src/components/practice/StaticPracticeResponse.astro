@@ -29,6 +29,7 @@ const feedbackId = `${exercise.id}-feedback`;
       <form
         data-mikro1-evaluation-form
         data-exercise-id={exercise.id}
+        data-evaluation-kind={exercise.interactionType}
         aria-describedby={instructionsId}
       >
         <div>
@@ -48,10 +49,7 @@ const feedbackId = `${exercise.id}-feedback`;
         >
           Check answer
         </button>
-        <p class="card__meta">
-          Answer checking requires JavaScript. Written justifications are
-          required for completion but are not automatically graded.
-        </p>
+        <p class="card__meta">Answer checking requires JavaScript.</p>
         <div
           class="static-practice-feedback"
           id={feedbackId}
