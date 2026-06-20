@@ -1497,6 +1497,24 @@ details > * {
   color: var(--color-text);
 }
 
+.static-practice-response form {
+  display: grid;
+  gap: var(--space-16);
+}
+
+.static-practice-feedback {
+  display: grid;
+  gap: var(--space-8);
+  padding: var(--space-12);
+  border-inline-start: 0.35rem solid var(--color-status-info-text);
+  background: var(--color-status-info-bg);
+}
+
+.static-practice-feedback h4,
+.static-practice-feedback p {
+  margin: 0;
+}
+
 .static-practice-field textarea {
   min-block-size: 7rem;
   resize: vertical;

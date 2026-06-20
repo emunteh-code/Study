@@ -3,9 +3,9 @@ import { expect, test } from "@playwright/test";
 
 const practicePath = "/Study/ueben/mikrooekonomik-1/praeferenzrelationen/";
 
-test("static Mikro I preferences practice renders all approved exercises without evaluation", async ({
+test("Mikro I preferences practice renders all approved exercises with scoped evaluation controls", async ({
   page,
-}) => {
+}, testInfo) => {
   await page.goto(practicePath);
 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -19,7 +19,10 @@ test("static Mikro I preferences practice renders all approved exercises without
     page.getByRole("heading", { name: "Derive the incompatibility" }),
   ).toBeVisible();
   await expect(page.getByText("Notation used in this set")).toBeVisible();
-  await expect(page.locator('button[type="submit"]')).toHaveCount(0);
+  await expect(page.locator('button[type="submit"]')).toHaveCount(4);
+  await expect(page.locator("form[data-mikro1-evaluation-form]")).toHaveCount(
+    4,
+  );
   await expect(page.getByText("Score", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Correct", { exact: true })).toHaveCount(0);
   await expect(page.getByText("The two definitions require both")).toHaveCount(
@@ -27,12 +30,20 @@ test("static Mikro I preferences practice renders all approved exercises without
   );
   const html = await page.content();
   expect(html).not.toContain("correctOptionIds");
+  expect(html).not.toContain("acceptedAnswerStructure");
+  expect(html).not.toContain("solutionMetadata");
   expect(html).not.toContain("claim-pref-");
   expect(html).not.toContain("The relation is complete because every");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
     "content",
     "noindex, nofollow",
   );
+
+  if (testInfo.project.name.includes("no-js")) {
+    await expect(
+      page.getByText("Answer checking requires JavaScript.").first(),
+    ).toBeVisible();
+  }
 });
 
 test("static practice controls and relation tables expose native semantics", async ({
@@ -52,7 +63,77 @@ test("static practice controls and relation tables expose native semantics", asy
     page.getByText(
       "Response evaluation is not available in this practice version.",
     ),
-  ).toHaveCount(12);
+  ).toHaveCount(8);
+});
+
+test("scoped exercises evaluate selected answers without revealing a solution", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  await page.goto(practicePath);
+
+  const answers = [
+    { id: "pref-practice-02", label: "x ∼ y means x ≽ y and y ≽ x." },
+    {
+      id: "pref-practice-03",
+      label: "False",
+      justification: "Both directions hold.",
+    },
+    {
+      id: "pref-practice-06",
+      label: "Not complete, because neither x ≽ z nor z ≽ x holds.",
+      justification: "The x and z pair has no direction.",
+    },
+    {
+      id: "pref-practice-09",
+      label: "False",
+      justification: "Transitivity is also required.",
+    },
+  ];
+
+  for (const answer of answers) {
+    const exercise = page.locator(`#${answer.id}`);
+    await exercise.getByLabel(answer.label, { exact: true }).check();
+    if (answer.justification) {
+      await exercise.getByLabel("Justification").fill(answer.justification);
+    }
+    const submit = exercise.getByRole("button", { name: "Check answer" });
+    await expect(submit).toBeEnabled();
+    await submit.click();
+    await expect(exercise.getByRole("status")).toContainText("Correct");
+  }
+
+  await expect(page.getByText("Show full solution")).toHaveCount(0);
+  await expect(page.getByText("The pair {x,z} has no direction")).toHaveCount(
+    0,
+  );
+});
+
+test("incorrect scoped responses retain keyboard revision and announce feedback", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  await page.goto(practicePath);
+
+  const exercise = page.locator("#pref-practice-03");
+  await exercise.getByLabel("True", { exact: true }).check();
+  await exercise.getByLabel("Justification").fill("A first attempt.");
+  const submit = exercise.getByRole("button", { name: "Check answer" });
+  await submit.focus();
+  await page.keyboard.press("Enter");
+
+  const feedback = exercise.locator("[data-evaluation-feedback]");
+  await expect(feedback).toHaveAttribute("role", "status");
+  await expect(feedback).toHaveAttribute("aria-live", "polite");
+  await expect(feedback).toContainText("Not yet correct");
+  await expect(submit).toBeFocused();
+  await expect(submit).toBeDisabled();
+
+  await exercise.getByLabel("False", { exact: true }).check();
+  await expect(feedback).toBeHidden();
+  await expect(submit).toBeEnabled();
+  await submit.click();
+  await expect(feedback).toContainText("Correct");
 });
 
 test("static Mikro I preferences practice is keyboard reachable and has no obvious accessibility violations", async ({

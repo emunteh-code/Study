@@ -28,6 +28,7 @@ const fieldId = `${exerciseId}-${field.id}`;
             : instructionsId
         }
         aria-required={field.required ? "true" : undefined}
+        required={field.required}
         rows="4"
       />
     </div>
@@ -51,6 +52,7 @@ const fieldId = `${exerciseId}-${field.id}`;
             : instructionsId
         }
         aria-required={field.required ? "true" : undefined}
+        required={field.required}
       />
     </div>
   )
@@ -65,6 +67,7 @@ const fieldId = `${exerciseId}-${field.id}`;
         name={fieldId}
         aria-describedby={instructionsId}
         aria-required={field.required ? "true" : undefined}
+        required={field.required}
       >
         <option value="">Bitte auswählen</option>
         {field.options.map((option) => (
@@ -79,7 +82,7 @@ const fieldId = `${exerciseId}-${field.id}`;
   field.kind === "radio" && (
     <fieldset class="static-practice-field" aria-describedby={instructionsId}>
       <legend>{field.label}</legend>
-      {field.options.map((option) => {
+      {field.options.map((option, index) => {
         const optionId = `${fieldId}-${option.id}`;
 
         return (
@@ -89,6 +92,7 @@ const fieldId = `${exerciseId}-${field.id}`;
               name={fieldId}
               type="radio"
               value={option.id}
+              required={field.required && index === 0}
             />
             <label for={optionId}>
               <AccessiblePracticeText text={option.label} />

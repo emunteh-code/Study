@@ -1,0 +1,83 @@
+---
+import AccessiblePracticeText from "./AccessiblePracticeText.astro";
+import StaticPracticeResponseField from "./StaticPracticeResponseField.astro";
+import type { StaticMikro1PreferenceExercise } from "../../lib/mikro1-preferences-practice";
+
+interface Props {
+  exercise: StaticMikro1PreferenceExercise;
+  instructionsId: string;
+}
+
+const { exercise, instructionsId } = Astro.props;
+const feedbackId = `${exercise.id}-feedback`;
+---
+
+<div class="static-practice-response">
+  <h3 id={`${exercise.id}-response`}>Response</h3>
+  <p id={instructionsId}>{exercise.responseDefinition.responseSummary}</p>
+  <ul class="static-practice-instructions">
+    {
+      exercise.learnerVisibleContent.instructions.map((instruction) => (
+        <li>
+          <AccessiblePracticeText text={instruction} />
+        </li>
+      ))
+    }
+  </ul>
+  {
+    exercise.evaluationAvailable ? (
+      <form
+        data-mikro1-evaluation-form
+        data-exercise-id={exercise.id}
+        aria-describedby={instructionsId}
+      >
+        <div>
+          {exercise.responseDefinition.fields.map((field) => (
+            <StaticPracticeResponseField
+              exerciseId={exercise.id}
+              instructionsId={instructionsId}
+              field={field}
+            />
+          ))}
+        </div>
+        <button
+          class="button button--primary"
+          type="submit"
+          data-evaluation-submit
+          disabled
+        >
+          Check answer
+        </button>
+        <p class="card__meta">
+          Answer checking requires JavaScript. Written justifications are
+          required for completion but are not automatically graded.
+        </p>
+        <div
+          class="static-practice-feedback"
+          id={feedbackId}
+          data-evaluation-feedback
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          hidden
+        >
+          <h4 data-evaluation-feedback-heading />
+          <p data-evaluation-feedback-text />
+        </div>
+      </form>
+    ) : (
+      <div>
+        {exercise.responseDefinition.fields.map((field) => (
+          <StaticPracticeResponseField
+            exerciseId={exercise.id}
+            instructionsId={instructionsId}
+            field={field}
+          />
+        ))}
+        <p class="card__meta">
+          Response evaluation is not available in this practice version.
+        </p>
+      </div>
+    )
+  }
+</div>

@@ -163,6 +163,10 @@ export const mikro1PreferencesPracticeExercises = [
     feedbackMetadata: {
       misconceptionIds: ["mis-pref-02"],
       conceptualFocus: "Indifference requires both weak-comparison directions.",
+      correctExplanation:
+        "Indifference requires both weak-comparison directions to hold.",
+      incorrectExplanation:
+        "This selection may be treating one weak comparison as sufficient. Check whether both directions are required.",
     },
     solutionMetadata: {
       summary:
@@ -232,6 +236,10 @@ export const mikro1PreferencesPracticeExercises = [
       misconceptionIds: ["mis-pref-01"],
       conceptualFocus:
         "Mutual weak preference establishes indifference, not strict preference.",
+      correctExplanation:
+        "Mutual weak preference establishes indifference; strict preference requires the reverse weak comparison not to hold.",
+      incorrectExplanation:
+        "This selection may be overlooking the reverse weak comparison. Compare the conditions for indifference and strict preference.",
     },
     solutionMetadata: {
       summary:
@@ -533,6 +541,10 @@ export const mikro1PreferencesPracticeExercises = [
       misconceptionIds: ["mis-pref-04", "mis-pref-07"],
       conceptualFocus:
         "A missing comparison is a completeness failure only when the required pair is exhaustive; it is not automatically a transitivity failure.",
+      correctExplanation:
+        "Completeness fails because neither direction is supplied for the pair x and z in the exhaustive list.",
+      incorrectExplanation:
+        "This selection may be confusing a missing pair with a missing transitivity consequence. Check the pair x and z under the exhaustive-list condition.",
     },
     solutionMetadata: {
       summary: "The pair {x,z} has no direction, so completeness fails.",
@@ -777,6 +789,10 @@ export const mikro1PreferencesPracticeExercises = [
       misconceptionIds: ["mis-pref-05"],
       conceptualFocus:
         "Rationality is the technical conjunction of completeness and transitivity.",
+      correctExplanation:
+        "Rationality requires both completeness and transitivity, so completeness alone is insufficient.",
+      incorrectExplanation:
+        "This selection may be treating completeness as the whole rationality condition. Check the additional axiom required for rationality.",
     },
     solutionMetadata: {
       summary:

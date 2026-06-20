@@ -16,6 +16,16 @@ export const approvedMikro1PreferenceExerciseIds = [
 export type Mikro1PreferenceExerciseId =
   (typeof approvedMikro1PreferenceExerciseIds)[number];
 
+export const evaluableMikro1PreferenceExerciseIds = [
+  "pref-practice-02",
+  "pref-practice-03",
+  "pref-practice-06",
+  "pref-practice-09",
+] as const;
+
+export type EvaluableMikro1PreferenceExerciseId =
+  (typeof evaluableMikro1PreferenceExerciseIds)[number];
+
 export const supportedMikro1PracticeInteractionTypes = [
   "single-choice",
   "true-false-with-justification",
@@ -104,6 +114,8 @@ export interface EvaluationMetadata {
 export interface FeedbackMetadata {
   misconceptionIds: string[];
   conceptualFocus: string;
+  correctExplanation?: string;
+  incorrectExplanation?: string;
 }
 
 export interface SolutionMetadata {
@@ -159,6 +171,7 @@ export interface StaticMikro1PreferenceExercise {
   relationData?: RelationData;
   derivationSteps?: DerivationStep[];
   accessibility: AccessibilityMetadata;
+  evaluationAvailable: boolean;
 }
 
 const approvedClaimIds = new Set([
@@ -199,6 +212,14 @@ function isSelectionExercise(exercise: Mikro1PreferenceExercise): boolean {
   return (
     exercise.interactionType === "single-choice" ||
     exercise.interactionType === "true-false-with-justification"
+  );
+}
+
+export function isEvaluableMikro1PreferenceExercise(
+  exerciseId: Mikro1PreferenceExerciseId,
+): exerciseId is EvaluableMikro1PreferenceExerciseId {
+  return evaluableMikro1PreferenceExerciseIds.includes(
+    exerciseId as EvaluableMikro1PreferenceExerciseId,
   );
 }
 
@@ -305,6 +326,17 @@ export function validateMikro1PreferenceExercises(
       if (correctOptionIds.length !== 1) {
         errors.push(
           `${exercise.id}: selection exercises need exactly one correct hidden option ID.`,
+        );
+      }
+    }
+
+    if (isEvaluableMikro1PreferenceExercise(exercise.id)) {
+      if (
+        !exercise.feedbackMetadata.correctExplanation ||
+        !exercise.feedbackMetadata.incorrectExplanation
+      ) {
+        errors.push(
+          `${exercise.id}: evaluable exercises need approved correct and incorrect feedback.`,
         );
       }
     }
@@ -430,5 +462,6 @@ export function toStaticMikro1PreferenceExercise(
       ? { derivationSteps: exercise.derivationSteps }
       : {}),
     accessibility: exercise.accessibility,
+    evaluationAvailable: isEvaluableMikro1PreferenceExercise(exercise.id),
   };
 }

@@ -35,6 +35,19 @@ describe("Mikro I preference practice production data", () => {
     }
   });
 
+  it("exposes evaluation availability without exposing evaluator metadata", () => {
+    const evaluableIds = staticMikro1PreferencesPracticeExercises
+      .filter((exercise) => exercise.evaluationAvailable)
+      .map((exercise) => exercise.id);
+
+    expect(evaluableIds).toEqual([
+      "pref-practice-02",
+      "pref-practice-03",
+      "pref-practice-06",
+      "pref-practice-09",
+    ]);
+  });
+
   it("rejects missing versions, duplicate IDs, and unexpected exercise IDs", () => {
     const versionless = cloneExercises();
     versionless[0]!.version = 0;

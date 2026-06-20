@@ -19,3 +19,9 @@ import BaseLayout from "../../../../layouts/BaseLayout.astro";
 >
   <StaticPracticeSet exercises={staticMikro1PreferencesPracticeExercises} />
 </BaseLayout>
+
+<script>
+  import { enhanceMikro1PreferencesEvaluation } from "../../../../scripts/mikro1-preferences-evaluation";
+
+  enhanceMikro1PreferencesEvaluation();
+</script>

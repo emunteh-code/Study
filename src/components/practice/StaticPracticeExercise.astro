@@ -1,6 +1,6 @@
 ---
 import AccessiblePracticeText from "./AccessiblePracticeText.astro";
-import StaticPracticeResponseField from "./StaticPracticeResponseField.astro";
+import StaticPracticeResponse from "./StaticPracticeResponse.astro";
 import StatusLabel from "../foundation/StatusLabel.astro";
 import type { StaticMikro1PreferenceExercise } from "../../lib/mikro1-preferences-practice";
 
@@ -124,31 +124,10 @@ const difficultyLabels = {
           </div>
         )}
 
-        <div class="static-practice-response">
-          <h3 id={`${exercise.id}-response`}>Response</h3>
-          <p id={instructionsId}>
-            {exercise.responseDefinition.responseSummary}
-          </p>
-          <ul class="static-practice-instructions">
-            {exercise.learnerVisibleContent.instructions.map((instruction) => (
-              <li>
-                <AccessiblePracticeText text={instruction} />
-              </li>
-            ))}
-          </ul>
-          <div>
-            {exercise.responseDefinition.fields.map((field) => (
-              <StaticPracticeResponseField
-                exerciseId={exercise.id}
-                instructionsId={instructionsId}
-                field={field}
-              />
-            ))}
-          </div>
-          <p class="card__meta">
-            Response evaluation is not available in this practice version.
-          </p>
-        </div>
+        <StaticPracticeResponse
+          exercise={exercise}
+          instructionsId={instructionsId}
+        />
       </>
     )
   }
