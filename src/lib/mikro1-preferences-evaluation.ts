@@ -50,11 +50,23 @@ export interface Mikro1PreferenceTransitivityChainResponse {
   requiredFieldsComplete: boolean;
 }
 
+export interface Mikro1PreferenceTransitivityViolationEntry {
+  positionId: string;
+  answerId: string;
+}
+
+export interface Mikro1PreferenceTransitivityViolationResponse {
+  kind: "transitivity-violation";
+  entries: Mikro1PreferenceTransitivityViolationEntry[];
+  requiredFieldsComplete: boolean;
+}
+
 export type Mikro1PreferenceEvaluationResponse =
   | Mikro1PreferenceSelectionResponse
   | Mikro1PreferenceClassificationResponse
   | Mikro1PreferenceRelationTableResponse
-  | Mikro1PreferenceTransitivityChainResponse;
+  | Mikro1PreferenceTransitivityChainResponse
+  | Mikro1PreferenceTransitivityViolationResponse;
 
 export interface Mikro1PreferenceEvaluationFeedback {
   heading: string;
@@ -98,6 +110,7 @@ function isExpectedExercise(
     "pref-practice-05",
     "pref-practice-06",
     "pref-practice-07",
+    "pref-practice-08",
     "pref-practice-09",
   ].includes(exercise.id);
 }
@@ -422,6 +435,89 @@ function evaluateTransitivityChain(
   };
 }
 
+function evaluateTransitivityViolation(
+  exercise: Mikro1PreferenceExercise,
+  response: Mikro1PreferenceTransitivityViolationResponse,
+): Mikro1PreferenceEvaluationResult {
+  const violation = exercise.evaluationMetadata.transitivityViolation;
+  const feedback = exercise.feedbackMetadata;
+
+  if (
+    !violation ||
+    !exercise.relationData ||
+    !feedback.correctExplanation ||
+    !feedback.incorrectExplanation
+  ) {
+    throw new Error(`Evaluation metadata is unavailable for ${exercise.id}.`);
+  }
+
+  const expectedAnswers = new Map([
+    [violation.classification.positionId, violation.classification.answerId],
+    [violation.triple.firstPositionId, violation.triple.firstAnswerId],
+    [violation.triple.middlePositionId, violation.triple.middleAnswerId],
+    [violation.triple.lastPositionId, violation.triple.lastAnswerId],
+  ]);
+  const responseFields = new Map(
+    exercise.responseDefinition.fields.map((field) => [field.id, field]),
+  );
+  const submittedEntries = new Map<string, string>();
+
+  if (
+    !response.requiredFieldsComplete ||
+    response.entries.length !== expectedAnswers.size ||
+    response.entries.some(({ positionId, answerId }) => {
+      const field = responseFields.get(positionId);
+
+      if (!field || submittedEntries.has(positionId)) {
+        return true;
+      }
+
+      if (
+        (positionId === violation.classification.positionId &&
+          (field.kind !== "radio" ||
+            !field.options.some((option) => option.id === answerId))) ||
+        (positionId !== violation.classification.positionId &&
+          (field.kind !== "select" ||
+            !field.options.some((option) => option.id === answerId)))
+      ) {
+        return true;
+      }
+
+      submittedEntries.set(positionId, answerId);
+      return false;
+    }) ||
+    submittedEntries.size !== expectedAnswers.size ||
+    [...submittedEntries.keys()].some(
+      (positionId) => !expectedAnswers.has(positionId),
+    )
+  ) {
+    return { status: "incomplete", feedback: invalidStructuredFeedback };
+  }
+
+  // Classification and witness together establish one counterexample claim.
+  if (
+    [...expectedAnswers].some(
+      ([positionId, answerId]) => submittedEntries.get(positionId) !== answerId,
+    )
+  ) {
+    return {
+      status: "fully-incorrect",
+      feedback: {
+        heading: "Not yet correct",
+        explanation: feedback.incorrectExplanation,
+      },
+    };
+  }
+
+  return {
+    status: "fully-correct",
+    feedback: {
+      heading: "Correct",
+      explanation: feedback.correctExplanation,
+    },
+  };
+}
+
 export const mikro1PreferenceEvaluator: Mikro1PreferenceEvaluator = {
   evaluate(exercise, response) {
     if (!isExpectedExercise(exercise)) {
@@ -452,6 +548,15 @@ export const mikro1PreferenceEvaluator: Mikro1PreferenceEvaluator = {
     ) {
       return response.kind === "transitivity-chain"
         ? evaluateTransitivityChain(exercise, response)
+        : { status: "incomplete", feedback: invalidStructuredFeedback };
+    }
+
+    if (
+      exercise.interactionType === "relation-table-analysis" &&
+      exercise.id === "pref-practice-08"
+    ) {
+      return response.kind === "transitivity-violation"
+        ? evaluateTransitivityViolation(exercise, response)
         : { status: "incomplete", feedback: invalidStructuredFeedback };
     }
 

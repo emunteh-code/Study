@@ -744,11 +744,26 @@ export const mikro1PreferencesPracticeExercises = [
     evaluationMetadata: {
       acceptedAnswerStructure: ["Transitive: no", "Ordered triple: (x, y, z)"],
       approvedRelationPairKeys: relationKeys,
+      transitivityViolation: {
+        classification: { positionId: "transitive", answerId: "no" },
+        triple: {
+          firstPositionId: "first",
+          middlePositionId: "middle",
+          lastPositionId: "last",
+          firstAnswerId: "x",
+          middleAnswerId: "y",
+          lastAnswerId: "z",
+        },
+      },
     },
     feedbackMetadata: {
       misconceptionIds: ["mis-pref-04"],
       conceptualFocus:
         "A transitivity failure needs a concrete weak-preference chain with an absent endpoint.",
+      correctExplanation:
+        "The selected classification and ordered triple identify a transitivity failure.",
+      incorrectExplanation:
+        "Reconsider the direction of the two supplied comparisons and whether their endpoint is present.",
     },
     solutionMetadata: {
       summary:

@@ -23,6 +23,7 @@ export const evaluableMikro1PreferenceExerciseIds = [
   "pref-practice-05",
   "pref-practice-06",
   "pref-practice-07",
+  "pref-practice-08",
   "pref-practice-09",
 ] as const;
 
@@ -128,6 +129,20 @@ export interface EvaluationMetadata {
       from: string;
       to: string;
     }>;
+  };
+  transitivityViolation?: {
+    classification: {
+      positionId: string;
+      answerId: string;
+    };
+    triple: {
+      firstPositionId: string;
+      middlePositionId: string;
+      lastPositionId: string;
+      firstAnswerId: string;
+      middleAnswerId: string;
+      lastAnswerId: string;
+    };
   };
   acceptedAnswerStructure: string[];
   approvedRelationPairKeys?: string[];
@@ -459,6 +474,81 @@ export function validateMikro1PreferenceExercises(
       ) {
         errors.push(
           "pref-practice-07: a valid transitivity chain with directed relation positions is required.",
+        );
+      }
+    }
+
+    if (exercise.id === "pref-practice-08") {
+      const violation = exercise.evaluationMetadata.transitivityViolation;
+      const responseFields = new Map(
+        exercise.responseDefinition.fields.map((field) => [field.id, field]),
+      );
+      const positions = violation
+        ? [
+            violation.classification.positionId,
+            violation.triple.firstPositionId,
+            violation.triple.middlePositionId,
+            violation.triple.lastPositionId,
+          ]
+        : [];
+      const classificationField = responseFields.get(
+        violation?.classification.positionId ?? "",
+      );
+      const hasValidClassification =
+        classificationField?.kind === "radio" &&
+        classificationField.options.some(
+          (option) => option.id === violation?.classification.answerId,
+        );
+      const tripleEntries = violation
+        ? [
+            {
+              positionId: violation.triple.firstPositionId,
+              answerId: violation.triple.firstAnswerId,
+            },
+            {
+              positionId: violation.triple.middlePositionId,
+              answerId: violation.triple.middleAnswerId,
+            },
+            {
+              positionId: violation.triple.lastPositionId,
+              answerId: violation.triple.lastAnswerId,
+            },
+          ]
+        : [];
+      const relationStatus = new Map(
+        exercise.relationData?.orderedPairs.map((pair) => [
+          pairKey(pair),
+          pair.status,
+        ]),
+      );
+
+      if (
+        !violation ||
+        !exercise.relationData ||
+        positions.length !== 4 ||
+        new Set(positions).size !== positions.length ||
+        !hasValidClassification ||
+        tripleEntries.some(({ positionId, answerId }) => {
+          const field = responseFields.get(positionId);
+          return (
+            !field ||
+            field.kind !== "select" ||
+            !field.options.some((option) => option.id === answerId) ||
+            !exercise.relationData?.domain.includes(answerId)
+          );
+        }) ||
+        relationStatus.get(
+          `${violation.triple.firstAnswerId}:${violation.triple.middleAnswerId}`,
+        ) !== "holds" ||
+        relationStatus.get(
+          `${violation.triple.middleAnswerId}:${violation.triple.lastAnswerId}`,
+        ) !== "holds" ||
+        relationStatus.get(
+          `${violation.triple.firstAnswerId}:${violation.triple.lastAnswerId}`,
+        ) !== "does-not-hold"
+      ) {
+        errors.push(
+          "pref-practice-08: a valid directed transitivity-violation witness is required.",
         );
       }
     }

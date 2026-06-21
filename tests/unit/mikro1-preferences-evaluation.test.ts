@@ -68,7 +68,8 @@ describe("Mikro I preference evaluator", () => {
       (id) =>
         id !== "pref-practice-04" &&
         id !== "pref-practice-05" &&
-        id !== "pref-practice-07",
+        id !== "pref-practice-07" &&
+        id !== "pref-practice-08",
     )) {
       expect(
         mikro1PreferenceEvaluator.evaluate(exercise(id), {
@@ -535,6 +536,135 @@ describe("Mikro I preference evaluator", () => {
       expect(
         mikro1PreferenceEvaluator.evaluate(
           exercise("pref-practice-07"),
+          response,
+        ),
+      ).toMatchObject({
+        status: "incomplete",
+        feedback: { heading: "Incomplete or invalid response" },
+      });
+    }
+  });
+
+  it("evaluates the directed transitivity violation independent of response order", () => {
+    const response = {
+      kind: "transitivity-violation" as const,
+      requiredFieldsComplete: true,
+      entries: [
+        { positionId: "last", answerId: "z" },
+        { positionId: "transitive", answerId: "no" },
+        { positionId: "first", answerId: "x" },
+        { positionId: "middle", answerId: "y" },
+      ],
+    };
+
+    expect(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-08"),
+        response,
+      ),
+    ).toMatchObject({
+      status: "fully-correct",
+      feedback: { heading: "Correct" },
+    });
+    expect(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-08"),
+        response,
+      ),
+    ).toEqual(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-08"),
+        response,
+      ),
+    );
+  });
+
+  it("treats a valid but wrong transitivity witness as one incorrect logical claim without answer leakage", () => {
+    const result = mikro1PreferenceEvaluator.evaluate(
+      exercise("pref-practice-08"),
+      {
+        kind: "transitivity-violation",
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "no" },
+          { positionId: "first", answerId: "y" },
+          { positionId: "middle", answerId: "x" },
+          { positionId: "last", answerId: "z" },
+        ],
+      },
+    );
+
+    expect(result).toMatchObject({
+      status: "fully-incorrect",
+      feedback: { heading: "Not yet correct" },
+    });
+    expect(result).not.toHaveProperty("correctCount");
+    expect(result.feedback.explanation).not.toContain("x, y, z");
+  });
+
+  it("rejects incomplete, duplicated, unknown, extra, and invalid transitivity-violation entries", () => {
+    const invalidResponses = [
+      {
+        kind: "transitivity-violation" as const,
+        requiredFieldsComplete: false,
+        entries: [],
+      },
+      {
+        kind: "transitivity-violation" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "no" },
+          { positionId: "first", answerId: "x" },
+          { positionId: "middle", answerId: "y" },
+        ],
+      },
+      {
+        kind: "transitivity-violation" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "no" },
+          { positionId: "first", answerId: "x" },
+          { positionId: "first", answerId: "x" },
+          { positionId: "last", answerId: "z" },
+        ],
+      },
+      {
+        kind: "transitivity-violation" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "unknown" },
+          { positionId: "first", answerId: "x" },
+          { positionId: "middle", answerId: "y" },
+          { positionId: "last", answerId: "z" },
+        ],
+      },
+      {
+        kind: "transitivity-violation" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "no" },
+          { positionId: "unknown", answerId: "x" },
+          { positionId: "middle", answerId: "y" },
+          { positionId: "last", answerId: "z" },
+        ],
+      },
+      {
+        kind: "transitivity-violation" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "no" },
+          { positionId: "first", answerId: "x" },
+          { positionId: "middle", answerId: "y" },
+          { positionId: "last", answerId: "z" },
+          { positionId: "extra", answerId: "z" },
+        ],
+      },
+    ];
+
+    for (const response of invalidResponses) {
+      expect(
+        mikro1PreferenceEvaluator.evaluate(
+          exercise("pref-practice-08"),
           response,
         ),
       ).toMatchObject({

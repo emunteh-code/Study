@@ -47,6 +47,7 @@ describe("Mikro I preference practice production data", () => {
       "pref-practice-05",
       "pref-practice-06",
       "pref-practice-07",
+      "pref-practice-08",
       "pref-practice-09",
     ]);
   });
@@ -123,6 +124,22 @@ describe("Mikro I preference practice production data", () => {
       "outside";
     expect(validateMikro1PreferenceExercises(malformedChain)).toContain(
       "pref-practice-07: a valid transitivity chain with directed relation positions is required.",
+    );
+  });
+
+  it("rejects malformed or contradictory transitivity-violation metadata", () => {
+    const malformedViolation = cloneExercises();
+    malformedViolation[7]!.evaluationMetadata.transitivityViolation!.triple.firstPositionId =
+      "middle";
+    expect(validateMikro1PreferenceExercises(malformedViolation)).toContain(
+      "pref-practice-08: a valid directed transitivity-violation witness is required.",
+    );
+
+    const contradictoryViolation = cloneExercises();
+    contradictoryViolation[7]!.evaluationMetadata.transitivityViolation!.triple.lastAnswerId =
+      "y";
+    expect(validateMikro1PreferenceExercises(contradictoryViolation)).toContain(
+      "pref-practice-08: a valid directed transitivity-violation witness is required.",
     );
   });
 

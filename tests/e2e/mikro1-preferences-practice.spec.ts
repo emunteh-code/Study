@@ -19,9 +19,9 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
     page.getByRole("heading", { name: "Derive the incompatibility" }),
   ).toBeVisible();
   await expect(page.getByText("Notation used in this set")).toBeVisible();
-  await expect(page.locator('button[type="submit"]')).toHaveCount(7);
+  await expect(page.locator('button[type="submit"]')).toHaveCount(8);
   await expect(page.locator("form[data-mikro1-evaluation-form]")).toHaveCount(
-    7,
+    8,
   );
   await expect(page.getByText("Score", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Correct", { exact: true })).toHaveCount(0);
@@ -35,6 +35,7 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
   expect(html).not.toContain("classificationMappings");
   expect(html).not.toContain("relationTableMappings");
   expect(html).not.toContain("transitivityChain");
+  expect(html).not.toContain("transitivityViolation");
   expect(html).not.toContain("claim-pref-");
   expect(html).not.toContain("The relation is complete because every");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
@@ -66,10 +67,10 @@ test("static practice controls and relation tables expose native semantics", asy
     page.getByText(
       "Response evaluation is not available in this practice version.",
     ),
-  ).toHaveCount(5);
+  ).toHaveCount(4);
 });
 
-test("pref-practice-07 evaluates the reviewed transitivity chain without exposing its directions", async ({
+test("pref-practice-07 and pref-practice-08 evaluate reviewed transitivity reasoning without exposing directions", async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
@@ -102,9 +103,52 @@ test("pref-practice-07 evaluates the reviewed transitivity chain without exposin
   await expect(submit).toBeEnabled();
   await submit.click();
   await expect(feedback).toContainText("Correct");
+
+  const violationExercise = page.locator("#pref-practice-08");
+  const violationSubmit = violationExercise.getByRole("button", {
+    name: "Check answer",
+  });
+  await expect(violationSubmit).toBeDisabled();
+  await violationExercise.getByLabel("No", { exact: true }).check();
+  await violationExercise
+    .getByLabel("First alternative in the triple")
+    .selectOption("y");
+  await violationExercise
+    .getByLabel("Middle alternative in the triple")
+    .selectOption("x");
+  await violationExercise
+    .getByLabel("Final alternative in the triple")
+    .selectOption("z");
+  await expect(violationSubmit).toBeEnabled();
+  await violationSubmit.click();
+
+  const violationFeedback = violationExercise.locator(
+    "[data-evaluation-feedback]",
+  );
+  await expect(violationFeedback).toContainText("Not yet correct");
+  await expect(violationFeedback).not.toContainText("x, y, z");
+  await expect(violationFeedback).not.toContainText("first");
+  await expect(violationSubmit).toHaveAttribute("aria-disabled", "true");
+  await expect(violationSubmit).toBeDisabled();
+
+  await violationExercise
+    .getByLabel("First alternative in the triple")
+    .selectOption("x");
+  await violationExercise
+    .getByLabel("Middle alternative in the triple")
+    .selectOption("y");
+  await expect(violationFeedback).toBeHidden();
+  await expect(violationSubmit).toBeEnabled();
+  await violationSubmit.click();
+  await expect(violationFeedback).toContainText("Correct");
+
+  await page.reload();
+  await expect(
+    page.locator("#pref-practice-08 [data-evaluation-feedback]"),
+  ).toBeHidden();
 });
 
-test("pref-practice-07 supports keyboard chain entry and submission", async ({
+test("pref-practice-07 and pref-practice-08 support keyboard completion and submission", async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
@@ -129,6 +173,33 @@ test("pref-practice-07 supports keyboard chain entry and submission", async ({
   await page.keyboard.press("Enter");
   await expect(exercise.getByRole("status")).toContainText("Correct");
   await expect(submit).toBeFocused();
+
+  const violationExercise = page.locator("#pref-practice-08");
+  const first = violationExercise.getByLabel("First alternative in the triple");
+  const middle = violationExercise.getByLabel(
+    "Middle alternative in the triple",
+  );
+  const last = violationExercise.getByLabel("Final alternative in the triple");
+  await first.focus();
+  await page.keyboard.press("x");
+  await expect(first).toHaveValue("x");
+  await middle.focus();
+  await page.keyboard.press("y");
+  await expect(middle).toHaveValue("y");
+  await last.focus();
+  await page.keyboard.press("z");
+  await expect(last).toHaveValue("z");
+  await violationExercise.getByLabel("No", { exact: true }).focus();
+  await page.keyboard.press("Space");
+
+  const violationSubmit = violationExercise.getByRole("button", {
+    name: "Check answer",
+  });
+  await expect(violationSubmit).toBeEnabled();
+  await violationSubmit.focus();
+  await page.keyboard.press("Enter");
+  await expect(violationExercise.getByRole("status")).toContainText("Correct");
+  await expect(violationSubmit).toBeFocused();
 });
 
 test("pref-practice-05 evaluates the reviewed relation-table positions and supports revision", async ({
@@ -393,6 +464,9 @@ test("static Mikro I preferences practice remains readable without JavaScript", 
   ).toBeVisible();
   await expect(
     page.getByLabel("First premise in the non-reflexive chain"),
+  ).toBeVisible();
+  await expect(
+    page.getByLabel("First alternative in the triple"),
   ).toBeVisible();
   await expect(page.getByLabel("x ≽ y and not y ≽ x")).toBeVisible();
   await expect(
