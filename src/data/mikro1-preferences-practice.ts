@@ -90,6 +90,23 @@ export const mikro1PreferencesPracticeExercises = [
         "Does not infer or deny the reverse comparison.",
       ],
     },
+    selfReviewMetadata: {
+      requiredFieldIds: ["meaning", "reverse"],
+      modelSummary:
+        "x is weakly preferred to y; the reverse relation is not established.",
+      comparisons: [
+        {
+          id: "meaning-guidance",
+          responseFieldId: "meaning",
+          modelContent: "Read the direction from x to y.",
+        },
+        {
+          id: "reverse-guidance",
+          responseFieldId: "reverse",
+          modelContent: "Do not add a condition about y ≽ x.",
+        },
+      ],
+    },
     feedbackMetadata: {
       misconceptionIds: ["mis-pref-01"],
       conceptualFocus:
@@ -1091,6 +1108,51 @@ export const mikro1PreferencesPracticeExercises = [
       ],
       approvedRelationPairKeys: relationKeys,
     },
+    selfReviewMetadata: {
+      requiredFieldIds: [
+        "complete",
+        "transitive",
+        "first",
+        "middle",
+        "last",
+        "repair",
+      ],
+      modelSummary:
+        "The relation is complete but not transitive because y ≽ z and z ≽ x do not yield y ≽ x.",
+      comparisons: [
+        {
+          id: "complete",
+          responseFieldId: "complete",
+          modelContent: "Complete: yes",
+        },
+        {
+          id: "transitive",
+          responseFieldId: "transitive",
+          modelContent: "Transitive: no",
+        },
+        {
+          id: "violating-triple",
+          responseFieldId: "first",
+          modelContent: "Ordered triple: (y, z, x)",
+        },
+        {
+          id: "violating-middle",
+          responseFieldId: "middle",
+          modelContent: "Ordered triple: (y, z, x)",
+        },
+        {
+          id: "violating-last",
+          responseFieldId: "last",
+          modelContent: "Ordered triple: (y, z, x)",
+        },
+        {
+          id: "repair",
+          responseFieldId: "repair",
+          modelContent:
+            "Repair the learner claim by requiring transitivity too.",
+        },
+      ],
+    },
     feedbackMetadata: {
       misconceptionIds: ["mis-pref-04", "mis-pref-05", "mis-pref-07"],
       conceptualFocus:
@@ -1205,6 +1267,49 @@ export const mikro1PreferencesPracticeExercises = [
         "x ≻ y implies x ≽ y and not y ≽ x",
         "x ∼ y implies x ≽ y and y ≽ x",
         "Contradiction: y ≽ x and not y ≽ x",
+      ],
+    },
+    selfReviewMetadata: {
+      requiredFieldIds: [
+        "assumption",
+        "strict-consequence",
+        "indifference-consequence",
+        "contradiction",
+        "conclusion",
+      ],
+      modelSummary:
+        "The two definitions require both y ≽ x and not y ≽ x, which is a contradiction.",
+      comparisons: [
+        {
+          id: "assumption",
+          responseFieldId: "assumption",
+          derivationStepId: "assumption",
+          modelContent: "Assume both relations.",
+        },
+        {
+          id: "strict-consequence",
+          responseFieldId: "strict-consequence",
+          derivationStepId: "strict-consequence",
+          modelContent: "Apply strict preference.",
+        },
+        {
+          id: "indifference-consequence",
+          responseFieldId: "indifference-consequence",
+          derivationStepId: "indifference-consequence",
+          modelContent: "Apply indifference.",
+        },
+        {
+          id: "contradiction",
+          responseFieldId: "contradiction",
+          derivationStepId: "contradiction",
+          modelContent: "State the contradiction.",
+        },
+        {
+          id: "conclusion",
+          responseFieldId: "conclusion",
+          derivationStepId: "conclusion",
+          modelContent: "Conclude incompatibility.",
+        },
       ],
     },
     feedbackMetadata: {

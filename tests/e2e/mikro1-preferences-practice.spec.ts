@@ -19,7 +19,7 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
     page.getByRole("heading", { name: "Derive the incompatibility" }),
   ).toBeVisible();
   await expect(page.getByText("Notation used in this set")).toBeVisible();
-  await expect(page.locator('button[type="submit"]')).toHaveCount(9);
+  await expect(page.locator('button[type="submit"]')).toHaveCount(12);
   await expect(page.locator("form[data-mikro1-evaluation-form]")).toHaveCount(
     9,
   );
@@ -37,6 +37,8 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
   expect(html).not.toContain("transitivityChain");
   expect(html).not.toContain("transitivityViolation");
   expect(html).not.toContain("rationalityClassification");
+  expect(html).not.toContain("selfReviewMetadata");
+  expect(html).not.toContain("Model basis:");
   expect(html).not.toContain("claim-pref-");
   expect(html).not.toContain("The relation is complete because every");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
@@ -68,7 +70,91 @@ test("static practice controls and relation tables expose native semantics", asy
     page.getByText(
       "Response evaluation is not available in this practice version.",
     ),
-  ).toHaveCount(3);
+  ).toHaveCount(0);
+});
+
+test("self-review opens approved comparison material without grading learner text", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  await page.goto(practicePath);
+
+  const weakComparison = page.locator("#pref-practice-01");
+  const compare = weakComparison.getByRole("button", {
+    name: "Compare with model solution",
+  });
+  await expect(compare).toBeDisabled();
+  await weakComparison.getByLabel("What does x ≽ y state?").fill("   ");
+  await weakComparison
+    .getByLabel("What does the displayed relation establish about y ≽ x?")
+    .fill("My first attempt");
+  await expect(compare).toBeDisabled();
+  await weakComparison.getByLabel("What does x ≽ y state?").fill("My response");
+  await expect(compare).toBeEnabled();
+  await compare.focus();
+  await page.keyboard.press("Enter");
+  const panel = weakComparison.locator("[data-self-review-panel]");
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText("My response");
+  await expect(panel).toContainText("Model guidance");
+  await expect(weakComparison.getByRole("status")).toContainText(
+    "Comparison opened",
+  );
+  await expect(
+    weakComparison.getByText("Correct", { exact: true }),
+  ).toHaveCount(0);
+  await panel.getByRole("button", { name: "Close comparison" }).click();
+  await expect(panel).toBeHidden();
+  await expect(compare).toBeFocused();
+
+  const diagnosis = page.locator("#pref-practice-11");
+  await diagnosis
+    .getByRole("group", { name: "Does completeness hold?" })
+    .getByLabel("Yes", { exact: true })
+    .check();
+  await diagnosis
+    .getByRole("group", { name: "Does transitivity hold?" })
+    .getByLabel("No", { exact: true })
+    .check();
+  await diagnosis
+    .getByLabel("First alternative in a violating triple")
+    .selectOption("y");
+  await diagnosis
+    .getByLabel("Middle alternative in a violating triple")
+    .selectOption("z");
+  await diagnosis
+    .getByLabel("Final alternative in a violating triple")
+    .selectOption("x");
+  await expect(
+    diagnosis.getByRole("button", { name: "Compare with model solution" }),
+  ).toBeDisabled();
+  await diagnosis
+    .getByLabel("Smallest repair to the learner’s reasoning")
+    .fill("Needs another condition.");
+  await expect(
+    diagnosis.getByRole("button", { name: "Compare with model solution" }),
+  ).toBeEnabled();
+
+  const proof = page.locator("#pref-practice-12");
+  for (const fieldId of [
+    "assumption",
+    "strict-consequence",
+    "indifference-consequence",
+    "contradiction",
+    "conclusion",
+  ]) {
+    await proof
+      .locator(`[data-response-field-id="${fieldId}"]`)
+      .fill(`Attempt for ${fieldId}`);
+  }
+  const proofCompare = proof.getByRole("button", {
+    name: "Compare with model solution",
+  });
+  await expect(proofCompare).toBeEnabled();
+  await proofCompare.click();
+  await expect(proof.locator("[data-self-review-panel]")).toContainText(
+    "Attempt for assumption",
+  );
 });
 
 test("pref-practice-07 and pref-practice-08 evaluate reviewed transitivity reasoning without exposing directions", async ({

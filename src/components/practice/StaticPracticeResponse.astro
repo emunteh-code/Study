@@ -29,9 +29,11 @@ const evaluationKind =
     }
   </ul>
   {
-    exercise.evaluationAvailable ? (
+    exercise.evaluationAvailable || exercise.selfReviewAvailable ? (
       <form
-        data-mikro1-evaluation-form
+        {...(exercise.evaluationAvailable
+          ? { "data-mikro1-evaluation-form": true }
+          : { "data-mikro1-self-review-form": true })}
         data-exercise-id={exercise.id}
         data-evaluation-kind={evaluationKind}
         aria-describedby={instructionsId}
@@ -48,24 +50,51 @@ const evaluationKind =
         <button
           class="button button--primary"
           type="submit"
-          data-evaluation-submit
+          {...(exercise.evaluationAvailable
+            ? { "data-evaluation-submit": true }
+            : { "data-self-review-open": true })}
           disabled
         >
-          Check answer
+          {exercise.evaluationAvailable
+            ? "Check answer"
+            : "Compare with model solution"}
         </button>
-        <p class="card__meta">Answer checking requires JavaScript.</p>
+        <p class="card__meta">
+          {exercise.evaluationAvailable
+            ? "Answer checking requires JavaScript."
+            : "Comparison requires JavaScript."}
+        </p>
         <div
           class="static-practice-feedback"
           id={feedbackId}
-          data-evaluation-feedback
+          {...(exercise.evaluationAvailable
+            ? { "data-evaluation-feedback": true }
+            : { "data-self-review-feedback": true })}
           role="status"
           aria-live="polite"
           aria-atomic="true"
           hidden
         >
-          <h4 data-evaluation-feedback-heading />
-          <p data-evaluation-feedback-text />
+          <h4
+            {...(exercise.evaluationAvailable
+              ? { "data-evaluation-feedback-heading": true }
+              : { "data-self-review-feedback-heading": true })}
+          />
+          <p
+            {...(exercise.evaluationAvailable
+              ? { "data-evaluation-feedback-text": true }
+              : { "data-self-review-feedback-text": true })}
+          />
         </div>
+        {exercise.selfReviewAvailable && (
+          <section data-self-review-panel hidden tabindex="-1">
+            <h4>Model solution comparison</h4>
+            <div data-self-review-content />
+            <button type="button" data-self-review-close>
+              Close comparison
+            </button>
+          </section>
+        )}
       </form>
     ) : (
       <div>

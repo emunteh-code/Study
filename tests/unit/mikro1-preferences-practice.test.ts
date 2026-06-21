@@ -32,6 +32,7 @@ describe("Mikro I preference practice production data", () => {
       expect(exercise).not.toHaveProperty("solutionMetadata");
       expect(exercise).not.toHaveProperty("audit");
       expect(exercise).not.toHaveProperty("claimIds");
+      expect(exercise).not.toHaveProperty("selfReviewMetadata");
     }
   });
 
@@ -160,6 +161,28 @@ describe("Mikro I preference practice production data", () => {
       validateMikro1PreferenceExercises(contradictoryClassification),
     ).toContain(
       "pref-practice-10: a valid rationality classification matching the approved relation is required.",
+    );
+  });
+
+  it("validates self-review mappings separately from evaluator metadata", () => {
+    expect(
+      mikro1PreferencesPracticeExercises
+        .filter((exercise) => exercise.selfReviewMetadata)
+        .map((exercise) => exercise.id),
+    ).toEqual(["pref-practice-01", "pref-practice-11", "pref-practice-12"]);
+
+    const duplicateMapping = cloneExercises();
+    duplicateMapping[0]!.selfReviewMetadata!.comparisons[1]!.responseFieldId =
+      "meaning";
+    expect(validateMikro1PreferenceExercises(duplicateMapping)).toContain(
+      "pref-practice-01: self-review metadata must map every required response to approved review content.",
+    );
+
+    const unknownProofStep = cloneExercises();
+    unknownProofStep[11]!.selfReviewMetadata!.comparisons[0]!.derivationStepId =
+      "unknown";
+    expect(validateMikro1PreferenceExercises(unknownProofStep)).toContain(
+      "pref-practice-12: self-review metadata must map every required response to approved review content.",
     );
   });
 

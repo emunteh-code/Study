@@ -166,6 +166,17 @@ export interface EvaluationMetadata {
   approvedRelationPairKeys?: string[];
 }
 
+export interface SelfReviewMetadata {
+  requiredFieldIds: string[];
+  modelSummary: string;
+  comparisons: Array<{
+    id: string;
+    responseFieldId: string;
+    modelContent: string;
+    derivationStepId?: string;
+  }>;
+}
+
 export interface FeedbackMetadata {
   misconceptionIds: string[];
   conceptualFocus: string;
@@ -207,6 +218,7 @@ export interface Mikro1PreferenceExercise {
   relationData?: RelationData;
   derivationSteps?: DerivationStep[];
   evaluationMetadata: EvaluationMetadata;
+  selfReviewMetadata?: SelfReviewMetadata;
   feedbackMetadata: FeedbackMetadata;
   solutionMetadata: SolutionMetadata;
   accessibility: AccessibilityMetadata;
@@ -228,6 +240,7 @@ export interface StaticMikro1PreferenceExercise {
   derivationSteps?: DerivationStep[];
   accessibility: AccessibilityMetadata;
   evaluationAvailable: boolean;
+  selfReviewAvailable: boolean;
 }
 
 const approvedClaimIds = new Set([
@@ -630,6 +643,53 @@ export function validateMikro1PreferenceExercises(
       }
     }
 
+    if (exercise.selfReviewMetadata) {
+      const review = exercise.selfReviewMetadata;
+      const fields = new Map(
+        exercise.responseDefinition.fields.map((field) => [field.id, field]),
+      );
+      const requiredFieldIds = exercise.responseDefinition.fields
+        .filter((field) => field.required)
+        .map((field) => field.id);
+      const mappedFieldIds = review.comparisons.map(
+        (comparison) => comparison.responseFieldId,
+      );
+      const approvedContent = new Set([
+        exercise.solutionMetadata.summary,
+        ...exercise.solutionMetadata.steps,
+        ...exercise.evaluationMetadata.acceptedAnswerStructure,
+      ]);
+      const derivationIds = new Set(
+        exercise.derivationSteps?.map((step) => step.id) ?? [],
+      );
+
+      if (
+        review.requiredFieldIds.length !== requiredFieldIds.length ||
+        new Set(review.requiredFieldIds).size !==
+          review.requiredFieldIds.length ||
+        new Set(mappedFieldIds).size !== mappedFieldIds.length ||
+        review.comparisons.length !== requiredFieldIds.length ||
+        review.modelSummary !== exercise.solutionMetadata.summary ||
+        review.requiredFieldIds.some(
+          (fieldId) => !requiredFieldIds.includes(fieldId),
+        ) ||
+        mappedFieldIds.some((fieldId) => !requiredFieldIds.includes(fieldId)) ||
+        review.comparisons.some(
+          (comparison) =>
+            !fields.has(comparison.responseFieldId) ||
+            !approvedContent.has(comparison.modelContent) ||
+            (exercise.interactionType === "ordered-derivation" &&
+              comparison.derivationStepId !== comparison.responseFieldId) ||
+            (comparison.derivationStepId &&
+              !derivationIds.has(comparison.derivationStepId)),
+        )
+      ) {
+        errors.push(
+          `${exercise.id}: self-review metadata must map every required response to approved review content.`,
+        );
+      }
+    }
+
     if (exercise.relationData) {
       validateRelationData(exercise, errors);
     }
@@ -752,5 +812,6 @@ export function toStaticMikro1PreferenceExercise(
       : {}),
     accessibility: exercise.accessibility,
     evaluationAvailable: isEvaluableMikro1PreferenceExercise(exercise.id),
+    selfReviewAvailable: Boolean(exercise.selfReviewMetadata),
   };
 }
