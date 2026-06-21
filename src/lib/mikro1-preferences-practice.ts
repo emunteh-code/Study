@@ -22,6 +22,7 @@ export const evaluableMikro1PreferenceExerciseIds = [
   "pref-practice-04",
   "pref-practice-05",
   "pref-practice-06",
+  "pref-practice-07",
   "pref-practice-09",
 ] as const;
 
@@ -117,6 +118,17 @@ export interface EvaluationMetadata {
     positionId: string;
     answerId: string;
   }>;
+  transitivityChain?: {
+    classification: {
+      positionId: string;
+      answerId: string;
+    };
+    relations: Array<{
+      positionId: string;
+      from: string;
+      to: string;
+    }>;
+  };
   acceptedAnswerStructure: string[];
   approvedRelationPairKeys?: string[];
 }
@@ -409,6 +421,44 @@ export function validateMikro1PreferenceExercises(
       ) {
         errors.push(
           "pref-practice-05: approved relation-table mappings and partial feedback are required.",
+        );
+      }
+    }
+
+    if (exercise.id === "pref-practice-07") {
+      const chain = exercise.evaluationMetadata.transitivityChain;
+      const responseFields = new Map(
+        exercise.responseDefinition.fields.map((field) => [field.id, field]),
+      );
+      const classificationField = responseFields.get(
+        chain?.classification.positionId ?? "",
+      );
+      const hasValidClassification =
+        classificationField?.kind === "radio" &&
+        classificationField.options.some(
+          (option) => option.id === chain?.classification.answerId,
+        );
+
+      if (
+        !chain ||
+        chain.relations.length !== 3 ||
+        new Set(chain.relations.map((relation) => relation.positionId)).size !==
+          chain.relations.length ||
+        !exercise.relationData ||
+        !hasValidClassification ||
+        chain.relations.some((relation) => {
+          const field = responseFields.get(relation.positionId);
+
+          return (
+            !field ||
+            field.kind !== "text" ||
+            !exercise.relationData?.domain.includes(relation.from) ||
+            !exercise.relationData?.domain.includes(relation.to)
+          );
+        })
+      ) {
+        errors.push(
+          "pref-practice-07: a valid transitivity chain with directed relation positions is required.",
         );
       }
     }

@@ -39,10 +39,22 @@ export interface Mikro1PreferenceRelationTableResponse {
   requiredFieldsComplete: boolean;
 }
 
+export interface Mikro1PreferenceTransitivityChainEntry {
+  positionId: string;
+  answerId: string;
+}
+
+export interface Mikro1PreferenceTransitivityChainResponse {
+  kind: "transitivity-chain";
+  entries: Mikro1PreferenceTransitivityChainEntry[];
+  requiredFieldsComplete: boolean;
+}
+
 export type Mikro1PreferenceEvaluationResponse =
   | Mikro1PreferenceSelectionResponse
   | Mikro1PreferenceClassificationResponse
-  | Mikro1PreferenceRelationTableResponse;
+  | Mikro1PreferenceRelationTableResponse
+  | Mikro1PreferenceTransitivityChainResponse;
 
 export interface Mikro1PreferenceEvaluationFeedback {
   heading: string;
@@ -85,6 +97,7 @@ function isExpectedExercise(
     "pref-practice-04",
     "pref-practice-05",
     "pref-practice-06",
+    "pref-practice-07",
     "pref-practice-09",
   ].includes(exercise.id);
 }
@@ -297,6 +310,118 @@ function evaluateRelationTable(
   };
 }
 
+function parseWeakRelation(value: string): { from: string; to: string } | null {
+  const match = /^\s*([a-z])\s*≽\s*([a-z])\s*$/u.exec(value);
+
+  return match ? { from: match[1]!, to: match[2]! } : null;
+}
+
+function evaluateTransitivityChain(
+  exercise: Mikro1PreferenceExercise,
+  response: Mikro1PreferenceTransitivityChainResponse,
+): Mikro1PreferenceEvaluationResult {
+  const chain = exercise.evaluationMetadata.transitivityChain;
+  const feedback = exercise.feedbackMetadata;
+
+  if (
+    !chain ||
+    !exercise.relationData ||
+    !feedback.correctExplanation ||
+    !feedback.incorrectExplanation
+  ) {
+    throw new Error(`Evaluation metadata is unavailable for ${exercise.id}.`);
+  }
+
+  const expectedRelations = new Map(
+    chain.relations.map((relation) => [
+      relation.positionId,
+      `${relation.from}:${relation.to}`,
+    ]),
+  );
+  const expectedPositionIds = new Set([
+    chain.classification.positionId,
+    ...expectedRelations.keys(),
+  ]);
+  const responseFields = new Map(
+    exercise.responseDefinition.fields.map((field) => [field.id, field]),
+  );
+  const submittedEntries = new Map<string, string>();
+
+  if (
+    !response.requiredFieldsComplete ||
+    response.entries.length !== expectedPositionIds.size ||
+    response.entries.some(({ positionId, answerId }) => {
+      const field = responseFields.get(positionId);
+
+      if (!field || submittedEntries.has(positionId)) {
+        return true;
+      }
+
+      if (positionId === chain.classification.positionId) {
+        if (
+          field.kind !== "radio" ||
+          !field.options.some((option) => option.id === answerId)
+        ) {
+          return true;
+        }
+      } else {
+        const relation = parseWeakRelation(answerId);
+
+        if (
+          field.kind !== "text" ||
+          !relation ||
+          !exercise.relationData?.domain.includes(relation.from) ||
+          !exercise.relationData?.domain.includes(relation.to)
+        ) {
+          return true;
+        }
+      }
+
+      submittedEntries.set(positionId, answerId);
+      return false;
+    }) ||
+    submittedEntries.size !== expectedPositionIds.size ||
+    [...submittedEntries.keys()].some(
+      (positionId) => !expectedPositionIds.has(positionId),
+    )
+  ) {
+    return { status: "incomplete", feedback: invalidStructuredFeedback };
+  }
+
+  const classificationMatches =
+    submittedEntries.get(chain.classification.positionId) ===
+    chain.classification.answerId;
+  const relationsMatch = chain.relations.every((relation) => {
+    const submittedRelation = parseWeakRelation(
+      submittedEntries.get(relation.positionId) ?? "",
+    );
+
+    return (
+      submittedRelation?.from === relation.from &&
+      submittedRelation.to === relation.to
+    );
+  });
+
+  // The chain is one logical claim, so field-level partial credit is not valid.
+  if (!classificationMatches || !relationsMatch) {
+    return {
+      status: "fully-incorrect",
+      feedback: {
+        heading: "Not yet correct",
+        explanation: feedback.incorrectExplanation,
+      },
+    };
+  }
+
+  return {
+    status: "fully-correct",
+    feedback: {
+      heading: "Correct",
+      explanation: feedback.correctExplanation,
+    },
+  };
+}
+
 export const mikro1PreferenceEvaluator: Mikro1PreferenceEvaluator = {
   evaluate(exercise, response) {
     if (!isExpectedExercise(exercise)) {
@@ -318,6 +443,15 @@ export const mikro1PreferenceEvaluator: Mikro1PreferenceEvaluator = {
     ) {
       return response.kind === "relation-table"
         ? evaluateRelationTable(exercise, response)
+        : { status: "incomplete", feedback: invalidStructuredFeedback };
+    }
+
+    if (
+      exercise.interactionType === "relation-table-analysis" &&
+      exercise.id === "pref-practice-07"
+    ) {
+      return response.kind === "transitivity-chain"
+        ? evaluateTransitivityChain(exercise, response)
         : { status: "incomplete", feedback: invalidStructuredFeedback };
     }
 

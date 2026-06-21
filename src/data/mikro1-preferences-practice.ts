@@ -643,6 +643,14 @@ export const mikro1PreferencesPracticeExercises = [
       ],
     },
     evaluationMetadata: {
+      transitivityChain: {
+        classification: { positionId: "transitive", answerId: "yes" },
+        relations: [
+          { positionId: "first-premise", from: "x", to: "y" },
+          { positionId: "second-premise", from: "y", to: "z" },
+          { positionId: "conclusion", from: "x", to: "z" },
+        ],
+      },
       acceptedAnswerStructure: ["Transitive: yes", "x ≽ y", "y ≽ z", "x ≽ z"],
       approvedRelationPairKeys: relationKeys,
     },
@@ -650,6 +658,10 @@ export const mikro1PreferencesPracticeExercises = [
       misconceptionIds: ["mis-pref-07"],
       conceptualFocus:
         "A missing reverse comparison is not a transitivity violation without an applicable chain.",
+      correctExplanation:
+        "The non-reflexive chain closes in the stated direction, and the reflexive cases also close.",
+      incorrectExplanation:
+        "Reconsider the direction of each premise and the endpoint required by the transitivity chain.",
     },
     solutionMetadata: {
       summary:

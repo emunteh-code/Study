@@ -10,6 +10,10 @@ interface Props {
 
 const { exercise, instructionsId } = Astro.props;
 const feedbackId = `${exercise.id}-feedback`;
+const evaluationKind =
+  exercise.id === "pref-practice-07"
+    ? "transitivity-chain"
+    : exercise.interactionType;
 ---
 
 <div class="static-practice-response">
@@ -29,7 +33,7 @@ const feedbackId = `${exercise.id}-feedback`;
       <form
         data-mikro1-evaluation-form
         data-exercise-id={exercise.id}
-        data-evaluation-kind={exercise.interactionType}
+        data-evaluation-kind={evaluationKind}
         aria-describedby={instructionsId}
       >
         <div>

@@ -65,7 +65,10 @@ describe("Mikro I preference evaluator", () => {
 
   it("fails incomplete submissions before assessing an answer", () => {
     for (const id of evaluableMikro1PreferenceExerciseIds.filter(
-      (id) => id !== "pref-practice-04" && id !== "pref-practice-05",
+      (id) =>
+        id !== "pref-practice-04" &&
+        id !== "pref-practice-05" &&
+        id !== "pref-practice-07",
     )) {
       expect(
         mikro1PreferenceEvaluator.evaluate(exercise(id), {
@@ -411,5 +414,133 @@ describe("Mikro I preference evaluator", () => {
     expect(result).not.toHaveProperty("entries");
     expect(result).not.toHaveProperty("mappings");
     expect(JSON.stringify(result)).not.toContain("pair-xy");
+  });
+
+  it("evaluates the reviewed transitivity chain independently of entry order", () => {
+    const response = {
+      kind: "transitivity-chain" as const,
+      requiredFieldsComplete: true,
+      entries: [
+        { positionId: "conclusion", answerId: "x ≽ z" },
+        { positionId: "transitive", answerId: "yes" },
+        { positionId: "second-premise", answerId: "y ≽ z" },
+        { positionId: "first-premise", answerId: "x ≽ y" },
+      ],
+    };
+
+    expect(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-07"),
+        response,
+      ),
+    ).toMatchObject({
+      status: "fully-correct",
+      feedback: { heading: "Correct" },
+    });
+    expect(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-07"),
+        response,
+      ),
+    ).toEqual(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-07"),
+        response,
+      ),
+    );
+  });
+
+  it("treats a directionally incorrect but valid chain as one incorrect logical claim", () => {
+    const result = mikro1PreferenceEvaluator.evaluate(
+      exercise("pref-practice-07"),
+      {
+        kind: "transitivity-chain",
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "yes" },
+          { positionId: "first-premise", answerId: "y ≽ x" },
+          { positionId: "second-premise", answerId: "y ≽ z" },
+          { positionId: "conclusion", answerId: "x ≽ z" },
+        ],
+      },
+    );
+
+    expect(result).toMatchObject({
+      status: "fully-incorrect",
+      feedback: { heading: "Not yet correct" },
+    });
+    expect(result).not.toHaveProperty("correctCount");
+  });
+
+  it("rejects incomplete or malformed transitivity-chain responses", () => {
+    const invalidResponses = [
+      {
+        kind: "transitivity-chain" as const,
+        requiredFieldsComplete: false,
+        entries: [],
+      },
+      {
+        kind: "transitivity-chain" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "yes" },
+          { positionId: "first-premise", answerId: "x ≽ y" },
+          { positionId: "second-premise", answerId: "y ≽ z" },
+        ],
+      },
+      {
+        kind: "transitivity-chain" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "yes" },
+          { positionId: "first-premise", answerId: "x ≽ y" },
+          { positionId: "first-premise", answerId: "x ≽ y" },
+          { positionId: "conclusion", answerId: "x ≽ z" },
+        ],
+      },
+      {
+        kind: "transitivity-chain" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "yes" },
+          { positionId: "unknown", answerId: "x ≽ y" },
+          { positionId: "second-premise", answerId: "y ≽ z" },
+          { positionId: "conclusion", answerId: "x ≽ z" },
+        ],
+      },
+      {
+        kind: "transitivity-chain" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "yes" },
+          { positionId: "first-premise", answerId: "q ≽ y" },
+          { positionId: "second-premise", answerId: "y ≽ z" },
+          { positionId: "conclusion", answerId: "x ≽ z" },
+        ],
+      },
+      {
+        kind: "transitivity-chain" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "transitive", answerId: "yes" },
+          { positionId: "first-premise", answerId: "x ≽ y" },
+          { positionId: "second-premise", answerId: "y ≽ z" },
+          { positionId: "conclusion", answerId: "x ≽ z" },
+          { positionId: "extra", answerId: "x ≽ z" },
+        ],
+      },
+    ];
+
+    for (const response of invalidResponses) {
+      expect(
+        mikro1PreferenceEvaluator.evaluate(
+          exercise("pref-practice-07"),
+          response,
+        ),
+      ).toMatchObject({
+        status: "incomplete",
+        feedback: { heading: "Incomplete or invalid response" },
+      });
+    }
   });
 });

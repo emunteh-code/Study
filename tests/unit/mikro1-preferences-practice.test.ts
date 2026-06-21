@@ -46,6 +46,7 @@ describe("Mikro I preference practice production data", () => {
       "pref-practice-04",
       "pref-practice-05",
       "pref-practice-06",
+      "pref-practice-07",
       "pref-practice-09",
     ]);
   });
@@ -113,6 +114,15 @@ describe("Mikro I preference practice production data", () => {
     reversedPair[4]!.relationData!.orderedPairs[1]!.from = "z";
     expect(validateMikro1PreferenceExercises(reversedPair)).toContain(
       "pref-practice-05: relation pairs differ from the approved ordered pairs.",
+    );
+  });
+
+  it("rejects malformed transitivity-chain metadata", () => {
+    const malformedChain = cloneExercises();
+    malformedChain[6]!.evaluationMetadata.transitivityChain!.relations[0]!.from =
+      "outside";
+    expect(validateMikro1PreferenceExercises(malformedChain)).toContain(
+      "pref-practice-07: a valid transitivity chain with directed relation positions is required.",
     );
   });
 

@@ -19,9 +19,9 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
     page.getByRole("heading", { name: "Derive the incompatibility" }),
   ).toBeVisible();
   await expect(page.getByText("Notation used in this set")).toBeVisible();
-  await expect(page.locator('button[type="submit"]')).toHaveCount(6);
+  await expect(page.locator('button[type="submit"]')).toHaveCount(7);
   await expect(page.locator("form[data-mikro1-evaluation-form]")).toHaveCount(
-    6,
+    7,
   );
   await expect(page.getByText("Score", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Correct", { exact: true })).toHaveCount(0);
@@ -34,6 +34,7 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
   expect(html).not.toContain("solutionMetadata");
   expect(html).not.toContain("classificationMappings");
   expect(html).not.toContain("relationTableMappings");
+  expect(html).not.toContain("transitivityChain");
   expect(html).not.toContain("claim-pref-");
   expect(html).not.toContain("The relation is complete because every");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
@@ -65,7 +66,69 @@ test("static practice controls and relation tables expose native semantics", asy
     page.getByText(
       "Response evaluation is not available in this practice version.",
     ),
-  ).toHaveCount(6);
+  ).toHaveCount(5);
+});
+
+test("pref-practice-07 evaluates the reviewed transitivity chain without exposing its directions", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  await page.goto(practicePath);
+
+  const exercise = page.locator("#pref-practice-07");
+  const submit = exercise.getByRole("button", { name: "Check answer" });
+  await expect(submit).toBeDisabled();
+  await exercise.getByLabel("Yes", { exact: true }).check();
+  await exercise
+    .getByLabel("First premise in the non-reflexive chain")
+    .fill("y ≽ x");
+  await exercise
+    .getByLabel("Second premise in the non-reflexive chain")
+    .fill("y ≽ z");
+  await exercise.getByLabel("Required conclusion").fill("x ≽ z");
+  await expect(submit).toBeEnabled();
+  await submit.click();
+
+  const feedback = exercise.locator("[data-evaluation-feedback]");
+  await expect(feedback).toContainText("Not yet correct");
+  await expect(feedback).not.toContainText("x ≽ y");
+  await expect(feedback).not.toContainText("first-premise");
+  await expect(submit).toHaveAttribute("aria-disabled", "true");
+
+  await exercise
+    .getByLabel("First premise in the non-reflexive chain")
+    .fill("x ≽ y");
+  await expect(feedback).toBeHidden();
+  await expect(submit).toBeEnabled();
+  await submit.click();
+  await expect(feedback).toContainText("Correct");
+});
+
+test("pref-practice-07 supports keyboard chain entry and submission", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  await page.goto(practicePath);
+
+  const exercise = page.locator("#pref-practice-07");
+  const firstPremise = exercise.getByLabel(
+    "First premise in the non-reflexive chain",
+  );
+  await firstPremise.focus();
+  await page.keyboard.insertText("x ≽ y");
+  await page.keyboard.press("Tab");
+  await page.keyboard.insertText("y ≽ z");
+  await page.keyboard.press("Tab");
+  await page.keyboard.insertText("x ≽ z");
+  await exercise.getByLabel("Yes", { exact: true }).focus();
+  await page.keyboard.press("Space");
+
+  const submit = exercise.getByRole("button", { name: "Check answer" });
+  await expect(submit).toBeEnabled();
+  await submit.focus();
+  await page.keyboard.press("Enter");
+  await expect(exercise.getByRole("status")).toContainText("Correct");
+  await expect(submit).toBeFocused();
 });
 
 test("pref-practice-05 evaluates the reviewed relation-table positions and supports revision", async ({
@@ -327,6 +390,9 @@ test("static Mikro I preferences practice remains readable without JavaScript", 
     page.getByLabel(
       "For {x, y}, which comparison direction or directions are present?",
     ),
+  ).toBeVisible();
+  await expect(
+    page.getByLabel("First premise in the non-reflexive chain"),
   ).toBeVisible();
   await expect(page.getByLabel("x ≽ y and not y ≽ x")).toBeVisible();
   await expect(
