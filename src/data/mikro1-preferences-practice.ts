@@ -958,11 +958,28 @@ export const mikro1PreferencesPracticeExercises = [
         "Classification: a",
       ],
       approvedRelationPairKeys: relationKeys,
+      rationalityClassification: {
+        completeness: { positionId: "complete", answerId: "yes", value: true },
+        transitivity: {
+          positionId: "transitive",
+          answerId: "yes",
+          value: true,
+        },
+        finalClassification: {
+          positionId: "classification",
+          answerId: "a",
+          rational: true,
+        },
+      },
     },
     feedbackMetadata: {
       misconceptionIds: ["mis-pref-03", "mis-pref-05"],
       conceptualFocus:
         "Mutual comparisons are allowed; rationality follows only after both axioms are checked.",
+      correctExplanation:
+        "Both axiom checks and the final classification agree with the relation.",
+      incorrectExplanation:
+        "Reconsider completeness and transitivity separately before applying the rationality definition.",
     },
     solutionMetadata: {
       summary:

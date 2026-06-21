@@ -49,6 +49,7 @@ describe("Mikro I preference practice production data", () => {
       "pref-practice-07",
       "pref-practice-08",
       "pref-practice-09",
+      "pref-practice-10",
     ]);
   });
 
@@ -140,6 +141,25 @@ describe("Mikro I preference practice production data", () => {
       "y";
     expect(validateMikro1PreferenceExercises(contradictoryViolation)).toContain(
       "pref-practice-08: a valid directed transitivity-violation witness is required.",
+    );
+  });
+
+  it("rejects malformed or contradictory rationality-classification metadata", () => {
+    const malformedClassification = cloneExercises();
+    malformedClassification[9]!.evaluationMetadata.rationalityClassification!.completeness.positionId =
+      "transitive";
+    expect(
+      validateMikro1PreferenceExercises(malformedClassification),
+    ).toContain(
+      "pref-practice-10: a valid rationality classification matching the approved relation is required.",
+    );
+
+    const contradictoryClassification = cloneExercises();
+    contradictoryClassification[9]!.evaluationMetadata.rationalityClassification!.finalClassification.rational = false;
+    expect(
+      validateMikro1PreferenceExercises(contradictoryClassification),
+    ).toContain(
+      "pref-practice-10: a valid rationality classification matching the approved relation is required.",
     );
   });
 

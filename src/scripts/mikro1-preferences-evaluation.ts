@@ -121,6 +121,10 @@ function transitivityViolationResponse(form: HTMLFormElement) {
   return relationTableResponse(form);
 }
 
+function rationalityClassificationResponse(form: HTMLFormElement) {
+  return relationTableResponse(form);
+}
+
 async function evaluateSubmission(form: HTMLFormElement): Promise<void> {
   const exerciseId = form.dataset.exerciseId;
 
@@ -146,6 +150,8 @@ async function evaluateSubmission(form: HTMLFormElement): Promise<void> {
   const relationTableEntries = relationTableResponse(form);
   const transitivityChainEntries = transitivityChainResponse(form);
   const transitivityViolationEntries = transitivityViolationResponse(form);
+  const rationalityClassificationEntries =
+    rationalityClassificationResponse(form);
   const selectedOption = selectedOptionId(form);
   const result = evaluationModule.mikro1PreferenceEvaluator.evaluate(
     exercise,
@@ -161,23 +167,31 @@ async function evaluateSubmission(form: HTMLFormElement): Promise<void> {
             entries: transitivityViolationEntries,
             requiredFieldsComplete: isStructurallyComplete(form),
           }
-        : evaluationKind === "relation-table-analysis"
+        : exercise.id === "pref-practice-10"
           ? {
-              kind: "relation-table",
-              entries: relationTableEntries,
+              kind: "rationality-classification",
+              entries: rationalityClassificationEntries,
               requiredFieldsComplete: isStructurallyComplete(form),
             }
-          : evaluationKind === "classification"
+          : evaluationKind === "relation-table-analysis"
             ? {
-                kind: "classification",
-                classifications,
+                kind: "relation-table",
+                entries: relationTableEntries,
                 requiredFieldsComplete: isStructurallyComplete(form),
               }
-            : {
-                kind: "selection",
-                ...(selectedOption ? { selectedOptionId: selectedOption } : {}),
-                requiredFieldsComplete: isStructurallyComplete(form),
-              },
+            : evaluationKind === "classification"
+              ? {
+                  kind: "classification",
+                  classifications,
+                  requiredFieldsComplete: isStructurallyComplete(form),
+                }
+              : {
+                  kind: "selection",
+                  ...(selectedOption
+                    ? { selectedOptionId: selectedOption }
+                    : {}),
+                  requiredFieldsComplete: isStructurallyComplete(form),
+                },
   );
 
   setFeedback(form, result.feedback.heading, result.feedback.explanation);

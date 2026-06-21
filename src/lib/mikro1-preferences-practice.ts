@@ -25,6 +25,7 @@ export const evaluableMikro1PreferenceExerciseIds = [
   "pref-practice-07",
   "pref-practice-08",
   "pref-practice-09",
+  "pref-practice-10",
 ] as const;
 
 export type EvaluableMikro1PreferenceExerciseId =
@@ -142,6 +143,23 @@ export interface EvaluationMetadata {
       firstAnswerId: string;
       middleAnswerId: string;
       lastAnswerId: string;
+    };
+  };
+  rationalityClassification?: {
+    completeness: {
+      positionId: string;
+      answerId: "yes" | "no";
+      value: boolean;
+    };
+    transitivity: {
+      positionId: string;
+      answerId: "yes" | "no";
+      value: boolean;
+    };
+    finalClassification: {
+      positionId: string;
+      answerId: string;
+      rational: boolean;
     };
   };
   acceptedAnswerStructure: string[];
@@ -549,6 +567,65 @@ export function validateMikro1PreferenceExercises(
       ) {
         errors.push(
           "pref-practice-08: a valid directed transitivity-violation witness is required.",
+        );
+      }
+    }
+
+    if (exercise.id === "pref-practice-10") {
+      const classification =
+        exercise.evaluationMetadata.rationalityClassification;
+      const responseFields = new Map(
+        exercise.responseDefinition.fields.map((field) => [field.id, field]),
+      );
+      const mappings = classification
+        ? [
+            classification.completeness,
+            classification.transitivity,
+            classification.finalClassification,
+          ]
+        : [];
+      const relationStatus = new Map(
+        exercise.relationData?.orderedPairs.map((pair) => [
+          pairKey(pair),
+          pair.status,
+        ]),
+      );
+      const domain = exercise.relationData?.domain ?? [];
+      const isComplete = domain.every((from) =>
+        domain.every((to) => relationStatus.get(`${from}:${to}`) === "holds"),
+      );
+      const isTransitive = domain.every((from) =>
+        domain.every((via) =>
+          domain.every(
+            (to) =>
+              relationStatus.get(`${from}:${via}`) !== "holds" ||
+              relationStatus.get(`${via}:${to}`) !== "holds" ||
+              relationStatus.get(`${from}:${to}`) === "holds",
+          ),
+        ),
+      );
+
+      if (
+        !classification ||
+        !exercise.relationData ||
+        mappings.length !== 3 ||
+        new Set(mappings.map((mapping) => mapping.positionId)).size !==
+          mappings.length ||
+        mappings.some(({ positionId, answerId }) => {
+          const field = responseFields.get(positionId);
+          return (
+            !field ||
+            field.kind !== "radio" ||
+            !field.options.some((option) => option.id === answerId)
+          );
+        }) ||
+        classification.completeness.value !== isComplete ||
+        classification.transitivity.value !== isTransitive ||
+        classification.finalClassification.rational !==
+          (isComplete && isTransitive)
+      ) {
+        errors.push(
+          "pref-practice-10: a valid rationality classification matching the approved relation is required.",
         );
       }
     }

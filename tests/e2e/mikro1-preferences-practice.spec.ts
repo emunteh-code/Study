@@ -19,9 +19,9 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
     page.getByRole("heading", { name: "Derive the incompatibility" }),
   ).toBeVisible();
   await expect(page.getByText("Notation used in this set")).toBeVisible();
-  await expect(page.locator('button[type="submit"]')).toHaveCount(8);
+  await expect(page.locator('button[type="submit"]')).toHaveCount(9);
   await expect(page.locator("form[data-mikro1-evaluation-form]")).toHaveCount(
-    8,
+    9,
   );
   await expect(page.getByText("Score", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Correct", { exact: true })).toHaveCount(0);
@@ -36,6 +36,7 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
   expect(html).not.toContain("relationTableMappings");
   expect(html).not.toContain("transitivityChain");
   expect(html).not.toContain("transitivityViolation");
+  expect(html).not.toContain("rationalityClassification");
   expect(html).not.toContain("claim-pref-");
   expect(html).not.toContain("The relation is complete because every");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
@@ -67,7 +68,7 @@ test("static practice controls and relation tables expose native semantics", asy
     page.getByText(
       "Response evaluation is not available in this practice version.",
     ),
-  ).toHaveCount(4);
+  ).toHaveCount(3);
 });
 
 test("pref-practice-07 and pref-practice-08 evaluate reviewed transitivity reasoning without exposing directions", async ({
@@ -302,7 +303,7 @@ test("pref-practice-05 supports focused relation controls and keyboard submissio
   await expect(submit).toBeFocused();
 });
 
-test("pref-practice-04 evaluates a complete classification mapping and supports revision", async ({
+test("pref-practice-04 and pref-practice-10 evaluate classification responses and support revision", async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
@@ -338,9 +339,55 @@ test("pref-practice-04 evaluates a complete classification mapping and supports 
   await expect(submit).toBeEnabled();
   await submit.click();
   await expect(feedback).toContainText("Correct");
+
+  const rationalityExercise = page.locator("#pref-practice-10");
+  const rationalitySubmit = rationalityExercise.getByRole("button", {
+    name: "Check answer",
+  });
+  await expect(rationalitySubmit).toBeDisabled();
+  await rationalityExercise
+    .getByRole("group", { name: "Is the relation complete?" })
+    .getByLabel("Yes", { exact: true })
+    .check();
+  await rationalityExercise
+    .getByRole("group", { name: "Is the relation transitive?" })
+    .getByLabel("No", { exact: true })
+    .check();
+  await rationalityExercise
+    .getByLabel("Complete but not transitive; therefore not rational.")
+    .check();
+  await expect(rationalitySubmit).toBeEnabled();
+  await rationalitySubmit.click();
+
+  const rationalityFeedback = rationalityExercise.locator(
+    "[data-evaluation-feedback]",
+  );
+  await expect(rationalityFeedback).toContainText("Not yet correct");
+  await expect(rationalityFeedback).not.toContainText(
+    "Complete and transitive",
+  );
+  await expect(rationalityFeedback).not.toContainText("classification");
+  await expect(rationalitySubmit).toBeDisabled();
+
+  await rationalityExercise
+    .getByRole("group", { name: "Is the relation transitive?" })
+    .getByLabel("Yes", { exact: true })
+    .check();
+  await rationalityExercise
+    .getByLabel("Complete and transitive; therefore rational.")
+    .check();
+  await expect(rationalityFeedback).toBeHidden();
+  await expect(rationalitySubmit).toBeEnabled();
+  await rationalitySubmit.click();
+  await expect(rationalityFeedback).toContainText("Correct");
+
+  await page.reload();
+  await expect(
+    page.locator("#pref-practice-10 [data-evaluation-feedback]"),
+  ).toBeHidden();
 });
 
-test("pref-practice-04 supports focused native selects and keyboard submission", async ({
+test("pref-practice-04 and pref-practice-10 support keyboard completion and submission", async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
@@ -364,6 +411,34 @@ test("pref-practice-04 supports focused native selects and keyboard submission",
   await page.keyboard.press("Enter");
   await expect(exercise.getByRole("status")).toContainText("Correct");
   await expect(submit).toBeFocused();
+
+  const rationalityExercise = page.locator("#pref-practice-10");
+  const complete = rationalityExercise
+    .getByRole("group", { name: "Is the relation complete?" })
+    .getByLabel("Yes", { exact: true });
+  const transitive = rationalityExercise
+    .getByRole("group", { name: "Is the relation transitive?" })
+    .getByLabel("Yes", { exact: true });
+  const classification = rationalityExercise.getByLabel(
+    "Complete and transitive; therefore rational.",
+  );
+  await complete.focus();
+  await page.keyboard.press("Space");
+  await transitive.focus();
+  await page.keyboard.press("Space");
+  await classification.focus();
+  await page.keyboard.press("Space");
+
+  const rationalitySubmit = rationalityExercise.getByRole("button", {
+    name: "Check answer",
+  });
+  await expect(rationalitySubmit).toBeEnabled();
+  await rationalitySubmit.focus();
+  await page.keyboard.press("Enter");
+  await expect(rationalityExercise.getByRole("status")).toContainText(
+    "Correct",
+  );
+  await expect(rationalitySubmit).toBeFocused();
 });
 
 test("scoped exercises evaluate selected answers without revealing a solution", async ({
@@ -471,6 +546,9 @@ test("static Mikro I preferences practice remains readable without JavaScript", 
   await expect(page.getByLabel("x ≽ y and not y ≽ x")).toBeVisible();
   await expect(
     page.getByRole("group", { name: "Is the relation complete?" }).first(),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("group", { name: "Which final classification is correct?" }),
   ).toBeVisible();
 });
 

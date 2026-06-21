@@ -61,12 +61,24 @@ export interface Mikro1PreferenceTransitivityViolationResponse {
   requiredFieldsComplete: boolean;
 }
 
+export interface Mikro1PreferenceRationalityClassificationEntry {
+  positionId: string;
+  answerId: string;
+}
+
+export interface Mikro1PreferenceRationalityClassificationResponse {
+  kind: "rationality-classification";
+  entries: Mikro1PreferenceRationalityClassificationEntry[];
+  requiredFieldsComplete: boolean;
+}
+
 export type Mikro1PreferenceEvaluationResponse =
   | Mikro1PreferenceSelectionResponse
   | Mikro1PreferenceClassificationResponse
   | Mikro1PreferenceRelationTableResponse
   | Mikro1PreferenceTransitivityChainResponse
-  | Mikro1PreferenceTransitivityViolationResponse;
+  | Mikro1PreferenceTransitivityViolationResponse
+  | Mikro1PreferenceRationalityClassificationResponse;
 
 export interface Mikro1PreferenceEvaluationFeedback {
   heading: string;
@@ -112,6 +124,7 @@ function isExpectedExercise(
     "pref-practice-07",
     "pref-practice-08",
     "pref-practice-09",
+    "pref-practice-10",
   ].includes(exercise.id);
 }
 
@@ -518,6 +531,90 @@ function evaluateTransitivityViolation(
   };
 }
 
+function evaluateRationalityClassification(
+  exercise: Mikro1PreferenceExercise,
+  response: Mikro1PreferenceRationalityClassificationResponse,
+): Mikro1PreferenceEvaluationResult {
+  const classification = exercise.evaluationMetadata.rationalityClassification;
+  const feedback = exercise.feedbackMetadata;
+
+  if (
+    !classification ||
+    !feedback.correctExplanation ||
+    !feedback.incorrectExplanation
+  ) {
+    throw new Error(`Evaluation metadata is unavailable for ${exercise.id}.`);
+  }
+
+  const expectedAnswers = new Map([
+    [
+      classification.completeness.positionId,
+      classification.completeness.answerId,
+    ],
+    [
+      classification.transitivity.positionId,
+      classification.transitivity.answerId,
+    ],
+    [
+      classification.finalClassification.positionId,
+      classification.finalClassification.answerId,
+    ],
+  ]);
+  const responseFields = new Map(
+    exercise.responseDefinition.fields.map((field) => [field.id, field]),
+  );
+  const submittedEntries = new Map<string, string>();
+
+  if (
+    !response.requiredFieldsComplete ||
+    response.entries.length !== expectedAnswers.size ||
+    response.entries.some(({ positionId, answerId }) => {
+      const field = responseFields.get(positionId);
+
+      if (
+        !field ||
+        field.kind !== "radio" ||
+        submittedEntries.has(positionId) ||
+        !field.options.some((option) => option.id === answerId)
+      ) {
+        return true;
+      }
+
+      submittedEntries.set(positionId, answerId);
+      return false;
+    }) ||
+    submittedEntries.size !== expectedAnswers.size ||
+    [...submittedEntries.keys()].some(
+      (positionId) => !expectedAnswers.has(positionId),
+    )
+  ) {
+    return { status: "incomplete", feedback: invalidStructuredFeedback };
+  }
+
+  // These fields together establish one rationality classification claim.
+  if (
+    [...expectedAnswers].some(
+      ([positionId, answerId]) => submittedEntries.get(positionId) !== answerId,
+    )
+  ) {
+    return {
+      status: "fully-incorrect",
+      feedback: {
+        heading: "Not yet correct",
+        explanation: feedback.incorrectExplanation,
+      },
+    };
+  }
+
+  return {
+    status: "fully-correct",
+    feedback: {
+      heading: "Correct",
+      explanation: feedback.correctExplanation,
+    },
+  };
+}
+
 export const mikro1PreferenceEvaluator: Mikro1PreferenceEvaluator = {
   evaluate(exercise, response) {
     if (!isExpectedExercise(exercise)) {
@@ -557,6 +654,15 @@ export const mikro1PreferenceEvaluator: Mikro1PreferenceEvaluator = {
     ) {
       return response.kind === "transitivity-violation"
         ? evaluateTransitivityViolation(exercise, response)
+        : { status: "incomplete", feedback: invalidStructuredFeedback };
+    }
+
+    if (
+      exercise.interactionType === "classification" &&
+      exercise.id === "pref-practice-10"
+    ) {
+      return response.kind === "rationality-classification"
+        ? evaluateRationalityClassification(exercise, response)
         : { status: "incomplete", feedback: invalidStructuredFeedback };
     }
 

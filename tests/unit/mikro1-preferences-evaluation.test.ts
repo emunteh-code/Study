@@ -69,7 +69,8 @@ describe("Mikro I preference evaluator", () => {
         id !== "pref-practice-04" &&
         id !== "pref-practice-05" &&
         id !== "pref-practice-07" &&
-        id !== "pref-practice-08",
+        id !== "pref-practice-08" &&
+        id !== "pref-practice-10",
     )) {
       expect(
         mikro1PreferenceEvaluator.evaluate(exercise(id), {
@@ -665,6 +666,128 @@ describe("Mikro I preference evaluator", () => {
       expect(
         mikro1PreferenceEvaluator.evaluate(
           exercise("pref-practice-08"),
+          response,
+        ),
+      ).toMatchObject({
+        status: "incomplete",
+        feedback: { heading: "Incomplete or invalid response" },
+      });
+    }
+  });
+
+  it("evaluates the approved rationality classification independent of response order", () => {
+    const response = {
+      kind: "rationality-classification" as const,
+      requiredFieldsComplete: true,
+      entries: [
+        { positionId: "classification", answerId: "a" },
+        { positionId: "transitive", answerId: "yes" },
+        { positionId: "complete", answerId: "yes" },
+      ],
+    };
+
+    expect(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-10"),
+        response,
+      ),
+    ).toMatchObject({
+      status: "fully-correct",
+      feedback: { heading: "Correct" },
+    });
+    expect(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-10"),
+        response,
+      ),
+    ).toEqual(
+      mikro1PreferenceEvaluator.evaluate(
+        exercise("pref-practice-10"),
+        response,
+      ),
+    );
+  });
+
+  it("treats a valid but wrong rationality classification as one incorrect claim without answer leakage", () => {
+    const result = mikro1PreferenceEvaluator.evaluate(
+      exercise("pref-practice-10"),
+      {
+        kind: "rationality-classification",
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "complete", answerId: "yes" },
+          { positionId: "transitive", answerId: "no" },
+          { positionId: "classification", answerId: "b" },
+        ],
+      },
+    );
+
+    expect(result).toMatchObject({
+      status: "fully-incorrect",
+      feedback: { heading: "Not yet correct" },
+    });
+    expect(result).not.toHaveProperty("correctCount");
+    expect(result.feedback.explanation).not.toContain("classification: a");
+  });
+
+  it("rejects incomplete, duplicate, unknown, extra, and invalid rationality-classification entries", () => {
+    const invalidResponses = [
+      {
+        kind: "rationality-classification" as const,
+        requiredFieldsComplete: false,
+        entries: [],
+      },
+      {
+        kind: "rationality-classification" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "complete", answerId: "yes" },
+          { positionId: "transitive", answerId: "yes" },
+        ],
+      },
+      {
+        kind: "rationality-classification" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "complete", answerId: "yes" },
+          { positionId: "complete", answerId: "yes" },
+          { positionId: "classification", answerId: "a" },
+        ],
+      },
+      {
+        kind: "rationality-classification" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "complete", answerId: "unknown" },
+          { positionId: "transitive", answerId: "yes" },
+          { positionId: "classification", answerId: "a" },
+        ],
+      },
+      {
+        kind: "rationality-classification" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "complete", answerId: "yes" },
+          { positionId: "unknown", answerId: "yes" },
+          { positionId: "classification", answerId: "a" },
+        ],
+      },
+      {
+        kind: "rationality-classification" as const,
+        requiredFieldsComplete: true,
+        entries: [
+          { positionId: "complete", answerId: "yes" },
+          { positionId: "transitive", answerId: "yes" },
+          { positionId: "classification", answerId: "a" },
+          { positionId: "extra", answerId: "yes" },
+        ],
+      },
+    ];
+
+    for (const response of invalidResponses) {
+      expect(
+        mikro1PreferenceEvaluator.evaluate(
+          exercise("pref-practice-10"),
           response,
         ),
       ).toMatchObject({
