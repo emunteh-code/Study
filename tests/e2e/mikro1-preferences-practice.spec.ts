@@ -203,6 +203,81 @@ test("local completion records attempts, self-review, recovery, and reset withou
   await expect(progress.getByRole("status")).toContainText("0 of 12");
 });
 
+test("exercise map markers share the validated completion state with the summary", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  const storageKey = "study.mikro1.preference-practice.completion";
+  await page.goto(practicePath);
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem("unrelated-map-key", "preserved");
+  });
+  await page.reload();
+
+  const progress = page.locator("[data-practice-progress]");
+  const map = page.locator(".static-practice-overview");
+  const completed = map.locator('[data-completion-state="completed"]');
+  await expect(progress.getByRole("status")).toContainText("0 of 12");
+  await expect(completed).toHaveCount(0);
+  await expect(
+    map.getByRole("link", { name: "Exercise 1, Not completed" }),
+  ).toBeVisible();
+  await expect(map.locator("[data-practice-map-marker]")).toHaveCount(12);
+  expect(
+    await map
+      .locator("[data-practice-map-marker]")
+      .evaluateAll((markers) =>
+        markers.every((marker) => !marker.hasAttribute("tabindex")),
+      ),
+  ).toBe(true);
+
+  await page.evaluate((key) => {
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        version: 1,
+        completed: ["pref-practice-01", "pref-practice-03"],
+      }),
+    );
+  }, storageKey);
+  await page.reload();
+  await expect(progress.getByRole("status")).toContainText("2 of 12");
+  await expect(completed).toHaveCount(2);
+  await expect(
+    map.getByRole("link", { name: "Exercise 1, Completed" }),
+  ).toBeVisible();
+  await expect(
+    map.getByRole("link", { name: "Exercise 2, Not completed" }),
+  ).toBeVisible();
+
+  const deterministic = page.locator("#pref-practice-02");
+  await deterministic.getByLabel("x ≻ y means x ≽ y and y ≽ x.").check();
+  await deterministic.getByRole("button", { name: "Check answer" }).click();
+  await expect(progress.getByRole("status")).toContainText("3 of 12");
+  await expect(
+    map.getByRole("link", { name: "Exercise 2, Completed" }),
+  ).toBeVisible();
+  await expect(completed).toHaveCount(3);
+  await page.reload();
+  await expect(completed).toHaveCount(3);
+
+  page.once("dialog", (dialog) => dialog.dismiss());
+  await progress
+    .getByRole("button", { name: "Reset local completion" })
+    .click();
+  await expect(completed).toHaveCount(3);
+  page.once("dialog", (dialog) => dialog.accept());
+  await progress
+    .getByRole("button", { name: "Reset local completion" })
+    .click();
+  await expect(progress.getByRole("status")).toContainText("0 of 12");
+  await expect(completed).toHaveCount(0);
+  expect(
+    await page.evaluate(() => localStorage.getItem("unrelated-map-key")),
+  ).toBe("preserved");
+});
+
 test("invalid saved completion payloads recover safely and permit later completion", async ({
   page,
 }, testInfo) => {
