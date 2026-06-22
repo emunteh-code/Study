@@ -37,6 +37,10 @@ The blueprint covers the intended misconception set, but no final distractor can
 
 ## Final Decision
 
-**Not ready.** Zero exercises are production-approved; five are conditionally feasible after final specification, five are rejected for missing computational contracts, and two are correctly reserved for self-review. Route implementation is not authorized.
+**Not ready.** Zero exercises are production-approved; six are conditionally feasible after final specification, four are rejected for missing computational contracts, and two are correctly reserved for self-review. Route implementation is not authorized.
+
+## Reconciliation Note
+
+The prior summary contained a counting error. The detailed decision table is the controlling record: it contains six conditionally feasible deterministic items (`sub-practice-01`, `02`, `03`, `08`, `09`, and `10`), four rejected items (`04` through `07`), and two self-review items (`11` and `12`). No academic exercise decision changed. The corrected eventual production target is six deterministic exercises plus two learner-controlled self-review exercises.
 
 Required next task: create a complete original production exercise specification with final values, independent model solutions, evaluator schemas, accepted forms, feedback categories, and rights review; then repeat this adversarial review.
