@@ -1,0 +1,188 @@
+import {
+  assertValidMikro1SubstitutionExercises,
+  type StaticMikro1SubstitutionExercise,
+} from "../lib/mikro1-substitution-practice";
+const assumptions = {
+  heading: "Annahmen" as const,
+  items: [
+    "Das Bündel ist innerlich, die Nutzenfunktion lokal differenzierbar und u_x2 ist nicht null.",
+  ],
+};
+const choice = (id: string, label: string) => ({ id, label });
+export const mikro1SubstitutionPracticeExercises: readonly StaticMikro1SubstitutionExercise[] =
+  [
+    {
+      id: "sub-practice-01",
+      displayNumber: 1,
+      title: "Read the course GRS",
+      objective: "Distinguish signed slope and positive GRS.",
+      prompt: "Which expression is the course GRS_12?",
+      assumptions,
+      support: [
+        {
+          type: "math",
+          id: "slope",
+          latex: "dx_2/dx_1=-u_{x_1}/u_{x_2}",
+          accessibleText:
+            "the derivative of good 2 with respect to good 1 while utility is held constant",
+        },
+      ],
+      responseType: "single-choice",
+      responseId: "grs-expression",
+      label: "Course GRS",
+      instruction: "Select one expression.",
+      options: [
+        choice("positive-ratio", "u_x1/u_x2"),
+        choice("signed-slope", "-u_x1/u_x2"),
+        choice("inverse-ratio", "u_x2/u_x1"),
+        choice("elasticity", "1/(1-rho)"),
+      ],
+    },
+    {
+      id: "sub-practice-02",
+      displayNumber: 2,
+      title: "Orient the GRS ratio",
+      objective: "Identify the numerator in GRS_12.",
+      prompt: "For GRS_12=u_x1/u_x2, which term is the numerator?",
+      support: [],
+      responseType: "single-choice",
+      responseId: "numerator",
+      label: "Numerator",
+      instruction: "Select one term.",
+      options: [
+        choice("ux1", "u_x1"),
+        choice("ux2", "u_x2"),
+        choice("difference", "u_x1-u_x2"),
+        choice("signed-slope", "the signed slope"),
+      ],
+    },
+    {
+      id: "sub-practice-03",
+      displayNumber: 3,
+      title: "Check local GRS assumptions",
+      objective: "Select conditions for the local course GRS statement.",
+      prompt:
+        "Select every condition used for the local positive GRS statement.",
+      support: [],
+      responseType: "multi-select",
+      responseId: "conditions",
+      label: "Conditions",
+      instruction: "Select all and only the required conditions.",
+      options: [
+        choice("interior", "Interior positive bundle"),
+        choice("differentiable", "Local differentiability"),
+        choice("fixed-utility", "Utility held fixed"),
+        choice("nonzero-denominator", "u_x2 is not zero"),
+        choice("positive-ratio", "Positive ratio interpretation"),
+        choice("budget", "A budget constraint"),
+        choice("zero-bundle", "A zero quantity"),
+      ],
+    },
+    {
+      id: "sub-practice-08",
+      displayNumber: 4,
+      title: "Convert rho to sigma",
+      objective: "Calculate sigma from rho.",
+      prompt: "With rho=1/2, enter sigma=1/(1-rho).",
+      support: [],
+      responseType: "numeric-text",
+      responseId: "sigma",
+      label: "Sigma",
+      instruction: "Enter an integer, dot decimal, or simple fraction.",
+      inputMode: "decimal",
+    },
+    {
+      id: "sub-practice-09",
+      displayNumber: 5,
+      title: "Convert sigma to rho",
+      objective: "Calculate rho from sigma.",
+      prompt: "With sigma=4, enter rho=1-1/sigma.",
+      support: [],
+      responseType: "numeric-text",
+      responseId: "rho",
+      label: "Rho",
+      instruction: "Enter a dot decimal or simple fraction.",
+      inputMode: "decimal",
+    },
+    {
+      id: "sub-practice-10",
+      displayNumber: 6,
+      title: "Identify degree-one homogeneity",
+      objective: "Identify the degree-one homogeneity identity.",
+      prompt: "Which identity states degree-one homogeneity for t>0?",
+      support: [],
+      responseType: "single-choice",
+      responseId: "homogeneity-identity",
+      label: "Identity",
+      instruction: "Select one identity.",
+      options: [
+        choice("degree-one", "u(tx_1,tx_2)=t u(x_1,x_2)"),
+        choice("degree-zero", "u(tx)=u(x)"),
+        choice("degree-two", "u(tx)=t^2u(x)"),
+        choice(
+          "all-transforms",
+          "Every increasing transformation keeps degree one",
+        ),
+      ],
+    },
+    {
+      id: "sub-practice-11",
+      displayNumber: 7,
+      title: "Homogene Darstellung und homothetische Präferenzen",
+      objective: "Explain representation and preference properties.",
+      prompt: "Erkläre die folgenden drei Unterscheidungen.",
+      support: [],
+      responseType: "self-review",
+      fields: [
+        {
+          id: "homogeneity-property",
+          label: "Lineare Homogenität",
+          prompt:
+            "Welche Eigenschaft erfüllt eine linear homogene Nutzenfunktion?",
+          control: "textarea",
+        },
+        {
+          id: "homothetic-preferences",
+          label: "Homothetische Präferenzen",
+          prompt: "Was bedeutet Homothetie auf der Ebene der Präferenzen?",
+          control: "textarea",
+        },
+        {
+          id: "monotonic-transformation",
+          label: "Streng monoton steigende Transformation",
+          prompt: "Was bleibt erhalten und was nicht zwingend?",
+          control: "textarea",
+        },
+      ],
+    },
+    {
+      id: "sub-practice-12",
+      displayNumber: 8,
+      title: "Grenzfälle der CES-Nutzenfunktion",
+      objective: "Explain qualified CES limits.",
+      prompt: "Erläutere die drei freigegebenen CES-Grenzfälle.",
+      support: [],
+      responseType: "self-review",
+      fields: [
+        {
+          id: "limit-rho-one",
+          label: "Grenzfall ρ → 1",
+          prompt: "Beschreibe Form, Präferenzen und sigma.",
+          control: "textarea",
+        },
+        {
+          id: "limit-rho-zero",
+          label: "Grenzfall ρ → 0",
+          prompt: "Beschreibe Qualifikation und sigma.",
+          control: "textarea",
+        },
+        {
+          id: "limit-rho-negative-infinity",
+          label: "Grenzfall ρ → −∞",
+          prompt: "Beschreibe Voraussetzungen, Grenzfunktion und sigma.",
+          control: "textarea",
+        },
+      ],
+    },
+  ];
+assertValidMikro1SubstitutionExercises(mikro1SubstitutionPracticeExercises);
