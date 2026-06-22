@@ -1,0 +1,50 @@
+---
+import SubstitutionPracticeExercise from "./SubstitutionPracticeExercise.astro";
+import type { StaticMikro1SubstitutionExercise } from "../../lib/mikro1-substitution-practice";
+
+interface Props {
+  exercises: readonly StaticMikro1SubstitutionExercise[];
+}
+
+const { exercises } = Astro.props;
+---
+
+<div class="practice-page static-practice-set">
+  <header class="static-practice-set__header">
+    <p class="eyebrow">Mikroökonomik I</p>
+    <h1>Substitutionselastizität und homothetische Nutzenfunktionen</h1>
+    <p>Eight original exercises on the approved, bounded practice scope.</p>
+  </header>
+
+  <nav
+    class="static-practice-overview"
+    aria-labelledby="substitution-map-title"
+  >
+    <div>
+      <p class="eyebrow">Übungsübersicht</p>
+      <h2 id="substitution-map-title">Aufgaben</h2>
+    </div>
+    <ol>
+      {
+        exercises.map((exercise) => (
+          <li>
+            <a href={`#${exercise.id}`}>
+              <>
+                <span aria-hidden="true">{exercise.displayNumber}</span>
+                <span>{exercise.title}</span>
+              </>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+
+  <div class="static-practice-list">
+    {
+      exercises.map((exercise) => (
+        <SubstitutionPracticeExercise exercise={exercise} />
+      ))
+    }
+  </div>
+</div>

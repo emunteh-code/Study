@@ -1,0 +1,26 @@
+---
+import SubstitutionPracticeSet from "../../../../components/practice/SubstitutionPracticeSet.astro";
+import { mikro1SubstitutionPracticeExercises } from "../../../../data/mikro1-substitution-practice";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Substitutionselastizität und homothetische Nutzenfunktionen"
+  description="Acht original exercises for a bounded Mikroökonomik I practice unit."
+  canonicalPath="/ueben/mikrooekonomik-1/substitutionseffekt/"
+  robots="noindex, nofollow"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Üben", href: "/ueben/" },
+    { label: "Mikroökonomik I" },
+    { label: "Substitutionselastizität" },
+  ]}
+  pageId="mikro1-substitution-practice-static"
+>
+  <SubstitutionPracticeSet exercises={mikro1SubstitutionPracticeExercises} />
+</BaseLayout>
+
+<script>
+  import { enhanceMikro1SubstitutionEvaluation } from "../../../../scripts/mikro1-substitution-evaluation";
+  enhanceMikro1SubstitutionEvaluation();
+</script>

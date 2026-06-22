@@ -1,0 +1,186 @@
+---
+import type { StaticMikro1SubstitutionExercise } from "../../lib/mikro1-substitution-practice";
+
+interface Props {
+  exercise: StaticMikro1SubstitutionExercise;
+}
+
+const { exercise } = Astro.props;
+const titleId = `${exercise.id}-title`;
+const instructionsId = `${exercise.id}-instructions`;
+const feedbackId = `${exercise.id}-feedback`;
+const deterministic = exercise.responseType !== "self-review";
+---
+
+<article
+  class="static-practice-exercise"
+  id={exercise.id}
+  aria-labelledby={titleId}
+>
+  <header class="static-practice-exercise__header">
+    <p class="question-card__position">
+      Aufgabe {exercise.displayNumber} von 8
+    </p>
+    <h2 id={titleId}>{exercise.title}</h2>
+  </header>
+
+  <div class="static-practice-section">
+    <h3 id={`${exercise.id}-prompt`}>Aufgabe</h3>
+    <p>{exercise.prompt}</p>
+  </div>
+
+  {
+    exercise.assumptions && (
+      <div class="static-practice-section">
+        <h3 id={`${exercise.id}-assumptions`}>
+          {exercise.assumptions.heading}
+        </h3>
+        <ul>
+          {exercise.assumptions.items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  {
+    exercise.support.length > 0 && (
+      <div class="static-practice-section">
+        <h3 id={`${exercise.id}-support`}>Hinweise</h3>
+        {exercise.support.map((block) =>
+          block.type === "math" ? (
+            <p
+              id={`${exercise.id}-${block.id}`}
+              aria-label={block.accessibleText}
+            >
+              {block.latex}
+            </p>
+          ) : (
+            <p id={`${exercise.id}-${block.id}`}>{block.text}</p>
+          ),
+        )}
+      </div>
+    )
+  }
+
+  <div class="static-practice-response">
+    <h3 id={`${exercise.id}-response`}>Antwort</h3>
+    <p id={instructionsId}>
+      {
+        exercise.responseType !== "self-review"
+          ? exercise.instruction
+          : "Halte deine eigene Begründung für jeden Punkt fest."
+      }
+    </p>
+    {
+      deterministic ? (
+        <form
+          data-substitution-evaluation-form
+          data-exercise-id={exercise.id}
+          aria-describedby={instructionsId}
+        >
+          {exercise.responseType === "single-choice" && (
+            <fieldset
+              class="static-practice-field"
+              aria-describedby={`${instructionsId} ${feedbackId}`}
+            >
+              <legend>{exercise.label}</legend>
+              {exercise.options.map((option, index) => {
+                const optionId = `${exercise.id}-${exercise.responseId}-${option.id}`;
+                return (
+                  <div class="static-practice-option">
+                    <input
+                      id={optionId}
+                      name={exercise.responseId}
+                      type="radio"
+                      value={option.id}
+                      required={index === 0}
+                    />
+                    <label for={optionId}>{option.label}</label>
+                  </div>
+                );
+              })}
+            </fieldset>
+          )}
+          {exercise.responseType === "multi-select" && (
+            <fieldset
+              class="static-practice-field"
+              aria-describedby={`${instructionsId} ${feedbackId}`}
+            >
+              <legend>{exercise.label}</legend>
+              {exercise.options.map((option) => {
+                const optionId = `${exercise.id}-${exercise.responseId}-${option.id}`;
+                return (
+                  <div class="static-practice-option">
+                    <input
+                      id={optionId}
+                      name={exercise.responseId}
+                      type="checkbox"
+                      value={option.id}
+                    />
+                    <label for={optionId}>{option.label}</label>
+                  </div>
+                );
+              })}
+            </fieldset>
+          )}
+          {exercise.responseType === "numeric-text" && (
+            <div class="static-practice-field">
+              <label for={`${exercise.id}-${exercise.responseId}`}>
+                {exercise.label}
+              </label>
+              <input
+                id={`${exercise.id}-${exercise.responseId}`}
+                name={exercise.responseId}
+                data-response-id={exercise.responseId}
+                type="text"
+                inputmode={exercise.inputMode}
+                required
+                aria-describedby={`${instructionsId} ${feedbackId}`}
+              />
+            </div>
+          )}
+          <button
+            class="button button--primary"
+            type="submit"
+            data-substitution-evaluation-submit
+            disabled
+          >
+            Antwort prüfen
+          </button>
+          <p class="card__meta">Die Antwortprüfung benötigt JavaScript.</p>
+          <div
+            class="static-practice-feedback"
+            id={feedbackId}
+            data-substitution-evaluation-feedback
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            hidden
+          >
+            <>
+              <h4 data-substitution-feedback-heading />
+              <p data-substitution-feedback-text />
+            </>
+          </div>
+        </form>
+      ) : (
+        <div>
+          {exercise.fields.map((field) => (
+            <div class="static-practice-field">
+              <label for={`${exercise.id}-${field.id}`}>{field.label}</label>
+              <p>{field.prompt}</p>
+              <textarea
+                id={`${exercise.id}-${field.id}`}
+                name={field.id}
+                data-response-field-id={field.id}
+                rows="4"
+              />
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</article>
