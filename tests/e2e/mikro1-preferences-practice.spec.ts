@@ -203,6 +203,146 @@ test("local completion records attempts, self-review, recovery, and reset withou
   await expect(progress.getByRole("status")).toContainText("0 of 12");
 });
 
+test("invalid saved completion payloads recover safely and permit later completion", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  const storageKey = "study.mikro1.preference-practice.completion";
+  const invalidPayloads = [
+    "{",
+    JSON.stringify({ version: 2, completed: [] }),
+    JSON.stringify({ version: 1, completed: ["unknown-exercise"] }),
+    JSON.stringify({
+      version: 1,
+      completed: ["pref-practice-02", "pref-practice-02"],
+    }),
+    JSON.stringify({ version: 1, completed: [42] }),
+  ];
+
+  for (const payload of invalidPayloads) {
+    await page.goto(practicePath);
+    await page.evaluate(
+      ({ key, value }) => {
+        localStorage.clear();
+        localStorage.setItem("unrelated-completion-test-key", "keep");
+        localStorage.setItem(key, value);
+      },
+      { key: storageKey, value: payload },
+    );
+    await page.reload();
+    const progress = page.locator("[data-practice-progress]");
+    await expect(progress.getByRole("status")).toContainText("0 of 12");
+    await expect(
+      page
+        .locator("#pref-practice-02")
+        .getByRole("button", { name: "Check answer" }),
+    ).toBeDisabled();
+    expect(
+      await page.evaluate(() =>
+        localStorage.getItem("unrelated-completion-test-key"),
+      ),
+    ).toBe("keep");
+    await page
+      .locator("#pref-practice-02")
+      .getByLabel("x ≻ y means x ≽ y and y ≽ x.")
+      .check();
+    await page
+      .locator("#pref-practice-02")
+      .getByRole("button", { name: "Check answer" })
+      .click();
+    await expect(progress.getByRole("status")).toContainText("1 of 12");
+    expect(
+      await page.evaluate((key) => localStorage.getItem(key), storageKey),
+    ).toBe(JSON.stringify({ version: 1, completed: ["pref-practice-02"] }));
+  }
+});
+
+test("self-review completion requires a complete comparison and remains idempotent", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  await page.goto(practicePath);
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  const progress = page.locator("[data-practice-progress]");
+
+  for (const exerciseId of [
+    "pref-practice-01",
+    "pref-practice-11",
+    "pref-practice-12",
+  ]) {
+    const exercise = page.locator(`#${exerciseId}`);
+    const compare = exercise.getByRole("button", {
+      name: "Compare with model solution",
+    });
+    await expect(compare).toBeDisabled();
+    if (exerciseId === "pref-practice-01") {
+      await exercise.getByLabel("What does x ≽ y state?").fill("Attempt");
+      await exercise
+        .getByLabel("What does the displayed relation establish about y ≽ x?")
+        .fill("Attempt");
+    } else if (exerciseId === "pref-practice-11") {
+      await exercise
+        .getByRole("group", { name: "Does completeness hold?" })
+        .getByLabel("Yes", { exact: true })
+        .check();
+      await exercise
+        .getByRole("group", { name: "Does transitivity hold?" })
+        .getByLabel("No", { exact: true })
+        .check();
+      await exercise
+        .getByLabel("First alternative in a violating triple")
+        .selectOption("y");
+      await exercise
+        .getByLabel("Middle alternative in a violating triple")
+        .selectOption("z");
+      await exercise
+        .getByLabel("Final alternative in a violating triple")
+        .selectOption("x");
+      await exercise
+        .getByLabel("Smallest repair to the learner’s reasoning")
+        .fill("Attempt");
+    } else {
+      for (const fieldId of [
+        "assumption",
+        "strict-consequence",
+        "indifference-consequence",
+        "contradiction",
+        "conclusion",
+      ]) {
+        await exercise
+          .locator(`[data-response-field-id="${fieldId}"]`)
+          .fill("Attempt");
+      }
+    }
+    await expect(compare).toBeEnabled();
+    await expect(progress.getByRole("status")).toContainText(
+      `${exerciseId === "pref-practice-01" ? 0 : exerciseId === "pref-practice-11" ? 1 : 2} of 12`,
+    );
+    await compare.click();
+    await expect(progress.getByRole("status")).toContainText(
+      `${exerciseId === "pref-practice-01" ? 1 : exerciseId === "pref-practice-11" ? 2 : 3} of 12`,
+    );
+    await exercise.getByRole("button", { name: "Close comparison" }).click();
+    await compare.click();
+    await expect(progress.getByRole("status")).toContainText(
+      `${exerciseId === "pref-practice-01" ? 1 : exerciseId === "pref-practice-11" ? 2 : 3} of 12`,
+    );
+  }
+  await page.reload();
+  await expect(progress.getByRole("status")).toContainText("3 of 12");
+  expect(
+    await page.evaluate(() =>
+      localStorage.getItem("study.mikro1.preference-practice.completion"),
+    ),
+  ).toBe(
+    JSON.stringify({
+      version: 1,
+      completed: ["pref-practice-01", "pref-practice-11", "pref-practice-12"],
+    }),
+  );
+});
+
 test("pref-practice-07 and pref-practice-08 evaluate reviewed transitivity reasoning without exposing directions", async ({
   page,
 }, testInfo) => {
