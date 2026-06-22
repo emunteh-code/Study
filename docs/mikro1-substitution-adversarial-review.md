@@ -4,6 +4,10 @@
 
 Controlling records are the sanitized source inspection, claims audit, and readiness blueprint. Commit `86ebfbc` exists locally and is already on `origin/main`. This review adds no learner-facing content.
 
+## Mapping Reconciliation
+
+The authoritative mapping is `02` for GRS ratio orientation and `03` for local derivative and GRS assumptions. A later instruction that assigned assumptions to `02` is superseded. No exercise-level academic decision changed.
+
 ## Scope Freeze
 
 Only interior CES, course-positive GRS, elasticity conversion, degree-one homogeneity, and bounded homotheticity/limit interpretation were reviewed. Optimization, boundaries, graphs, unrestricted symbolic parsing, automatic prose marking, and copied material remain outside scope.
