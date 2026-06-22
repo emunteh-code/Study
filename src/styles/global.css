@@ -1469,13 +1469,41 @@ details > * {
 
 .static-practice-overview a {
   display: grid;
-  grid-template-columns: 1.75rem minmax(0, 1fr);
+  grid-template-columns: 1.75rem minmax(0, 1fr) max-content;
   gap: var(--space-8);
   align-items: baseline;
   min-block-size: 2.75rem;
   padding: var(--space-4) 0;
   color: var(--color-text);
   font-size: var(--font-size-0);
+}
+
+.static-practice-overview a[data-completion-state="completed"] {
+  border-inline-start: 0.2rem solid var(--color-status-success-text);
+  padding-inline-start: var(--space-8);
+}
+
+.static-practice-overview a[data-completion-state="not-completed"] {
+  border-inline-start: 0.2rem solid transparent;
+  padding-inline-start: var(--space-8);
+}
+
+.static-practice-overview [data-practice-map-marker] {
+  padding: var(--space-2) var(--space-8);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-4);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.static-practice-overview
+  a[data-completion-state="completed"]
+  [data-practice-map-marker] {
+  border-color: var(--color-status-success-text);
+  background: var(--color-status-success-bg);
+  color: var(--color-status-success-text);
 }
 
 .static-practice-overview a span {

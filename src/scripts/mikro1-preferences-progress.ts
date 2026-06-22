@@ -69,6 +69,9 @@ export function enhanceMikro1PreferencesProgress(
   const remaining = summary.querySelector<HTMLElement>(
     "[data-practice-progress-remaining]",
   );
+  const mapLinks = Array.from(
+    root.querySelectorAll<HTMLAnchorElement>("[data-practice-map-link]"),
+  );
   const render = () => {
     summary.hidden = false;
     if (text)
@@ -83,6 +86,28 @@ export function enhanceMikro1PreferencesProgress(
           exercise.querySelector("h2")?.textContent ?? exercise.id;
         remaining.append(item);
       }
+    }
+    for (const link of mapLinks) {
+      const exerciseId = link.dataset.practiceMapLink;
+      const exercisePosition = ids.indexOf(exerciseId ?? "") + 1;
+      const completed = Boolean(
+        exerciseId && state.completed.includes(exerciseId),
+      );
+      link.dataset.completionState = completed ? "completed" : "not-completed";
+      link.setAttribute(
+        "aria-label",
+        `Exercise ${exercisePosition}, ${completed ? "Completed" : "Not completed"}`,
+      );
+      let marker = link.querySelector<HTMLElement>(
+        "[data-practice-map-marker]",
+      );
+      if (!marker) {
+        marker = document.createElement("span");
+        marker.dataset.practiceMapMarker = "";
+        marker.setAttribute("aria-hidden", "true");
+        link.append(marker);
+      }
+      marker.textContent = completed ? "Done" : "To do";
     }
   };
   render();

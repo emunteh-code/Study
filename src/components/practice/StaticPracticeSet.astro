@@ -53,9 +53,9 @@ const { exercises } = Astro.props;
       {
         exercises.map((exercise, index) => (
           <li>
-            <a href={`#${exercise.id}`}>
+            <a href={`#${exercise.id}`} data-practice-map-link={exercise.id}>
               <span aria-hidden="true">{index + 1}</span>
-              {exercise.title}
+              <span>{exercise.title}</span>
             </a>
           </li>
         ))

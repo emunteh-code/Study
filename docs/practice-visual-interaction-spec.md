@@ -31,6 +31,8 @@ The Mikroökonomik I preference-relations practice route is the reference implem
 
 The reset action stays inside the compact completion summary. It is intentionally secondary and requires confirmation.
 
+The browser-enhanced map labels each link as `Completed` or `Not completed` through its accessible name. Its compact visual marker is supplementary: a completed item has a restrained success border and `Done` token; an incomplete item remains a fully active navigation link with a `To do` token. Completion never represents correctness, mastery, passing, or grading. Without JavaScript the map is navigation-only and has no completion marker.
+
 ## Exercise Shell Contract
 
 Every exercise presents: position, type/difficulty, prompt, supporting relation data, response, primary action, feedback, comparison material, and local completion state where enabled. The prompt precedes controls. Feedback remains adjacent to the action. Comparison uses its own bordered working surface and leaves learner responses visible.
