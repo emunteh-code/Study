@@ -21,10 +21,23 @@ const { exercises } = Astro.props;
     </p>
   </header>
 
+  <section
+    data-practice-progress
+    hidden
+    aria-labelledby="practice-progress-title"
+  >
+    <h2 id="practice-progress-title">Practice completion</h2>
+    <p data-practice-progress-summary role="status" aria-live="polite"></p>
+    <ul data-practice-progress-remaining></ul>
+    <button type="button" data-practice-progress-reset
+      >Reset local completion</button
+    >
+  </section>
+
   <Callout title="Static practice foundation" variant="information">
     <p>
-      You can enter responses in this version, but there is no submission,
-      answer checking, score, feedback, saved progress, or solution reveal yet.
+      You can enter responses in this version. Features that need JavaScript
+      remain optional; the practice content itself stays readable without it.
     </p>
   </Callout>
 

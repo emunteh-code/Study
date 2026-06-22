@@ -250,6 +250,11 @@ export function enhanceMikro1PreferencesEvaluation(
       try {
         await evaluateSubmission(form);
         form.dataset.submitted = "true";
+        window.dispatchEvent(
+          new CustomEvent("mikro1-practice-completed", {
+            detail: { exerciseId: form.dataset.exerciseId },
+          }),
+        );
       } catch {
         setFeedback(
           form,

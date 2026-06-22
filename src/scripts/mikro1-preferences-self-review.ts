@@ -114,6 +114,11 @@ export function enhanceMikro1PreferencesSelfReview(
       );
       if (!exercise?.selfReviewMetadata) return;
       renderComparison(form, exercise);
+      window.dispatchEvent(
+        new CustomEvent("mikro1-practice-completed", {
+          detail: { exerciseId },
+        }),
+      );
       setFeedback(
         form,
         "Comparison opened",

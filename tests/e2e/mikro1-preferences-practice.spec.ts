@@ -157,6 +157,52 @@ test("self-review opens approved comparison material without grading learner tex
   );
 });
 
+test("local completion records attempts, self-review, recovery, and reset without storing responses", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  await page.goto(practicePath);
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  const progress = page.locator("[data-practice-progress]");
+  await expect(progress.getByRole("status")).toContainText("0 of 12");
+
+  const exercise = page.locator("#pref-practice-02");
+  await exercise.getByLabel("x ≻ y means x ≽ y and y ≽ x.").check();
+  await exercise.getByRole("button", { name: "Check answer" }).click();
+  await expect(progress.getByRole("status")).toContainText("1 of 12");
+  const payload = await page.evaluate(() =>
+    localStorage.getItem("study.mikro1.preference-practice.completion"),
+  );
+  expect(payload).toBe(
+    JSON.stringify({ version: 1, completed: ["pref-practice-02"] }),
+  );
+
+  const review = page.locator("#pref-practice-01");
+  await review.getByLabel("What does x ≽ y state?").fill("Attempt");
+  await review
+    .getByLabel("What does the displayed relation establish about y ≽ x?")
+    .fill("Attempt");
+  await expect(progress.getByRole("status")).toContainText("1 of 12");
+  await review
+    .getByRole("button", { name: "Compare with model solution" })
+    .click();
+  await expect(progress.getByRole("status")).toContainText("2 of 12");
+  await page.reload();
+  await expect(progress.getByRole("status")).toContainText("2 of 12");
+
+  page.once("dialog", async (dialog) => dialog.dismiss());
+  await progress
+    .getByRole("button", { name: "Reset local completion" })
+    .click();
+  await expect(progress.getByRole("status")).toContainText("2 of 12");
+  page.once("dialog", async (dialog) => dialog.accept());
+  await progress
+    .getByRole("button", { name: "Reset local completion" })
+    .click();
+  await expect(progress.getByRole("status")).toContainText("0 of 12");
+});
+
 test("pref-practice-07 and pref-practice-08 evaluate reviewed transitivity reasoning without exposing directions", async ({
   page,
 }, testInfo) => {
