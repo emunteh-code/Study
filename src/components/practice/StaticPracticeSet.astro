@@ -41,6 +41,28 @@ const { exercises } = Astro.props;
     </p>
   </Callout>
 
+  <nav
+    class="static-practice-overview"
+    aria-labelledby="practice-overview-title"
+  >
+    <div>
+      <p class="eyebrow">Practice map</p>
+      <h2 id="practice-overview-title">Move through the set</h2>
+    </div>
+    <ol>
+      {
+        exercises.map((exercise, index) => (
+          <li>
+            <a href={`#${exercise.id}`}>
+              <span aria-hidden="true">{index + 1}</span>
+              {exercise.title}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+
   <section aria-labelledby="static-practice-instructions">
     <h2 id="static-practice-instructions">How to use this practice set</h2>
     <ol>

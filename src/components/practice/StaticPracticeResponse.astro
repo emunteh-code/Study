@@ -87,7 +87,12 @@ const evaluationKind =
           />
         </div>
         {exercise.selfReviewAvailable && (
-          <section data-self-review-panel hidden tabindex="-1">
+          <section
+            class="static-practice-comparison"
+            data-self-review-panel
+            hidden
+            tabindex="-1"
+          >
             <h4>Model solution comparison</h4>
             <div data-self-review-content />
             <button type="button" data-self-review-close>
