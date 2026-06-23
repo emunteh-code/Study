@@ -166,7 +166,7 @@ const deterministic = exercise.responseType !== "self-review";
           </div>
         </form>
       ) : (
-        <div>
+        <form data-substitution-self-review-form data-exercise-id={exercise.id}>
           {exercise.fields.map((field) => (
             <div class="static-practice-field">
               <label for={`${exercise.id}-${field.id}`}>{field.label}</label>
@@ -176,10 +176,37 @@ const deterministic = exercise.responseType !== "self-review";
                 name={field.id}
                 data-response-field-id={field.id}
                 rows="4"
+                required
               />
             </div>
           ))}
-        </div>
+          <button
+            class="button button--primary"
+            type="submit"
+            data-substitution-self-review-open
+            aria-controls={`${exercise.id}-comparison`}
+            aria-expanded="false"
+            disabled
+            hidden
+          >
+            Mit Modellbegründung vergleichen
+          </button>
+          <p class="card__meta">Der Vergleich benötigt JavaScript.</p>
+          <p
+            data-substitution-self-review-status
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          />
+          <div
+            id={`${exercise.id}-comparison`}
+            data-substitution-self-review-panel
+            hidden
+          />
+          <button type="button" data-substitution-self-review-close hidden>
+            Vergleich schließen
+          </button>
+        </form>
       )
     }
   </div>

@@ -17,8 +17,11 @@ test("substitution practice renders the bounded authorized set without answer me
     page.locator("[data-substitution-evaluation-submit]"),
   ).toHaveCount(6);
   await expect(
-    page.locator("#sub-practice-11 button, #sub-practice-12 button"),
-  ).toHaveCount(0);
+    page.locator("#sub-practice-11 [data-substitution-self-review-open]"),
+  ).toHaveCount(1);
+  await expect(
+    page.locator("#sub-practice-12 [data-substitution-self-review-open]"),
+  ).toHaveCount(1);
   const html = await page.content();
   expect(html).not.toMatch(
     /accepted|tolerance|correctAnswer|solution|guidance|claimId/i,
@@ -29,6 +32,49 @@ test("substitution practice renders the bounded authorized set without answer me
     ).toBeVisible();
     await expect(page.locator("input[type='radio']").first()).toBeVisible();
   }
+});
+
+test("substitution self-review pairs each completed response with its own guidance", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name.includes("no-js"), "Requires JavaScript.");
+  await page.goto(path);
+  const review = page.locator("#sub-practice-11");
+  const open = review.getByRole("button", {
+    name: "Mit Modellbegründung vergleichen",
+  });
+  await expect(open).toBeDisabled();
+  for (const id of [
+    "homogeneity-property",
+    "homothetic-preferences",
+    "monotonic-transformation",
+  ])
+    await review
+      .locator(`[data-response-field-id="${id}"]`)
+      .fill(`Antwort ${id}`);
+  await expect(open).toBeEnabled();
+  await open.press("Enter");
+  for (const id of [
+    "homogeneity-property",
+    "homothetic-preferences",
+    "monotonic-transformation",
+  ]) {
+    await expect(
+      review.locator(`[data-response-field-id="${id}"]`),
+    ).toHaveValue(`Antwort ${id}`);
+    await expect(
+      review.locator(`[data-self-review-guidance-for="${id}"]`),
+    ).toHaveCount(1);
+  }
+  await review.getByRole("button", { name: "Vergleich schließen" }).click();
+  await expect(review.locator("[data-self-review-guidance-for]")).toHaveCount(
+    0,
+  );
+  await expect(open).toBeFocused();
+  await open.click();
+  await expect(review.locator("[data-self-review-guidance-for]")).toHaveCount(
+    3,
+  );
 });
 
 test("substitution evaluation supports keyboard responses, revision, and isolated feedback", async ({
