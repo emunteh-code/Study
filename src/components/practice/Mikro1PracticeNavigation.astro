@@ -1,0 +1,30 @@
+---
+interface Props {
+  current: "preferences" | "substitution";
+}
+const { current } = Astro.props;
+---
+
+<nav
+  class="static-practice-overview"
+  aria-label="Mikroökonomik I Übungsnavigation"
+>
+  <div><p class="eyebrow">Mikroökonomik I</p><h2>Im Lernpfad</h2></div>
+  <ol>
+    <li><a href="/lernen/mikrooekonomik-1/">Kursübersicht</a></li>
+    <li>
+      <a
+        href="/ueben/mikrooekonomik-1/praeferenzrelationen/"
+        aria-current={current === "preferences" ? "page" : undefined}
+        >Präferenzrelationen</a
+      >
+    </li>
+    <li>
+      <a
+        href="/ueben/mikrooekonomik-1/substitutionseffekt/"
+        aria-current={current === "substitution" ? "page" : undefined}
+        >Substitutionselastizität</a
+      >
+    </li>
+  </ol>
+</nav>

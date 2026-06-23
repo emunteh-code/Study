@@ -1,0 +1,75 @@
+---
+import Button from "../../../components/foundation/Button.astro";
+import Card from "../../../components/foundation/Card.astro";
+import PageHeader from "../../../components/foundation/PageHeader.astro";
+import SectionHeader from "../../../components/foundation/SectionHeader.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Mikroökonomik I"
+  description="Ein strukturierter Einstieg in die aktuell verfügbaren Übungsbereiche der Mikroökonomik I."
+  canonicalPath="/lernen/mikrooekonomik-1/"
+  robots="noindex, follow"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Lernen", href: "/lernen/" },
+    { label: "Mikroökonomik I" },
+  ]}
+>
+  <section class="module-page" aria-labelledby="page-title">
+    <PageHeader
+      eyebrow="Kursübersicht"
+      title="Mikroökonomik I"
+      summary="Beginne mit Präferenzrelationen. Danach vertiefst du den Zusammenhang zwischen Substitution, Elastizität und homothetischen Nutzenfunktionen."
+    >
+      <Button
+        slot="actions"
+        href="/ueben/mikrooekonomik-1/praeferenzrelationen/"
+        >Mit Präferenzrelationen beginnen</Button
+      >
+    </PageHeader>
+
+    <section class="home-section" aria-labelledby="mikro1-path-title">
+      <SectionHeader
+        id="mikro1-path-title"
+        title="Dein Lernpfad"
+        summary="Die verfügbaren Bereiche bauen begrifflich aufeinander auf. Wähle einen Einstieg oder setze mit dem nächsten Bereich fort."
+      />
+      <div class="home-grid home-grid--modules">
+        <Card title="1. Präferenzrelationen" metadata="Grundlagen">
+          <p>
+            Arbeite mit schwacher und strikter Präferenz, Indifferenz,
+            Vollständigkeit und Transitivität.
+          </p>
+          <div slot="footer" class="card-actions">
+            <Button
+              href="/ueben/mikrooekonomik-1/praeferenzrelationen/"
+              variant="secondary">Übungsset öffnen</Button
+            >
+          </div>
+        </Card>
+        <Card title="2. Substitutionselastizität" metadata="Anwendung">
+          <p>
+            Übe die Abgrenzung von Steigung und GRS, CES-Parameter und
+            homothetische Darstellungen.
+          </p>
+          <div slot="footer" class="card-actions">
+            <Button
+              href="/ueben/mikrooekonomik-1/substitutionseffekt/"
+              variant="secondary">Übungsset öffnen</Button
+            >
+          </div>
+        </Card>
+      </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="mikro1-study-title">
+      <SectionHeader
+        id="mikro1-study-title"
+        title="So arbeitest du mit den Übungssets"
+        summary="Lies zuerst die Aufgabenstellung und die Annahmen. Prüfe strukturierte Antworten direkt; bei Reflexionsaufgaben vergleichst du deine Begründung erst nach eigener Bearbeitung."
+      />
+    </section>
+  </section>
+</BaseLayout>

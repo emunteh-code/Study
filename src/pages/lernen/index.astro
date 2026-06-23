@@ -6,12 +6,11 @@ import PageHeader from "../../components/foundation/PageHeader.astro";
 import SectionHeader from "../../components/foundation/SectionHeader.astro";
 import StatusLabel from "../../components/foundation/StatusLabel.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { pilotModuleFixture } from "../../fixtures/module-page";
 ---
 
 <BaseLayout
   title="Lernen"
-  description="Minimaler Lernbereich mit neutralem Fixture-Modul."
+  description="Wähle einen verfügbaren Lernbereich und beginne mit dem nächsten sinnvollen Schritt."
   canonicalPath="/lernen/"
   breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Lernen" }]}
 >
@@ -21,35 +20,37 @@ import { pilotModuleFixture } from "../../fixtures/module-page";
       title="Lernen"
       summary="Wähle einen Lernbereich und starte mit dem nächsten sinnvollen Schritt."
     >
-      <Button slot="actions" href="/lernen/pilot-modul/">
-        Pilotmodul A öffnen
+      <Button slot="actions" href="/lernen/mikrooekonomik-1/">
+        Mikroökonomik I öffnen
       </Button>
     </PageHeader>
-    <Callout title="Fixture-Hinweis" variant="note">
+    <Callout title="Verfügbare Inhalte" variant="information">
       <p>
-        Derzeit ist nur ein neutrales technisches Fixture sichtbar. Es sind noch
-        keine echten Kursinhalte, Themen, Übungen oder Quellen veröffentlicht.
+        Mikroökonomik I ist als reviewbereiter Lernpfad mit zwei Übungsbereichen
+        verfügbar.
       </p>
     </Callout>
     <section class="home-section" aria-labelledby="learning-modules-title">
       <SectionHeader
         id="learning-modules-title"
         title="Verfügbare Lernbereiche"
-        summary="Aktuell ist nur ein technisches Fixture-Modul sichtbar."
+        summary="Wähle einen verfügbaren Kursbereich."
       />
       <div class="home-grid home-grid--modules">
-        <Card
-          title={pilotModuleFixture.title}
-          metadata={pilotModuleFixture.versionLabel}
-        >
+        <Card title="Mikroökonomik I" metadata="Zwei Übungsbereiche">
           <div class="module-card__status">
             <StatusLabel label="Verfügbar" tone="success" />
           </div>
-          <p>{pilotModuleFixture.summary}</p>
-          <p class="card__meta">{pilotModuleFixture.contentCoverageNote}</p>
+          <p>
+            Beginne mit Präferenzrelationen und setze mit
+            Substitutionselastizität fort.
+          </p>
+          <p class="card__meta">
+            Originale Übungsinhalte mit nachvollziehbarer Quellenbasis.
+          </p>
           <div slot="footer" class="card-actions">
-            <Button href="/lernen/pilot-modul/" variant="secondary">
-              Modul-Dashboard öffnen
+            <Button href="/lernen/mikrooekonomik-1/" variant="secondary">
+              Kursübersicht öffnen
             </Button>
           </div>
         </Card>

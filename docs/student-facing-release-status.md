@@ -70,3 +70,40 @@ The next implementation milestone is to replace the neutral `/lernen/` and `/ueb
 - Working tree at audit start: clean
 - Course material inspected: `/Users/enowmunteh/Documents/Study-Course-Materials/Mikroökonomik I.zip` and the private Mikro I inventory.
 - Private materials remain outside Git and are not production assets.
+
+## 2026-06-23 Implementation Correction
+
+Pending human review is not an implementation blocker. The controlling dimensions are:
+
+| Dimension                       | Status      |
+| ------------------------------- | ----------- |
+| Implementation                  | in-progress |
+| Automated academic verification | in-progress |
+| Human review                    | in-progress |
+| Publication approval            | not-started |
+
+The active milestone is a review-ready Mikroökonomik I journey: `/lernen/` to
+`/lernen/mikrooekonomik-1/`, then to the two implemented practice routes.
+Human review and publication approval remain recorded as pending without
+preventing this implementation work.
+
+## Current Uncommitted Milestone
+
+- Implementation: `/lernen/` and `/ueben/` now point to the review-ready
+  Mikroökonomik I journey. The new `/lernen/mikrooekonomik-1/` overview and
+  shared practice navigation expose only the two implemented topics.
+- Automated verification: in-progress. Focused discovery, preference, and
+  substitution browser checks pass after a clean Node 24 installation.
+- Stall diagnosis: the active Astro dev server was stopped and was not the
+  cause. A partial installation created by an interrupted `npm ci
+--ignore-scripts` caused the checker failure. `npm ci --no-audit --no-fund`
+  restored `astro check` without changing dependency manifests.
+- Exact next command after this milestone is committed:
+
+```sh
+cd /Users/enowmunteh/Documents/Study
+PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
+```
+
+- Exact next implementation milestone: add route-level source traceability and
+  complete the instructional orientation of the two Mikro I practice topics.

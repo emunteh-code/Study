@@ -1,19 +1,48 @@
 ---
-import PlaceholderPage from "../../components/shell/PlaceholderPage.astro";
+import Button from "../../components/foundation/Button.astro";
+import Card from "../../components/foundation/Card.astro";
+import PageHeader from "../../components/foundation/PageHeader.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout
   title="Üben"
-  description="Platzhalter für den zukünftigen Übungsbereich."
+  description="Wähle ein verfügbares Übungsset und arbeite in deinem Tempo."
   canonicalPath="/ueben/"
   breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Üben" }]}
 >
-  <PlaceholderPage
-    title="Üben"
-    summary="Der Übungsbereich wird später geführte und unabhängige Praxis bündeln."
-    status="Es sind noch keine Übungssets veröffentlicht."
-    nextHref="/lernen/"
-    nextLabel="Zum Lernbereich"
-  />
+  <section class="module-page" aria-labelledby="page-title">
+    <PageHeader
+      eyebrow="Übungsbereich"
+      title="Üben"
+      summary="Wähle einen aktuell verfügbaren Bereich. Antworten können je nach Aufgabe direkt geprüft oder mit einer Modellbegründung verglichen werden."
+    />
+    <div class="home-grid home-grid--modules">
+      <Card title="Mikroökonomik I: Präferenzrelationen" metadata="12 Aufgaben">
+        <p>
+          Grundbegriffe, Rationalitätsaxiome und relationale Schlussfolgerungen.
+        </p>
+        <div slot="footer" class="card-actions">
+          <Button
+            href="/ueben/mikrooekonomik-1/praeferenzrelationen/"
+            variant="secondary">Übungsset öffnen</Button
+          >
+        </div>
+      </Card>
+      <Card
+        title="Mikroökonomik I: Substitutionselastizität"
+        metadata="8 Aufgaben"
+      >
+        <p>
+          GRS, CES-Parameter, Homogenität und reflektierende Vergleichsaufgaben.
+        </p>
+        <div slot="footer" class="card-actions">
+          <Button
+            href="/ueben/mikrooekonomik-1/substitutionseffekt/"
+            variant="secondary">Übungsset öffnen</Button
+          >
+        </div>
+      </Card>
+    </div>
+  </section>
 </BaseLayout>

@@ -1,6 +1,7 @@
 ---
 import Callout from "../foundation/Callout.astro";
 import StaticPracticeExercise from "./StaticPracticeExercise.astro";
+import Mikro1PracticeNavigation from "./Mikro1PracticeNavigation.astro";
 import type { StaticMikro1PreferenceExercise } from "../../lib/mikro1-preferences-practice";
 
 interface Props {
@@ -20,6 +21,8 @@ const { exercises } = Astro.props;
       incompatibility result.
     </p>
   </header>
+
+  <Mikro1PracticeNavigation current="preferences" />
 
   <section
     data-practice-progress
