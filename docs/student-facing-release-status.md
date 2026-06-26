@@ -46,6 +46,7 @@ Only these statuses are used below: `not-started`, `in-progress`, `blocked`,
 | `50fb108` | Substitution practice route and progressive enhancement | release-ready |
 | `1f35b81` | Substitution self-review workflow                       | release-ready |
 | `aa11405` | Mikro I course discovery journey                        | release-ready |
+| `cafa856` | Mikro I source-traceable topic orientation              | release-ready |
 
 ## Release-Critical Blockers
 
@@ -56,14 +57,14 @@ Only these statuses are used below: `not-started`, `in-progress`, `blocked`,
 
 ## Exact Next Highest-Priority Milestone
 
-`in-progress`: validate and commit the source-traceable instructional-orientation milestone for the two existing Mikroökonomik I practice sets. The next command is:
+`in-progress`: add source-status pages or release-review records that can support a publication decision without exposing private course materials. The next command is:
 
 ```sh
 cd /Users/enowmunteh/Documents/Study
 PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
 ```
 
-The next implementation milestone is to add source-status pages or release-review records that can support a publication decision without exposing private course materials.
+The next implementation milestone is to add publication-safe source and review status pages for the two Mikro I topics, linking only to repository audit records and not to private course files.
 
 ## Last Audit
 
@@ -88,24 +89,24 @@ The active milestone is a review-ready Mikroökonomik I journey: `/lernen/` to
 Human review and publication approval remain recorded as pending without
 preventing this implementation work.
 
-## Current Uncommitted Milestone
+## Latest Completed Milestone
 
-- Implementation: source-traceable instructional orientation is being added to
+- Implementation: source-traceable instructional orientation was added to
   `/lernen/mikrooekonomik-1/`, `/ueben/mikrooekonomik-1/praeferenzrelationen/`,
   and `/ueben/mikrooekonomik-1/substitutionseffekt/`. The orientation separates
   prerequisites, observable objectives, exercise coverage, workflow guidance,
   next steps, and source records from evaluator metadata.
-- Instructional-orientation implementation status: in-progress.
+- Instructional-orientation implementation status: release-ready.
 - Source-traceability status: in-progress.
-- Automated academic verification status: in-progress.
+- Automated academic verification status: release-ready.
 - Human academic review status: in-progress.
 - Publication approval status: not-started.
-- Exact next command after this milestone is committed:
+- Exact next command:
 
 ```sh
 cd /Users/enowmunteh/Documents/Study
 PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
 ```
 
-- Exact next implementation milestone: add route-level source traceability and
-  complete the instructional orientation of the two Mikro I practice topics.
+- Exact next implementation milestone: add publication-safe source and review
+  status pages for the two Mikro I topics.
