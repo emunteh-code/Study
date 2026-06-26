@@ -1534,6 +1534,51 @@ details > * {
   max-inline-size: var(--layout-content);
 }
 
+.orientation-list,
+.orientation-coverage-list,
+.orientation-source-list,
+.orientation-workflow {
+  display: grid;
+  gap: var(--space-12);
+  min-inline-size: 0;
+}
+
+.orientation-list > li,
+.orientation-source-list > li {
+  padding: var(--space-12);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-4);
+  background: var(--color-surface-raised);
+}
+
+.orientation-list p,
+.orientation-workflow dd {
+  margin: 0;
+}
+
+.orientation-meta {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-0);
+}
+
+.orientation-coverage-list {
+  margin-block-start: var(--space-8);
+}
+
+.orientation-workflow {
+  grid-template-columns: minmax(8rem, max-content) minmax(0, 1fr);
+}
+
+.orientation-workflow dt,
+.orientation-workflow dd {
+  min-inline-size: 0;
+}
+
+.orientation-workflow dt {
+  font-weight: 700;
+}
+
 .static-practice-list {
   gap: var(--space-48);
 }

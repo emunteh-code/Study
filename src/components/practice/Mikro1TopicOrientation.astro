@@ -1,0 +1,112 @@
+---
+import type { Mikro1TopicOrientation } from "../../lib/mikro1-orientation";
+
+interface Props {
+  orientation: Mikro1TopicOrientation;
+  exerciseTitles: ReadonlyMap<string, string>;
+}
+
+const { orientation, exerciseTitles } = Astro.props;
+const sourceLabel = new Map(
+  orientation.sourceReferences.map((source) => [source.id, source.title]),
+);
+
+function exerciseLabel(exerciseId: string): string {
+  return exerciseTitles.get(exerciseId) ?? exerciseId;
+}
+
+function objectiveMappings(objectiveId: string) {
+  return orientation.exerciseMappings.filter(
+    (mapping) => mapping.objectiveId === objectiveId,
+  );
+}
+---
+
+<section
+  class="static-practice-section"
+  aria-labelledby={`${orientation.id}-orientation-title`}
+>
+  <div>
+    <p class="eyebrow">Orientierung</p>
+    <h2 id={`${orientation.id}-orientation-title`}>{orientation.title}</h2>
+    <p>{orientation.shortIntroduction}</p>
+  </div>
+
+  <section aria-labelledby={`${orientation.id}-objectives-title`}>
+    <h3 id={`${orientation.id}-objectives-title`}>Lernziele</h3>
+    <ol class="orientation-list" data-learning-objectives>
+      {
+        orientation.learningObjectives.map((objective) => (
+          <li id={objective.id}>
+            <p>{objective.text}</p>
+            <p class="orientation-meta">
+              Quelle:{" "}
+              {objective.sourceReferenceIds
+                .map((sourceId) => sourceLabel.get(sourceId) ?? sourceId)
+                .join("; ")}
+            </p>
+            <ul class="orientation-coverage-list">
+              {objectiveMappings(objective.id).map((mapping) => (
+                <li>
+                  <a href={`#${mapping.exerciseId}`}>
+                    {exerciseLabel(mapping.exerciseId)}
+                  </a>{" "}
+                  <span>
+                    (
+                    {mapping.mode === "self-review"
+                      ? "Selbstkontrolle"
+                      : "Antwortprüfung"}
+                    )
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section aria-labelledby={`${orientation.id}-prerequisites-title`}>
+    <h3 id={`${orientation.id}-prerequisites-title`}>Voraussetzungen</h3>
+    <ul>
+      {orientation.prerequisites.map((item) => <li>{item}</li>)}
+    </ul>
+  </section>
+
+  <section aria-labelledby={`${orientation.id}-notation-title`}>
+    <h3 id={`${orientation.id}-notation-title`}>Notation und Begriffe</h3>
+    <ul>
+      {orientation.notationAndTerminology.map((item) => <li>{item}</li>)}
+    </ul>
+  </section>
+
+  <section aria-labelledby={`${orientation.id}-workflow-title`}>
+    <h3 id={`${orientation.id}-workflow-title`}>Arbeitsweise</h3>
+    <dl class="orientation-workflow">
+      <dt>Vor dem Üben</dt>
+      <dd>{orientation.workflow.before}</dd>
+      <dt>Während des Übens</dt>
+      <dd>{orientation.workflow.during}</dd>
+      <dt>Nach dem Üben</dt>
+      <dd>{orientation.workflow.after}</dd>
+    </dl>
+    <p>{orientation.nextStep}</p>
+  </section>
+
+  <section aria-labelledby={`${orientation.id}-sources-title`}>
+    <h3 id={`${orientation.id}-sources-title`}>Quellen- und Prüfstatus</h3>
+    <ul class="orientation-source-list" data-source-references>
+      {
+        orientation.sourceReferences.map((source) => (
+          <li>
+            <span>{source.title}</span>
+            <span class="orientation-meta">
+              {source.status}; {source.path}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</section>

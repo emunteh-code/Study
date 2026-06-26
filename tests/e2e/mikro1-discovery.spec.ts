@@ -23,6 +23,23 @@ test("learning and practice discovery lead to the two implemented Mikro I topics
   await expect(page.locator("a[href*='pilot-modul']")).toHaveCount(0);
 });
 
+test("Mikro I course overview explains current scope and next actions", async ({
+  page,
+}) => {
+  await page.goto(`${base}/lernen/mikrooekonomik-1/`);
+  await expect(
+    page.getByRole("heading", { name: "Dein Lernpfad" }),
+  ).toBeVisible();
+  await expect(page.getByText("Aktueller Umfang:")).toHaveCount(2);
+  await expect(page.getByText("identify the direction")).toBeVisible();
+  await expect(page.getByText("calculate sigma from rho")).toBeVisible();
+  await expect(page.getByText("Starte mit Präferenzrelationen")).toBeVisible();
+  await expect(page.locator("a[href*='sub-practice-04']")).toHaveCount(0);
+  await expect(page.locator("a[href*='mikrooekonomik-1/optim']")).toHaveCount(
+    0,
+  );
+});
+
 test("Mikro I practice routes expose an accessible shared learning path", async ({
   page,
 }) => {
@@ -42,11 +59,104 @@ test("Mikro I practice routes expose an accessible shared learning path", async 
   }
 });
 
+test("topic orientations render source-backed objectives before exercises", async ({
+  page,
+}) => {
+  for (const route of [
+    {
+      path: "/ueben/mikrooekonomik-1/praeferenzrelationen/",
+      heading: "Präferenzrelationen",
+      objective: "distinguish weak preference",
+      source: "Mikroökonomik I Preferences Claim Evidence Pack",
+      exercise: "Read the derived relations",
+    },
+    {
+      path: "/ueben/mikrooekonomik-1/substitutionseffekt/",
+      heading: "Substitutionselastizität und homothetische Nutzenfunktionen",
+      objective: "distinguish the signed indifference-curve slope",
+      source: "Mikro I substitution production specification",
+      exercise: "Orient the GRS ratio",
+    },
+  ]) {
+    await page.goto(`${base}${route.path}`);
+    const orientation = page
+      .getByRole("heading", { name: route.heading })
+      .locator("xpath=ancestor::section[1]");
+    await expect(
+      page.getByRole("heading", { name: "Lernziele" }),
+    ).toBeVisible();
+    await expect(page.getByText(route.objective)).toBeVisible();
+    await expect(
+      orientation
+        .locator("[data-source-references]")
+        .getByText(route.source, { exact: true }),
+    ).toBeVisible();
+    await expect(
+      orientation.getByRole("link", { name: route.exercise }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Aufgaben|Move through the set/ }),
+    ).toBeVisible();
+  }
+});
+
+test("topic orientations remain visible without JavaScript", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    !testInfo.project.name.includes("no-js"),
+    "No-JavaScript project only.",
+  );
+  await page.goto(`${base}/ueben/mikrooekonomik-1/praeferenzrelationen/`);
+  await expect(page.getByRole("heading", { name: "Lernziele" })).toBeVisible();
+  await expect(page.getByText("Präferenzrelationen").first()).toBeVisible();
+  await page.goto(`${base}/ueben/mikrooekonomik-1/substitutionseffekt/`);
+  await expect(page.getByRole("heading", { name: "Lernziele" })).toBeVisible();
+  await expect(
+    page.getByText("Substitutionselastizität").first(),
+  ).toBeVisible();
+});
+
+test("orientation pages keep semantic heading order", async ({ page }) => {
+  await page.goto(`${base}/ueben/mikrooekonomik-1/substitutionseffekt/`);
+  const headings = await page.locator("h1, h2, h3").evaluateAll((nodes) =>
+    nodes.map((node) => ({
+      level: Number(node.tagName.slice(1)),
+      text: node.textContent?.trim() ?? "",
+    })),
+  );
+  expect(headings[0]).toEqual({
+    level: 1,
+    text: "Substitutionselastizität und homothetische Nutzenfunktionen",
+  });
+  for (let index = 1; index < headings.length; index += 1)
+    expect(
+      headings[index]!.level - headings[index - 1]!.level,
+    ).toBeLessThanOrEqual(1);
+});
+
 test("Mikro I discovery remains usable at a narrow keyboard viewport", async ({
   page,
 }, testInfo) => {
   await page.setViewportSize({ width: 320, height: 720 });
   await page.goto(`${base}/lernen/mikrooekonomik-1/`);
+  await page.keyboard.press("Tab");
+  await expect(page.locator(":focus")).toBeVisible();
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth),
+  ).toBeLessThanOrEqual(320);
+  testInfo.annotations.push({
+    type: "viewport",
+    description: "320 CSS pixels",
+  });
+});
+
+test("topic orientation remains usable at 320 CSS pixels", async ({
+  page,
+}, testInfo) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto(`${base}/ueben/mikrooekonomik-1/substitutionseffekt/`);
+  await expect(page.getByRole("heading", { name: "Lernziele" })).toBeVisible();
   await page.keyboard.press("Tab");
   await expect(page.locator(":focus")).toBeVisible();
   expect(

@@ -5,15 +5,22 @@ const learningIndexPath = "/Study/lernen/";
 const modulePath = "/Study/lernen/pilot-modul/";
 const topicPath = "/Study/lernen/pilot-modul/beispielthema-alpha/";
 
-test("learning index exposes the fixture module honestly", async ({ page }) => {
+test("learning index exposes the Mikro I course journey honestly", async ({
+  page,
+}) => {
   await page.goto(learningIndexPath);
 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Lernen");
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-  await expect(page.getByText("Fixture-Hinweis")).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Pilotmodul A öffnen" }),
-  ).toHaveAttribute("href", modulePath);
+    page.getByRole("link", { name: "Mikroökonomik I öffnen" }),
+  ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/");
+  await expect(
+    page.getByText(
+      "Originale Übungsinhalte mit nachvollziehbarer Quellenbasis.",
+    ),
+  ).toBeVisible();
+  await expect(page.locator("a[href*='pilot-modul']")).toHaveCount(0);
   await expect(
     page
       .getByRole("navigation", { name: "Hauptnavigation" })

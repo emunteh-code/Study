@@ -1,6 +1,8 @@
 ---
 import SubstitutionPracticeExercise from "./SubstitutionPracticeExercise.astro";
 import Mikro1PracticeNavigation from "./Mikro1PracticeNavigation.astro";
+import Mikro1TopicOrientation from "./Mikro1TopicOrientation.astro";
+import { mikro1SubstitutionOrientation } from "../../data/mikro1-orientation";
 import type { StaticMikro1SubstitutionExercise } from "../../lib/mikro1-substitution-practice";
 
 interface Props {
@@ -8,6 +10,9 @@ interface Props {
 }
 
 const { exercises } = Astro.props;
+const exerciseTitles = new Map(
+  exercises.map((exercise) => [exercise.id, exercise.title]),
+);
 ---
 
 <div class="practice-page static-practice-set">
@@ -18,6 +23,11 @@ const { exercises } = Astro.props;
   </header>
 
   <Mikro1PracticeNavigation current="substitution" />
+
+  <Mikro1TopicOrientation
+    orientation={mikro1SubstitutionOrientation}
+    exerciseTitles={exerciseTitles}
+  />
 
   <nav
     class="static-practice-overview"

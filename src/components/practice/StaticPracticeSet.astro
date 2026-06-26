@@ -2,6 +2,8 @@
 import Callout from "../foundation/Callout.astro";
 import StaticPracticeExercise from "./StaticPracticeExercise.astro";
 import Mikro1PracticeNavigation from "./Mikro1PracticeNavigation.astro";
+import Mikro1TopicOrientation from "./Mikro1TopicOrientation.astro";
+import { mikro1PreferenceOrientation } from "../../data/mikro1-orientation";
 import type { StaticMikro1PreferenceExercise } from "../../lib/mikro1-preferences-practice";
 
 interface Props {
@@ -9,6 +11,9 @@ interface Props {
 }
 
 const { exercises } = Astro.props;
+const exerciseTitles = new Map(
+  exercises.map((exercise) => [exercise.id, exercise.title]),
+);
 ---
 
 <div class="practice-page static-practice-set">
@@ -23,6 +28,11 @@ const { exercises } = Astro.props;
   </header>
 
   <Mikro1PracticeNavigation current="preferences" />
+
+  <Mikro1TopicOrientation
+    orientation={mikro1PreferenceOrientation}
+    exerciseTitles={exerciseTitles}
+  />
 
   <section
     data-practice-progress

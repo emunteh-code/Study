@@ -3,6 +3,10 @@ import Button from "../../../components/foundation/Button.astro";
 import Card from "../../../components/foundation/Card.astro";
 import PageHeader from "../../../components/foundation/PageHeader.astro";
 import SectionHeader from "../../../components/foundation/SectionHeader.astro";
+import {
+  mikro1PreferenceOrientation,
+  mikro1SubstitutionOrientation,
+} from "../../../data/mikro1-orientation";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 ---
 
@@ -39,9 +43,17 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
       <div class="home-grid home-grid--modules">
         <Card title="1. Präferenzrelationen" metadata="Grundlagen">
           <p>
-            Arbeite mit schwacher und strikter Präferenz, Indifferenz,
-            Vollständigkeit und Transitivität.
+            Aktueller Umfang: quellengeprüfte Orientierung und ein interaktives
+            Übungsset. Keine vollständige Lektion und keine Veröffentlichung als
+            offizielles Kursmaterial.
           </p>
+          <ul>
+            {
+              mikro1PreferenceOrientation.learningObjectives.map(
+                (objective) => <li>{objective.text}</li>,
+              )
+            }
+          </ul>
           <div slot="footer" class="card-actions">
             <Button
               href="/ueben/mikrooekonomik-1/praeferenzrelationen/"
@@ -51,9 +63,17 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
         </Card>
         <Card title="2. Substitutionselastizität" metadata="Anwendung">
           <p>
-            Übe die Abgrenzung von Steigung und GRS, CES-Parameter und
-            homothetische Darstellungen.
+            Aktueller Umfang: quellengeprüfte Orientierung und ein
+            eingeschränktes Übungsset zu den freigegebenen Aufgaben. Breitere
+            CES-Rechnung und Optimierung bleiben ausgeschlossen.
           </p>
+          <ul>
+            {
+              mikro1SubstitutionOrientation.learningObjectives.map(
+                (objective) => <li>{objective.text}</li>,
+              )
+            }
+          </ul>
           <div slot="footer" class="card-actions">
             <Button
               href="/ueben/mikrooekonomik-1/substitutionseffekt/"
@@ -68,8 +88,22 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
       <SectionHeader
         id="mikro1-study-title"
         title="So arbeitest du mit den Übungssets"
-        summary="Lies zuerst die Aufgabenstellung und die Annahmen. Prüfe strukturierte Antworten direkt; bei Reflexionsaufgaben vergleichst du deine Begründung erst nach eigener Bearbeitung."
+        summary="Starte mit Präferenzrelationen, wechsle danach zum Substitutionsthema und nutze die Übungen als Bearbeitungsnachweis, nicht als Note oder Mastery-Score."
       />
+      <ol>
+        <li>
+          Öffne zuerst Präferenzrelationen, wenn du die Symbolik und
+          Rationalitätsaxiome noch einordnen musst.
+        </li>
+        <li>
+          Öffne danach Substitutionselastizität, wenn du Steigung, GRS,
+          CES-Parameter und Darstellungseigenschaften üben möchtest.
+        </li>
+        <li>
+          Nutze Selbstkontrollaufgaben erst nach eigener Antwort und vergleiche
+          dann mit den bereitgestellten Modellhinweisen.
+        </li>
+      </ol>
     </section>
   </section>
 </BaseLayout>
