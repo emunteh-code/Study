@@ -1,10 +1,39 @@
 import type {
   InstructionalRequirement,
+  LessonBlock,
+  LessonBlockKind,
   LearningSession,
   PracticeMapping,
   SourceReference,
   StudyModule,
 } from "./model";
+
+export const COMPLETE_SESSION_BLOCK_ORDER: readonly LessonBlockKind[] = [
+  "why-exists",
+  "unlocks",
+  "prerequisites",
+  "objectives",
+  "dependency-position",
+  "big-picture",
+  "intuition",
+  "definition",
+  "assumptions",
+  "symbols",
+  "concept-build",
+  "reasoning",
+  "connections",
+  "worked-example",
+  "guided-practice",
+  "misconception",
+  "exam-thinking",
+  "active-recall",
+  "feynman-test",
+  "interleaving",
+  "cheat-sheet",
+  "mastery-check",
+  "remediation",
+  "practice-handoff",
+] as const;
 
 const OBSERVABLE_VERBS = new Set([
   "identify",
@@ -159,6 +188,191 @@ function validatePracticeMapping(
       );
     }
   }
+  if (mapping.exerciseIds && !hasUniqueValues([...mapping.exerciseIds])) {
+    errors.push(
+      `${context}: practice mapping ${mapping.id} exercise IDs must be unique.`,
+    );
+  }
+  if (mapping.limitations) {
+    for (const limitation of mapping.limitations) {
+      if (!limitation.trim()) {
+        errors.push(
+          `${context}: practice mapping ${mapping.id} limitations must be non-empty.`,
+        );
+      }
+    }
+  }
+  return errors;
+}
+
+function validateLessonBlock(
+  context: string,
+  block: LessonBlock,
+  sourceIds: ReadonlySet<string>,
+  objectiveIds: ReadonlySet<string>,
+  practiceRoutes: ReadonlySet<string>,
+): string[] {
+  const errors: string[] = [];
+  if (!block.id.trim() || !block.title.trim()) {
+    errors.push(`${context}: lesson blocks need id and title.`);
+  }
+  if (!block.body.length || block.body.some((paragraph) => !paragraph.trim())) {
+    errors.push(`${context}: lesson block ${block.id} needs body text.`);
+  }
+  for (const sourceId of block.sourceReferenceIds ?? []) {
+    if (!sourceIds.has(sourceId)) {
+      errors.push(
+        `${context}: lesson block ${block.id} references unknown source ${sourceId}.`,
+      );
+    }
+  }
+  for (const objectiveId of block.objectiveIds ?? []) {
+    if (!objectiveIds.has(objectiveId)) {
+      errors.push(
+        `${context}: lesson block ${block.id} references unknown objective ${objectiveId}.`,
+      );
+    }
+  }
+
+  if (block.kind === "worked-example") {
+    if (
+      !block.problem.trim() ||
+      !block.testedConcept.trim() ||
+      !block.reasoning.trim() ||
+      !block.interpretation.trim() ||
+      !block.solutionSteps.length ||
+      block.solutionSteps.some((step) => !step.trim())
+    ) {
+      errors.push(
+        `${context}: worked example ${block.id} needs problem, tested concept, steps, reasoning, and interpretation.`,
+      );
+    }
+  }
+  if (block.kind === "guided-practice") {
+    if (
+      !block.prompt.trim() ||
+      !block.fullExplanation.trim() ||
+      block.hints.length < 3 ||
+      block.hints.some(
+        (hint) => !hint.id.trim() || !hint.label.trim() || !hint.body.trim(),
+      )
+    ) {
+      errors.push(
+        `${context}: guided practice ${block.id} needs prompt, at least three hints, and full explanation.`,
+      );
+    }
+  }
+  if (block.kind === "misconception") {
+    if (!block.whyPlausible.trim() || !block.correction.trim()) {
+      errors.push(
+        `${context}: misconception ${block.id} needs why-plausible and correction text.`,
+      );
+    }
+  }
+  if (block.kind === "exam-thinking") {
+    if (
+      !block.taskFamilyId.trim() ||
+      !block.testedConcept.trim() ||
+      !block.examinerReasoning.length ||
+      block.examinerReasoning.some((item) => !item.trim())
+    ) {
+      errors.push(
+        `${context}: exam-thinking block ${block.id} needs task family, tested concept, and examiner reasoning.`,
+      );
+    }
+  }
+  if (block.kind === "active-recall" || block.kind === "feynman-test") {
+    if (!block.prompts.length || block.prompts.some((prompt) => !prompt.trim()))
+      errors.push(`${context}: ${block.kind} block ${block.id} needs prompts.`);
+  }
+  if (block.kind === "interleaving") {
+    if (
+      !block.comparisons.length ||
+      block.comparisons.some((comparison) => !comparison.trim())
+    )
+      errors.push(
+        `${context}: interleaving block ${block.id} needs comparisons.`,
+      );
+  }
+  if (block.kind === "cheat-sheet") {
+    if (
+      !block.entries.length ||
+      block.entries.some(
+        (entry) => !entry.term.trim() || !entry.description.trim(),
+      )
+    )
+      errors.push(`${context}: cheat-sheet block ${block.id} needs entries.`);
+  }
+  if (block.kind === "mastery-check") {
+    if (
+      !block.checks.length ||
+      block.checks.some(
+        (check) => !check.observable.trim() || !check.evidence.trim(),
+      )
+    )
+      errors.push(`${context}: mastery-check block ${block.id} needs checks.`);
+  }
+  if (block.kind === "practice-handoff") {
+    if (
+      !practiceRoutes.has(block.practiceRoute) ||
+      !block.exerciseIds.length ||
+      block.exerciseIds.some((exerciseId) => !exerciseId.trim()) ||
+      !block.limitations.length ||
+      block.limitations.some((limitation) => !limitation.trim())
+    ) {
+      errors.push(
+        `${context}: practice-handoff block ${block.id} needs a mapped route, exercise IDs, and limitations.`,
+      );
+    }
+  }
+
+  return errors;
+}
+
+function validateCompleteSessionBlocks(
+  context: string,
+  blocks: readonly LessonBlock[] | undefined,
+): string[] {
+  const errors: string[] = [];
+  if (!blocks?.length) {
+    return [`${context}: complete-session lesson requires lesson blocks.`];
+  }
+
+  const blockIds = blocks.map(({ id }) => id);
+  if (!hasUniqueValues(blockIds)) {
+    errors.push(`${context}: lesson block IDs must be unique.`);
+  }
+
+  let searchStart = 0;
+  for (const kind of COMPLETE_SESSION_BLOCK_ORDER) {
+    const nextIndex = blocks.findIndex(
+      (block, index) => index >= searchStart && block.kind === kind,
+    );
+    if (nextIndex === -1) {
+      errors.push(`${context}: complete-session lesson is missing ${kind}.`);
+      continue;
+    }
+    searchStart = nextIndex + 1;
+  }
+
+  const exampleLevels = blocks
+    .filter((block) => block.kind === "worked-example")
+    .map((block) => block.level);
+  const foundational = exampleLevels.filter(
+    (level) => level === "foundational",
+  ).length;
+  const intermediate = exampleLevels.filter(
+    (level) => level === "intermediate",
+  ).length;
+  const examStyle = exampleLevels.filter(
+    (level) => level === "exam-style",
+  ).length;
+  if (foundational < 3 || intermediate < 3 || examStyle < 2) {
+    errors.push(
+      `${context}: complete-session lesson needs at least 3 foundational, 3 intermediate, and 2 exam-style worked examples.`,
+    );
+  }
+
   return errors;
 }
 
@@ -267,6 +481,12 @@ export function validateStudyModule(module: StudyModule): string[] {
     }
 
     const sessionSourceIds = new Set(session.sourceRecords.map(({ id }) => id));
+    const sessionObjectiveIds = new Set(
+      session.learningObjectives.map(({ id }) => id),
+    );
+    const practiceRoutes = new Set(
+      session.practiceMappings.map(({ practiceRoute }) => practiceRoute),
+    );
     errors.push(
       ...validateSourceRecords(sessionContext, session.sourceRecords),
     );
@@ -298,6 +518,17 @@ export function validateStudyModule(module: StudyModule): string[] {
         ...validateInstructionalRequirement(sessionContext, requirement),
       );
     }
+    for (const block of session.lessonBlocks ?? []) {
+      errors.push(
+        ...validateLessonBlock(
+          sessionContext,
+          block,
+          sessionSourceIds,
+          sessionObjectiveIds,
+          practiceRoutes,
+        ),
+      );
+    }
     for (const taskFamily of session.examTaskFamilies) {
       if (!taskFamily.title.trim() || !taskFamily.description.trim()) {
         errors.push(`${sessionContext}: exam task families need descriptions.`);
@@ -317,11 +548,16 @@ export function validateStudyModule(module: StudyModule): string[] {
     }
 
     if (
-      session.availability.lesson === "available" &&
+      ["available", "complete-session"].includes(session.availability.lesson) &&
       !session.instructionalRequirements.length
     ) {
       errors.push(
         `${sessionContext}: available lesson sessions need instructional requirements.`,
+      );
+    }
+    if (session.availability.lesson === "complete-session") {
+      errors.push(
+        ...validateCompleteSessionBlocks(sessionContext, session.lessonBlocks),
       );
     }
   }

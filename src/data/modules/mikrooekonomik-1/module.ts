@@ -4,6 +4,7 @@ import type {
   SourceReference,
   StudyModule,
 } from "../../../learning/model";
+import { preferenceCompletenessLessonBlocks } from "./preference-completeness-lesson";
 
 const preferenceSources = [
   {
@@ -23,6 +24,12 @@ const preferenceSources = [
     title: "Preference practice implementation specification",
     path: "docs/content-audits/mikro1-preferences-practice-set-01-implementation-spec.md",
     status: "implementation-spec",
+  },
+  {
+    id: "pref-completeness-review",
+    title: "Completeness session human review checklist",
+    path: "docs/mikro1-preferences-completeness-session-review.md",
+    status: "readiness-record",
   },
 ] as const satisfies readonly SourceReference[];
 
@@ -55,6 +62,10 @@ function preferenceMapping(
   id: string,
   sessionIds: readonly string[],
   objectiveIds: readonly string[],
+  metadata?: {
+    exerciseIds?: readonly string[];
+    limitations?: readonly string[];
+  },
 ): PracticeMapping {
   return {
     id,
@@ -62,6 +73,7 @@ function preferenceMapping(
     practiceTitle: "Präferenzrelationen üben",
     sessionIds,
     objectiveIds,
+    ...metadata,
     availability: "available",
   };
 }
@@ -114,7 +126,7 @@ const sessions = [
     prerequisiteSessionIds: [],
     futureSessionIds: [
       "pref-derived-relations",
-      "pref-rationality-axioms",
+      "pref-completeness",
       "sub-grs-foundations",
     ],
     dependencyConnections: [
@@ -218,7 +230,7 @@ const sessions = [
       },
     ],
     prerequisiteSessionIds: ["pref-binary-comparisons"],
-    futureSessionIds: ["pref-rationality-axioms"],
+    futureSessionIds: ["pref-completeness"],
     dependencyConnections: [
       {
         fromSessionId: "pref-binary-comparisons",
@@ -228,9 +240,9 @@ const sessions = [
       },
       {
         fromSessionId: "pref-derived-relations",
-        toSessionId: "pref-rationality-axioms",
+        toSessionId: "pref-completeness",
         explanation:
-          "Axiom checks use the same weak relation but must be kept separate from derived labels.",
+          "Completeness uses the same weak relation and must be kept separate from derived labels.",
       },
     ],
     instructionalRequirements: [
@@ -305,25 +317,273 @@ const sessions = [
     },
   },
   {
-    id: "pref-rationality-axioms",
-    slug: "vollstaendigkeit-transitivitaet-rationalitaet",
-    title: "Vollständigkeit, Transitivität und Rationalität",
+    id: "pref-completeness",
+    slug: "vollstaendigkeit",
+    title: "Vollständigkeit",
     unitId: "preferences",
     sequence: 3,
     whyThisSessionExists:
-      "Diese Sitzung trennt die beiden Axiome von einzelnen Vergleichsaussagen und verbindet sie erst danach zum technischen Rationalitätsbegriff.",
+      "Diese Sitzung macht Vollständigkeit als paarweise Vergleichbarkeitsbedingung vollständig lern- und übbar, bevor Transitivität und Rationalität hinzukommen.",
     concepts: [
       {
         id: "completeness",
         label: "Vollständigkeit",
         description:
-          "Für jedes Paar gilt mindestens eine der beiden schwachen Richtungen.",
+          "Für jedes Paar von Alternativen gilt mindestens eine der beiden schwachen Präferenzrichtungen.",
       },
+      {
+        id: "weak-preference-domain",
+        label: "Betrachtete Alternativenmenge",
+        description:
+          "Die Domain legt fest, welche Paare bei der Vollständigkeitsprüfung abgedeckt werden müssen.",
+      },
+      {
+        id: "incomplete-relation",
+        label: "Unvollständige Relation",
+        description:
+          "Eine Relation mit mindestens einem Paar, für das keine schwache Richtung gilt.",
+      },
+    ],
+    learningObjectives: [
+      {
+        id: "pref-lo-completeness-01",
+        text: "check whether every unordered pair in a finite domain has at least one weak-preference direction.",
+        sourceReferenceIds: ["pref-claims", "pref-outline"],
+      },
+      {
+        id: "pref-lo-completeness-02",
+        text: "identify the exact missing pair when a weak-preference relation is not complete.",
+        sourceReferenceIds: ["pref-claims", "pref-outline"],
+      },
+    ],
+    prerequisiteSessionIds: ["pref-derived-relations"],
+    futureSessionIds: ["pref-transitivity"],
+    dependencyConnections: [
+      {
+        fromSessionId: "pref-derived-relations",
+        toSessionId: "pref-completeness",
+        explanation:
+          "Completeness checks use the primitive weak-preference relation after derived labels are understood.",
+      },
+      {
+        fromSessionId: "pref-completeness",
+        toSessionId: "pref-transitivity",
+        explanation:
+          "Transitivity must be tested separately after pairwise comparability is clear.",
+      },
+    ],
+    instructionalRequirements: [
+      {
+        kind: "definition",
+        id: "pref-req-completeness-definition",
+        title: "Vollständigkeit definieren",
+        description:
+          "State the pairwise weak-preference disjunction and its domain restriction.",
+        conceptIds: ["completeness", "weak-preference-domain"],
+      },
+      {
+        kind: "mental-model",
+        id: "pref-req-completeness-pairs",
+        title: "Paarabdeckung prüfen",
+        description:
+          "Use finite pair lists to find whether at least one direction is available for each pair.",
+        conceptIds: ["completeness", "incomplete-relation"],
+      },
+      {
+        kind: "worked-example",
+        id: "pref-req-completeness-examples",
+        title: "Vollständigkeit in Relationstabellen",
+        description:
+          "Work through complete and incomplete finite relation records without transitivity overreach.",
+      },
+      {
+        kind: "exam-strategy",
+        id: "pref-req-completeness-exam",
+        title: "Vollständigkeit in Klausuraufgaben",
+        description:
+          "Check every relevant pair and name the exact missing comparison when the axiom fails.",
+        taskFamilyIds: [
+          "pref-exam-completeness-check",
+          "pref-exam-completeness-diagnosis",
+        ],
+      },
+    ],
+    examTaskFamilies: [
+      {
+        id: "pref-exam-completeness-check",
+        title: "Relation auf Vollständigkeit prüfen",
+        description:
+          "List every pair in the stated domain and verify that at least one weak-preference direction is present.",
+      },
+      {
+        id: "pref-exam-completeness-diagnosis",
+        title: "Fehlenden Paarvergleich diagnostizieren",
+        description:
+          "Correct an unsupported completeness claim by naming the missing pair and both absent directions.",
+      },
+    ],
+    commonMistakes: [
+      {
+        id: "pref-mistake-completeness-appearance",
+        description:
+          "Treating a relation as complete because every alternative appears somewhere in the list.",
+      },
+      {
+        id: "pref-mistake-completeness-exactly-one",
+        description:
+          "Treating mutual weak preference as a completeness failure.",
+      },
+      {
+        id: "pref-mistake-completeness-transitivity",
+        description:
+          "Calling every missing direction a transitivity problem instead of checking the pair first.",
+      },
+    ],
+    masteryCriteria: [
+      {
+        id: "pref-mastery-completeness-pairs",
+        description:
+          "Learner can list every relevant pair before classifying completeness.",
+        evidence:
+          "Worked solution or guided response names all pairs in the finite domain.",
+      },
+      {
+        id: "pref-mastery-completeness-gap",
+        description:
+          "Learner can identify the exact missing pair in an incomplete relation.",
+        evidence:
+          "Practice attempt or self-check names both absent weak-preference directions.",
+      },
+    ],
+    sourceRecords: preferenceSources,
+    practiceMappings: [
+      preferenceMapping(
+        "pref-practice-map-completeness",
+        ["pref-completeness"],
+        ["pref-lo-completeness-01", "pref-lo-completeness-02"],
+        {
+          exerciseIds: ["pref-practice-05", "pref-practice-06"],
+          limitations: [
+            "pref-practice-05 includes relation-table work before the direct incompleteness check.",
+            "pref-practice-06 is the direct independent-practice handoff for this session.",
+          ],
+        },
+      ),
+    ],
+    lessonBlocks: preferenceCompletenessLessonBlocks,
+    availability: {
+      architecture: "available",
+      lesson: "complete-session",
+      practice: "available",
+      sourceStatus: "available",
+    },
+    reviewState: {
+      status: "in-review",
+      note: "Complete-session structure and automated checks are in place; final human academic approval remains pending.",
+    },
+  },
+  {
+    id: "pref-transitivity",
+    slug: "transitivitaet",
+    title: "Transitivität",
+    unitId: "preferences",
+    sequence: 4,
+    whyThisSessionExists:
+      "Diese Sitzung hält die Kettenprüfung getrennt von Vollständigkeit; sie ist noch keine vollständige Quelle-zu-Lernsequenz.",
+    concepts: [
       {
         id: "transitivity",
         label: "Transitivität",
         description: "Wenn x ≽ y und y ≽ z gelten, muss auch x ≽ z gelten.",
       },
+    ],
+    learningObjectives: [
+      {
+        id: "pref-lo-transitivity-01",
+        text: "check whether stated weak-preference chains include the required direct consequence.",
+        sourceReferenceIds: ["pref-claims", "pref-outline"],
+      },
+    ],
+    prerequisiteSessionIds: ["pref-completeness"],
+    futureSessionIds: ["pref-rationality-classification"],
+    dependencyConnections: [
+      {
+        fromSessionId: "pref-completeness",
+        toSessionId: "pref-transitivity",
+        explanation:
+          "Transitivity is a separate chain condition and should not be inferred from pairwise comparability.",
+      },
+    ],
+    instructionalRequirements: [
+      {
+        kind: "definition",
+        id: "pref-req-transitivity-definition",
+        title: "Transitivität definieren",
+        description:
+          "State the weak-preference chain condition and distinguish it from completeness.",
+        conceptIds: ["transitivity"],
+      },
+    ],
+    examTaskFamilies: [
+      {
+        id: "pref-exam-transitivity-check",
+        title: "Ketten prüfen",
+        description:
+          "Find every applicable chain and verify the required direct weak-preference consequence.",
+      },
+    ],
+    commonMistakes: [
+      {
+        id: "pref-mistake-single-chain",
+        description: "Checking only one chain when testing transitivity.",
+      },
+    ],
+    masteryCriteria: [
+      {
+        id: "pref-mastery-transitivity",
+        description:
+          "Learner can locate a weak-preference chain and its required direct comparison.",
+        evidence: "Future complete session or deterministic practice attempt.",
+      },
+    ],
+    sourceRecords: preferenceSources,
+    practiceMappings: [
+      preferenceMapping(
+        "pref-practice-map-transitivity",
+        ["pref-transitivity"],
+        ["pref-lo-transitivity-01"],
+        {
+          exerciseIds: [
+            "pref-practice-07",
+            "pref-practice-08",
+            "pref-practice-09",
+          ],
+          limitations: [
+            "The practice route contains transitivity items, but this learning session is not yet a complete session.",
+          ],
+        },
+      ),
+    ],
+    availability: {
+      architecture: "available",
+      lesson: "practice-available",
+      practice: "available",
+      sourceStatus: "available",
+    },
+    reviewState: {
+      status: "in-review",
+      note: "Source-backed architecture exists; full lesson sequence remains a future bounded task.",
+    },
+  },
+  {
+    id: "pref-rationality-classification",
+    slug: "rationale-praeferenzrelationen",
+    title: "Rationale Präferenzrelationen klassifizieren",
+    unitId: "preferences",
+    sequence: 5,
+    whyThisSessionExists:
+      "Diese Sitzung verbindet Vollständigkeit und Transitivität zum technischen Rationalitätsbegriff, bleibt aber vorerst eine Architektur- und Praxiszuordnung.",
+    concepts: [
       {
         id: "rational-preference",
         label: "Rationale Präferenzrelation",
@@ -333,22 +593,22 @@ const sessions = [
     ],
     learningObjectives: [
       {
-        id: "pref-lo-03",
-        text: "classify small relation records for completeness, transitivity, and technical rationality.",
+        id: "pref-lo-rationality-01",
+        text: "classify small relation records for technical rationality only after checking completeness and transitivity separately.",
         sourceReferenceIds: ["pref-claims", "pref-outline"],
       },
     ],
-    prerequisiteSessionIds: ["pref-derived-relations"],
+    prerequisiteSessionIds: ["pref-transitivity"],
     futureSessionIds: ["sub-grs-foundations"],
     dependencyConnections: [
       {
-        fromSessionId: "pref-derived-relations",
-        toSessionId: "pref-rationality-axioms",
+        fromSessionId: "pref-transitivity",
+        toSessionId: "pref-rationality-classification",
         explanation:
-          "Axiom checks require reliable interpretation of weak and derived relation statements.",
+          "Rationality uses both completeness and transitivity; neither axiom alone is sufficient.",
       },
       {
-        fromSessionId: "pref-rationality-axioms",
+        fromSessionId: "pref-rationality-classification",
         toSessionId: "sub-grs-foundations",
         explanation:
           "Later substitution work uses preference language while adding differentiability and local slope assumptions.",
@@ -357,26 +617,11 @@ const sessions = [
     instructionalRequirements: [
       {
         kind: "definition",
-        id: "pref-req-axiom-definitions",
-        title: "Axiome definieren",
+        id: "pref-req-rationality-definition",
+        title: "Rationalität technisch definieren",
         description:
-          "State completeness, transitivity, and rationality as technical properties.",
-        conceptIds: ["completeness", "transitivity", "rational-preference"],
-      },
-      {
-        kind: "worked-example",
-        id: "pref-req-classification-example",
-        title: "Relation klassifizieren",
-        description:
-          "Work through completeness, transitivity, and rationality for a small relation record.",
-      },
-      {
-        kind: "exam-strategy",
-        id: "pref-req-axiom-exam-strategy",
-        title: "Axiomprüfung in Klausuraufgaben",
-        description:
-          "Check all pairs and all relevant chains before stating rationality.",
-        taskFamilyIds: ["pref-exam-classify-relation"],
+          "Use rationality only for a relation satisfying completeness and transitivity.",
+        conceptIds: ["rational-preference"],
       },
     ],
     examTaskFamilies: [
@@ -393,8 +638,9 @@ const sessions = [
         description: "Assuming completeness from transitivity.",
       },
       {
-        id: "pref-mistake-single-chain",
-        description: "Checking only one chain when testing transitivity.",
+        id: "pref-mistake-rationality-psychology",
+        description:
+          "Treating technical rationality as a psychological or moral claim.",
       },
     ],
     masteryCriteria: [
@@ -403,26 +649,32 @@ const sessions = [
         description:
           "Learner can classify a finite relation without treating rationality as psychological realism.",
         evidence:
-          "Deterministic classification attempts and final topic check.",
+          "Deterministic classification attempts and future complete-session check.",
       },
     ],
     sourceRecords: preferenceSources,
     practiceMappings: [
       preferenceMapping(
-        "pref-practice-map-03",
-        ["pref-rationality-axioms"],
-        ["pref-lo-03"],
+        "pref-practice-map-rationality",
+        ["pref-rationality-classification"],
+        ["pref-lo-rationality-01"],
+        {
+          exerciseIds: ["pref-practice-10"],
+          limitations: [
+            "The practice route contains a deterministic rationality item, but this route is not yet a complete learning session.",
+          ],
+        },
       ),
     ],
     availability: {
       architecture: "available",
-      lesson: "available",
+      lesson: "architecture-only",
       practice: "available",
       sourceStatus: "available",
     },
     reviewState: {
       status: "in-review",
-      note: "Automated checks pass; human academic publication approval remains pending.",
+      note: "Architecture and practice mapping exist; complete lesson content is intentionally deferred.",
     },
   },
   {
@@ -430,7 +682,7 @@ const sessions = [
     slug: "grs-steigung-und-lokale-annahmen",
     title: "GRS, Steigung und lokale Annahmen",
     unitId: "substitution",
-    sequence: 4,
+    sequence: 6,
     whyThisSessionExists:
       "Diese Sitzung trennt die kursbezogene positive GRS-Konvention von der vorzeichenbehafteten Indifferenzkurvensteigung.",
     concepts: [
@@ -458,11 +710,11 @@ const sessions = [
         sourceReferenceIds: ["sub-claims", "sub-production-spec"],
       },
     ],
-    prerequisiteSessionIds: ["pref-rationality-axioms"],
+    prerequisiteSessionIds: ["pref-rationality-classification"],
     futureSessionIds: ["sub-ces-conversions"],
     dependencyConnections: [
       {
-        fromSessionId: "pref-rationality-axioms",
+        fromSessionId: "pref-rationality-classification",
         toSessionId: "sub-grs-foundations",
         explanation:
           "GRS work assumes the learner can distinguish notation, relations, and model assumptions.",
@@ -544,7 +796,7 @@ const sessions = [
     slug: "ces-parameter-und-substitutionselastizitaet",
     title: "CES-Parameter und Substitutionselastizität",
     unitId: "substitution",
-    sequence: 5,
+    sequence: 7,
     whyThisSessionExists:
       "Diese Sitzung hält den freigegebenen numerischen Umfang für rho-sigma-Konversionen getrennt von breiter CES-Rechnung.",
     concepts: [
@@ -649,7 +901,7 @@ const sessions = [
     slug: "homogene-darstellungen-und-homothetie",
     title: "Homogene Darstellungen und homothetische Präferenzen",
     unitId: "substitution",
-    sequence: 6,
+    sequence: 8,
     whyThisSessionExists:
       "Diese Sitzung trennt Eigenschaften einer Nutzenrepräsentation von Eigenschaften der dargestellten Präferenzen.",
     concepts: [
@@ -779,7 +1031,9 @@ export const mikrooekonomik1Module = {
       sessionIds: [
         "pref-binary-comparisons",
         "pref-derived-relations",
-        "pref-rationality-axioms",
+        "pref-completeness",
+        "pref-transitivity",
+        "pref-rationality-classification",
       ],
     },
     {

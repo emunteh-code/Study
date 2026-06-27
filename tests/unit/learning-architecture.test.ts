@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import { mikrooekonomik1Module } from "../../src/data/modules/mikrooekonomik-1/module";
+import type {
+  LearningSession,
+  LessonBlock,
+  WorkedExampleBlock,
+} from "../../src/learning/model";
 import {
   getModuleBySlug,
   getModuleSessionsInOrder,
@@ -12,6 +17,7 @@ import {
   sessionLearningRoute,
 } from "../../src/learning/routing";
 import {
+  COMPLETE_SESSION_BLOCK_ORDER,
   getSessionsInDependencyOrder,
   validateStudyModule,
   validateStudyModules,
@@ -19,6 +25,20 @@ import {
 import { lawFixtureModule } from "../fixtures/learning-modules";
 
 describe("learning module architecture", () => {
+  function sessionById(sessionId: string): LearningSession {
+    return mikrooekonomik1Module.sessions.find(
+      ({ id }) => id === sessionId,
+    ) as LearningSession;
+  }
+
+  function workedExampleBlocks(
+    blocks: readonly LessonBlock[],
+  ): WorkedExampleBlock[] {
+    return blocks.filter(
+      (block): block is WorkedExampleBlock => block.kind === "worked-example",
+    );
+  }
+
   it("allows multiple modules to coexist without assuming economics capabilities", () => {
     const errors = validateStudyModules([
       mikrooekonomik1Module,
@@ -127,7 +147,9 @@ describe("learning module architecture", () => {
     ).toEqual([
       "pref-binary-comparisons",
       "pref-derived-relations",
-      "pref-rationality-axioms",
+      "pref-completeness",
+      "pref-transitivity",
+      "pref-rationality-classification",
       "sub-grs-foundations",
       "sub-ces-conversions",
       "sub-homothetic-representations",
@@ -174,6 +196,55 @@ describe("learning module architecture", () => {
     );
   });
 
+  it("requires complete-session pages to contain the full pedagogical block order", () => {
+    const completenessSession = sessionById("pref-completeness");
+    const kinds = completenessSession.lessonBlocks!.map(({ kind }) => kind);
+
+    expect(completenessSession.availability.lesson).toBe("complete-session");
+    expect(validateStudyModule(mikrooekonomik1Module)).toEqual([]);
+    let searchStart = 0;
+    for (const kind of COMPLETE_SESSION_BLOCK_ORDER) {
+      const index = kinds.findIndex(
+        (candidate, candidateIndex) =>
+          candidateIndex >= searchStart && candidate === kind,
+      );
+      expect(index).toBeGreaterThanOrEqual(searchStart);
+      searchStart = index + 1;
+    }
+  });
+
+  it("protects complete-session examples, IDs, objectives, and hidden-answer isolation", () => {
+    const completenessSession = sessionById("pref-completeness");
+    const blocks = completenessSession.lessonBlocks!;
+    const blockIds = blocks.map(({ id }) => id);
+    const exampleLevels = workedExampleBlocks(blocks).map(({ level }) => level);
+    const publicProjection = JSON.stringify(completenessSession);
+
+    expect(new Set(blockIds).size).toBe(blockIds.length);
+    expect(
+      exampleLevels.filter((level) => level === "foundational"),
+    ).toHaveLength(3);
+    expect(
+      exampleLevels.filter((level) => level === "intermediate"),
+    ).toHaveLength(3);
+    expect(
+      exampleLevels.filter((level) => level === "exam-style"),
+    ).toHaveLength(2);
+    expect(publicProjection).not.toContain("acceptedAnswer");
+    expect(publicProjection).not.toContain("correctOption");
+    expect(publicProjection).not.toContain("evaluator");
+    expect(completenessSession.practiceMappings[0]!.exerciseIds).toEqual([
+      "pref-practice-05",
+      "pref-practice-06",
+    ]);
+    expect(
+      completenessSession.instructionalRequirements.map(({ kind }) => kind),
+    ).not.toContain("formula");
+    expect(
+      completenessSession.instructionalRequirements.map(({ kind }) => kind),
+    ).not.toContain("graph");
+  });
+
   it("validates practice mappings against sessions and objectives", () => {
     const preferenceSession = mikrooekonomik1Module.sessions.find(
       ({ id }) => id === "pref-derived-relations",
@@ -182,6 +253,11 @@ describe("learning module architecture", () => {
     expect(preferenceSession.practiceMappings[0]).toMatchObject({
       practiceRoute: "/ueben/mikrooekonomik-1/praeferenzrelationen/",
       objectiveIds: ["pref-lo-02", "pref-lo-04"],
+    });
+    expect(sessionById("pref-completeness").practiceMappings[0]).toMatchObject({
+      practiceRoute: "/ueben/mikrooekonomik-1/praeferenzrelationen/",
+      objectiveIds: ["pref-lo-completeness-01", "pref-lo-completeness-02"],
+      exerciseIds: ["pref-practice-05", "pref-practice-06"],
     });
     expect(validateStudyModule(mikrooekonomik1Module)).toEqual([]);
   });

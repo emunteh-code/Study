@@ -53,96 +53,85 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
   }
 });
 
-test("preference topic teaches the lesson before independent practice", async ({
+test("preference topic links to the focused lesson before independent practice", async ({
   page,
 }) => {
   await page.goto(practicePath);
 
   for (const heading of [
-    "Warum das wichtig ist",
-    "Kernintuition",
-    "Formale Definitionen",
-    "Zusammenhang von schwacher Präferenz, strikter Präferenz und Indifferenz",
-    "Vollständigkeit und Transitivität",
-    "Rationalität als technischer Begriff",
-    "Durchgerechnete Beispiele",
-    "Geführte Übung mit Hinweisen",
-    "Häufige Denkfehler",
-    "Active Recall",
-    "Klausurtypische Aufgaben",
-    "Themencheck vor dem Weitergehen",
+    "Präferenzrelationen üben",
+    "Passende Lernschritte",
+    "Was diese Seite leistet",
   ]) {
     await expect(page.getByRole("heading", { name: heading })).toBeVisible();
   }
 
-  expect(
-    await page.getByText("Schwache Präferenz", { exact: true }).count(),
-  ).toBeGreaterThan(0);
-  expect(
-    await page.getByText("Strikte Präferenz", { exact: true }).count(),
-  ).toBeGreaterThan(0);
-  expect(
-    await page.getByText("Indifferenz", { exact: true }).count(),
-  ).toBeGreaterThan(0);
-  expect(
-    await page.getByText("Vollständigkeit", { exact: true }).count(),
-  ).toBeGreaterThan(0);
-  expect(
-    await page.getByText("Transitivität", { exact: true }).count(),
-  ).toBeGreaterThan(0);
-  await expect(page.getByText("Exam-style problem 1")).toBeVisible();
-  await expect(page.getByText("Schwache Bereiche erneut üben")).toBeVisible();
+  await expect(
+    page.getByText("Diese Übungsroute bleibt die unabhängige Praxisphase"),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Vollständigkeit lernen" }),
+  ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/vollstaendigkeit/");
+  await expect(
+    page.getByRole("link", { name: "Vorwissen wiederholen" }),
+  ).toHaveAttribute(
+    "href",
+    "/Study/lernen/mikrooekonomik-1/strikte-praeferenz-und-indifferenz/",
+  );
+  await expect(
+    page.getByRole("link", { name: "Nächste Sitzung ansehen" }),
+  ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/transitivitaet/");
 
   const order = await page.evaluate(() => {
-    const definition = document.querySelector("#pref-definitions");
-    const worked = document.querySelector("#pref-worked-examples");
-    const independent = document.querySelector("#pref-independent-practice");
+    const bridge = document.querySelector("#pref-lesson-title");
+    const links = document.querySelector("#pref-practice-links-title");
+    const scope = document.querySelector("#pref-practice-scope-title");
     const overview = document.querySelector("#practice-overview-title");
     const firstExercise = document.querySelector("#pref-practice-01");
     return {
-      definitionsBeforePractice:
-        !!definition &&
+      bridgeBeforePractice:
+        !!bridge &&
         !!overview &&
         Boolean(
-          definition.compareDocumentPosition(overview) &
+          bridge.compareDocumentPosition(overview) &
           Node.DOCUMENT_POSITION_FOLLOWING,
         ),
-      workedBeforeExercise:
-        !!worked &&
+      linksBeforeExercise:
+        !!links &&
         !!firstExercise &&
         Boolean(
-          worked.compareDocumentPosition(firstExercise) &
+          links.compareDocumentPosition(firstExercise) &
           Node.DOCUMENT_POSITION_FOLLOWING,
         ),
-      independentBeforeExercise:
-        !!independent &&
+      scopeBeforeExercise:
+        !!scope &&
         !!firstExercise &&
         Boolean(
-          independent.compareDocumentPosition(firstExercise) &
+          scope.compareDocumentPosition(firstExercise) &
           Node.DOCUMENT_POSITION_FOLLOWING,
         ),
     };
   });
   expect(order).toEqual({
-    definitionsBeforePractice: true,
-    workedBeforeExercise: true,
-    independentBeforeExercise: true,
+    bridgeBeforePractice: true,
+    linksBeforeExercise: true,
+    scopeBeforeExercise: true,
   });
 });
 
-test("preference lesson provides explanatory feedback and common-error diagnostics", async ({
+test("preference practice bridge states scope without becoming a second canonical lesson", async ({
   page,
 }) => {
   await page.goto(practicePath);
 
-  await expect(page.getByText("Geführte Übung mit Hinweisen")).toBeVisible();
-  await expect(page.getByText("Hinweis 1").first()).toBeVisible();
-  await expect(page.getByText("Aus z ≽ x allein folgt nicht")).toBeVisible();
-  await expect(page.getByText("Die verlangte Aussage ist x ≽ z")).toBeVisible();
-  await expect(page.getByText("Die Richtung umdrehen")).toBeVisible();
   await expect(
-    page.getByText("Rationalität als psychologische Wirklichkeitsbehauptung"),
+    page.getByText("Die Praxisroute ersetzt keine vollständige Lektion"),
   ).toBeVisible();
+  await expect(page.getByText("Geführte Übung mit Hinweisen")).toHaveCount(0);
+  await expect(page.getByText("Exam-style problem 1")).toHaveCount(0);
+  await expect(page.getByText("Themencheck vor dem Weitergehen")).toHaveCount(
+    0,
+  );
 });
 
 test("preference lesson remains visible without JavaScript", async ({
@@ -155,13 +144,13 @@ test("preference lesson remains visible without JavaScript", async ({
   await page.goto(practicePath);
 
   await expect(
-    page.getByRole("heading", { name: "Formale Definitionen" }),
+    page.getByRole("heading", { name: "Präferenzrelationen üben" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Durchgerechnete Beispiele" }),
+    page.getByRole("link", { name: "Vollständigkeit lernen" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Selbstständig üben" }),
+    page.getByRole("heading", { name: "Aufgabenkarten" }),
   ).toBeVisible();
   await expect(
     page.getByText("Answer checking requires JavaScript.").first(),

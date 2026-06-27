@@ -1,0 +1,177 @@
+---
+import type { LessonBlock } from "../../learning/model";
+import Button from "../foundation/Button.astro";
+
+interface Props {
+  blocks: readonly LessonBlock[];
+}
+
+const { blocks } = Astro.props;
+---
+
+<section class="lesson-slice" aria-labelledby="complete-session-title">
+  <header class="lesson-slice__header">
+    <p class="eyebrow">Complete learning session</p>
+    <h2 id="complete-session-title">Lernsequenz</h2>
+    <p>
+      Diese Sequenz führt von Orientierung und Intuition zu Definition,
+      Beispielen, geführter Übung, Prüfungstransfer und Wiederholung.
+    </p>
+  </header>
+
+  {
+    blocks.map((block) => (
+      <section
+        id={block.id}
+        class="lesson-block"
+        data-lesson-block-kind={block.kind}
+        aria-labelledby={`${block.id}-title`}
+      >
+        <header class="lesson-block__header">
+          <p class="eyebrow">{block.kind}</p>
+          <h3 id={`${block.id}-title`}>{block.title}</h3>
+        </header>
+
+        {block.body.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+
+        {block.kind === "worked-example" && (
+          <article class="lesson-worked-example">
+            <dl class="module-inline-meta">
+              <div>
+                <dt>Niveau</dt>
+                <dd>{block.level}</dd>
+              </div>
+              <div>
+                <dt>Getestet</dt>
+                <dd>{block.testedConcept}</dd>
+              </div>
+            </dl>
+            <p>
+              <strong>Aufgabe:</strong> {block.problem}
+            </p>
+            <ol>
+              {block.solutionSteps.map((step) => (
+                <li>{step}</li>
+              ))}
+            </ol>
+            <p>
+              <strong>Begründung:</strong> {block.reasoning}
+            </p>
+            <p>
+              <strong>Interpretation:</strong> {block.interpretation}
+            </p>
+            {block.commonWrongApproach && (
+              <p>
+                <strong>Typischer falscher Ansatz:</strong>{" "}
+                {block.commonWrongApproach}
+              </p>
+            )}
+          </article>
+        )}
+
+        {block.kind === "guided-practice" && (
+          <article class="lesson-guided-card">
+            <p>
+              <strong>Aufgabe:</strong> {block.prompt}
+            </p>
+            {block.hints.map((hint) => (
+              <details>
+                <summary>{hint.label}</summary>
+                <p>{hint.body}</p>
+              </details>
+            ))}
+            <details>
+              <summary>Erklärung bewusst öffnen</summary>
+              <p>{block.fullExplanation}</p>
+            </details>
+          </article>
+        )}
+
+        {block.kind === "misconception" && (
+          <dl class="lesson-definition-list">
+            <dt>Warum plausibel</dt>
+            <dd>{block.whyPlausible}</dd>
+            <dt>Korrektur</dt>
+            <dd>{block.correction}</dd>
+          </dl>
+        )}
+
+        {block.kind === "exam-thinking" && (
+          <article class="lesson-guided-card">
+            <p>
+              <strong>Aufgabenfamilie:</strong> {block.taskFamilyId}
+            </p>
+            <p>
+              <strong>Getestet:</strong> {block.testedConcept}
+            </p>
+            <ol>
+              {block.examinerReasoning.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ol>
+          </article>
+        )}
+
+        {block.kind === "active-recall" && (
+          <ol class="lesson-recall-list">
+            {block.prompts.map((prompt) => (
+              <li>{prompt}</li>
+            ))}
+          </ol>
+        )}
+
+        {block.kind === "feynman-test" && (
+          <ol class="lesson-recall-list">
+            {block.prompts.map((prompt) => (
+              <li>{prompt}</li>
+            ))}
+          </ol>
+        )}
+
+        {block.kind === "interleaving" && (
+          <ul class="lesson-checklist">
+            {block.comparisons.map((comparison) => (
+              <li>{comparison}</li>
+            ))}
+          </ul>
+        )}
+
+        {block.kind === "cheat-sheet" && (
+          <dl class="lesson-definition-list">
+            {block.entries.map((entry) => (
+              <>
+                <dt>{entry.term}</dt>
+                <dd>{entry.description}</dd>
+              </>
+            ))}
+          </dl>
+        )}
+
+        {block.kind === "mastery-check" && (
+          <ul class="lesson-checklist">
+            {block.checks.map((check) => (
+              <li>
+                <strong>{check.observable}</strong>
+                <p>{check.evidence}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {block.kind === "practice-handoff" && (
+          <article class="lesson-guided-card">
+            <p>Passende Aufgaben: {block.exerciseIds.join(", ")}</p>
+            <ul>
+              {block.limitations.map((limitation) => (
+                <li>{limitation}</li>
+              ))}
+            </ul>
+            <Button href={block.practiceRoute}>Zur passenden Übung</Button>
+          </article>
+        )}
+      </section>
+    ))
+  }
+</section>

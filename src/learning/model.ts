@@ -7,7 +7,15 @@ export type AvailabilityState =
 
 export type ArchitectureAvailability = "available" | "in-review" | "planned";
 
-export type LessonAvailability = "available" | "in-review" | "planned";
+export type LessonAvailability =
+  | "available"
+  | "complete-session"
+  | "partial-session"
+  | "orientation-available"
+  | "architecture-only"
+  | "practice-available"
+  | "in-review"
+  | "planned";
 
 export type PracticeAvailability = "available" | "in-review" | "planned";
 
@@ -206,6 +214,8 @@ export interface PracticeMapping {
   practiceTitle: string;
   sessionIds: readonly string[];
   objectiveIds: readonly string[];
+  exerciseIds?: readonly string[];
+  limitations?: readonly string[];
   availability: PracticeAvailability;
 }
 
@@ -213,6 +223,138 @@ export interface ReviewState {
   status: "not-started" | "in-review" | "checked" | "blocked";
   note: string;
 }
+
+export type LessonBlockKind =
+  | "why-exists"
+  | "unlocks"
+  | "prerequisites"
+  | "objectives"
+  | "dependency-position"
+  | "big-picture"
+  | "intuition"
+  | "definition"
+  | "assumptions"
+  | "symbols"
+  | "concept-build"
+  | "reasoning"
+  | "connections"
+  | "worked-example"
+  | "guided-practice"
+  | "misconception"
+  | "exam-thinking"
+  | "active-recall"
+  | "feynman-test"
+  | "interleaving"
+  | "cheat-sheet"
+  | "mastery-check"
+  | "remediation"
+  | "practice-handoff";
+
+export interface BaseLessonBlock<K extends LessonBlockKind = LessonBlockKind> {
+  id: string;
+  kind: K;
+  title: string;
+  body: readonly string[];
+  sourceReferenceIds?: readonly string[];
+  objectiveIds?: readonly string[];
+}
+
+export interface WorkedExampleBlock extends BaseLessonBlock<"worked-example"> {
+  kind: "worked-example";
+  level: "foundational" | "intermediate" | "exam-style";
+  problem: string;
+  testedConcept: string;
+  solutionSteps: readonly string[];
+  reasoning: string;
+  interpretation: string;
+  commonWrongApproach?: string;
+}
+
+export interface GuidedPracticeHint {
+  id: string;
+  label: string;
+  body: string;
+}
+
+export interface GuidedPracticeBlock extends BaseLessonBlock<"guided-practice"> {
+  kind: "guided-practice";
+  prompt: string;
+  hints: readonly GuidedPracticeHint[];
+  fullExplanation: string;
+}
+
+export interface MisconceptionBlock extends BaseLessonBlock<"misconception"> {
+  kind: "misconception";
+  whyPlausible: string;
+  correction: string;
+}
+
+export interface ExamThinkingBlock extends BaseLessonBlock<"exam-thinking"> {
+  kind: "exam-thinking";
+  taskFamilyId: string;
+  testedConcept: string;
+  examinerReasoning: readonly string[];
+}
+
+export interface ActiveRecallBlock extends BaseLessonBlock<"active-recall"> {
+  kind: "active-recall";
+  prompts: readonly string[];
+}
+
+export interface FeynmanTestBlock extends BaseLessonBlock<"feynman-test"> {
+  kind: "feynman-test";
+  prompts: readonly string[];
+}
+
+export interface InterleavingBlock extends BaseLessonBlock<"interleaving"> {
+  kind: "interleaving";
+  comparisons: readonly string[];
+}
+
+export interface CheatSheetBlock extends BaseLessonBlock<"cheat-sheet"> {
+  kind: "cheat-sheet";
+  entries: readonly { term: string; description: string }[];
+}
+
+export interface MasteryCheckBlock extends BaseLessonBlock<"mastery-check"> {
+  kind: "mastery-check";
+  checks: readonly { observable: string; evidence: string }[];
+}
+
+export interface PracticeHandoffBlock extends BaseLessonBlock<"practice-handoff"> {
+  kind: "practice-handoff";
+  practiceRoute: string;
+  exerciseIds: readonly string[];
+  limitations: readonly string[];
+}
+
+export type LessonBlock =
+  | BaseLessonBlock<
+      | "why-exists"
+      | "unlocks"
+      | "prerequisites"
+      | "objectives"
+      | "dependency-position"
+      | "big-picture"
+      | "intuition"
+      | "definition"
+      | "assumptions"
+      | "symbols"
+      | "concept-build"
+      | "reasoning"
+      | "connections"
+      | "remediation"
+    >
+  | WorkedExampleBlock
+  | GuidedPracticeBlock
+  | MisconceptionBlock
+  | ExamThinkingBlock
+  | ActiveRecallBlock
+  | FeynmanTestBlock
+  | InterleavingBlock
+  | CheatSheetBlock
+  | MasteryCheckBlock
+  | PracticeHandoffBlock;
 
 export interface LearningUnit {
   id: string;
@@ -239,6 +381,7 @@ export interface LearningSession {
   masteryCriteria: readonly MasteryCriterion[];
   sourceRecords: readonly SourceReference[];
   practiceMappings: readonly PracticeMapping[];
+  lessonBlocks?: readonly LessonBlock[];
   availability: SessionAvailability;
   reviewState?: ReviewState;
 }

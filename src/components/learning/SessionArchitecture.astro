@@ -10,6 +10,7 @@ import SectionHeader from "../foundation/SectionHeader.astro";
 import StatusLabel from "../foundation/StatusLabel.astro";
 import InstructionalRequirementList from "./InstructionalRequirementList.astro";
 import LearningObjectiveList from "./LearningObjectiveList.astro";
+import LessonBlockSequence from "./LessonBlockSequence.astro";
 import MasteryChecklist from "./MasteryChecklist.astro";
 
 interface Props {
@@ -58,6 +59,12 @@ const firstPractice = session.practiceMappings[0];
       )
     }
   </Callout>
+
+  {
+    session.lessonBlocks && session.lessonBlocks.length > 0 && (
+      <LessonBlockSequence blocks={session.lessonBlocks} />
+    )
+  }
 
   {
     session.concepts.length > 0 && (
@@ -225,6 +232,16 @@ const firstPractice = session.practiceMappings[0];
           {session.practiceMappings.map((mapping) => (
             <Card title={mapping.practiceTitle} metadata={mapping.id}>
               <p>Zugeordnete Ziele: {mapping.objectiveIds.join(", ")}</p>
+              {mapping.exerciseIds && (
+                <p>Zugeordnete Aufgaben: {mapping.exerciseIds.join(", ")}</p>
+              )}
+              {mapping.limitations && (
+                <ul>
+                  {mapping.limitations.map((limitation) => (
+                    <li>{limitation}</li>
+                  ))}
+                </ul>
+              )}
               <StatusLabel label={mapping.availability} tone="success" />
               <div slot="footer" class="card-actions">
                 <Button href={mapping.practiceRoute} variant="secondary">

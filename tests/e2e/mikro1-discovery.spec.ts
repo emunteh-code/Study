@@ -36,8 +36,13 @@ test("Mikro I course overview explains current scope and next actions", async ({
   ).toBeVisible();
   await expect(page.getByText("Architekturprinzip")).toBeVisible();
   await expect(page.getByText("identify the direction")).toBeVisible();
+  await expect(
+    page.getByText("check whether every unordered pair"),
+  ).toBeVisible();
   await expect(page.getByText("calculate sigma from rho")).toBeVisible();
-  await expect(page.getByText("Praxiszuordnung")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Praxiszuordnung" }),
+  ).toBeVisible();
   await expect(page.locator("a[href*='sub-practice-04']")).toHaveCount(0);
   await expect(page.locator("a[href*='mikrooekonomik-1/optim']")).toHaveCount(
     0,
@@ -58,7 +63,9 @@ test("Mikro I sessions render in dependency order through reusable architecture"
   await expect(sessions).toHaveText([
     "Binäre Relationen und schwache Präferenz",
     "Strikte Präferenz und Indifferenz ableiten",
-    "Vollständigkeit, Transitivität und Rationalität",
+    "Vollständigkeit",
+    "Transitivität",
+    "Rationale Präferenzrelationen klassifizieren",
     "GRS, Steigung und lokale Annahmen",
     "CES-Parameter und Substitutionselastizität",
     "Homogene Darstellungen und homothetische Präferenzen",
@@ -74,12 +81,10 @@ test("Mikro I sessions render in dependency order through reusable architecture"
 test("generic Mikro I session page exposes dependencies, capabilities, sources, and practice", async ({
   page,
 }) => {
-  await page.goto(
-    `${base}/lernen/mikrooekonomik-1/vollstaendigkeit-transitivitaet-rationalitaet/`,
-  );
+  await page.goto(`${base}/lernen/mikrooekonomik-1/vollstaendigkeit/`);
 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Vollständigkeit, Transitivität und Rationalität",
+    "Vollständigkeit",
   );
   for (const heading of [
     "Konzepte und Skills",
@@ -92,12 +97,58 @@ test("generic Mikro I session page exposes dependencies, capabilities, sources, 
     "Passende Praxis",
     "Quellen",
   ]) {
-    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 2, name: heading }),
+    ).toBeVisible();
   }
-  await expect(page.getByText("Definition")).toBeVisible();
-  await expect(page.getByText("Klausurstrategie")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Vollständigkeit definieren" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Vollständigkeit in Klausuraufgaben" }),
+  ).toBeVisible();
+  await expect(page.getByText("Complete learning session")).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Übung öffnen" }).first(),
+  ).toHaveAttribute(
+    "href",
+    "/Study/ueben/mikrooekonomik-1/praeferenzrelationen/",
+  );
+});
+
+test("focused completeness session follows the required learning order", async ({
+  page,
+}) => {
+  await page.goto(`${base}/lernen/mikrooekonomik-1/vollstaendigkeit/`);
+
+  const kinds = await page
+    .locator("[data-lesson-block-kind]")
+    .evaluateAll((nodes) =>
+      nodes.map((node) => node.getAttribute("data-lesson-block-kind")),
+    );
+  const indexOf = (kind: string) => kinds.indexOf(kind);
+
+  await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+  expect(indexOf("intuition")).toBeLessThan(indexOf("definition"));
+  expect(indexOf("definition")).toBeLessThan(indexOf("worked-example"));
+  expect(indexOf("worked-example")).toBeLessThan(indexOf("guided-practice"));
+  expect(indexOf("guided-practice")).toBeLessThan(indexOf("practice-handoff"));
+  expect(indexOf("exam-thinking")).toBeGreaterThan(indexOf("misconception"));
+  expect(indexOf("active-recall")).toBeGreaterThan(indexOf("exam-thinking"));
+  expect(indexOf("cheat-sheet")).toBeGreaterThan(indexOf("interleaving"));
+  await expect(
+    page.getByRole("heading", {
+      name: "Denkfehler: Jede Alternative erscheint, also vollständig",
+    }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByLabel("Denkfehler: Jede Alternative erscheint, also vollständig")
+      .getByText("Korrektur"),
+  ).toBeVisible();
+  await expect(page.getByText("Beobachtbare Beherrschung")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Zur passenden Übung" }),
   ).toHaveAttribute(
     "href",
     "/Study/ueben/mikrooekonomik-1/praeferenzrelationen/",
@@ -132,6 +183,15 @@ test("Mikro I practice routes expose an accessible shared learning path", async 
       navigation.getByRole("link", { name: "Kursübersicht" }),
     ).toBeVisible();
   }
+});
+
+test("preference practice route links back to the focused completeness session", async ({
+  page,
+}) => {
+  await page.goto(`${base}/ueben/mikrooekonomik-1/praeferenzrelationen/`);
+  await expect(
+    page.getByRole("link", { name: "Vollständigkeit lernen" }),
+  ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/vollstaendigkeit/");
 });
 
 test("topic orientations render source-backed objectives before exercises", async ({
@@ -191,6 +251,23 @@ test("topic orientations remain visible without JavaScript", async ({
   await expect(page.getByRole("heading", { name: "Lernziele" })).toBeVisible();
   await expect(
     page.getByText("Substitutionselastizität").first(),
+  ).toBeVisible();
+});
+
+test("focused completeness session remains visible without JavaScript", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    !testInfo.project.name.includes("no-js"),
+    "No-JavaScript project only.",
+  );
+  await page.goto(`${base}/lernen/mikrooekonomik-1/vollstaendigkeit/`);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Vollständigkeit" }),
+  ).toBeVisible();
+  await expect(page.getByText("Formale Definition")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Zur passenden Übung" }),
   ).toBeVisible();
 });
 
@@ -271,9 +348,7 @@ for (const width of [320, 768, 1440]) {
     page,
   }, testInfo) => {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto(
-      `${base}/lernen/mikrooekonomik-1/vollstaendigkeit-transitivitaet-rationalitaet/`,
-    );
+    await page.goto(`${base}/lernen/mikrooekonomik-1/vollstaendigkeit/`);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
