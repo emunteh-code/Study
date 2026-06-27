@@ -48,6 +48,7 @@ Only these statuses are used below: `not-started`, `in-progress`, `blocked`,
 | `1f35b81` | Substitution self-review workflow                       | release-ready |
 | `aa11405` | Mikro I course discovery journey                        | release-ready |
 | `cafa856` | Mikro I source-traceable topic orientation              | release-ready |
+| `a8f2aba` | Reusable dependency-based learning architecture         | release-ready |
 
 ## Release-Critical Blockers
 
@@ -58,14 +59,14 @@ Only these statuses are used below: `not-started`, `in-progress`, `blocked`,
 
 ## Exact Next Highest-Priority Milestone
 
-`in-progress`: validate and complete the reusable dependency-based module architecture now being introduced. The next command is:
+`in-progress`: extend student-facing instructional depth on top of the reusable dependency-based architecture. The next command is:
 
 ```sh
 cd /Users/enowmunteh/Documents/Study
 PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
 ```
 
-The next implementation milestone is to finish validation for the reusable learning module model, registry, module overview renderer, session architecture renderer, and module-ingestion workflow documentation.
+The next implementation milestone is to create a coherent end-to-end learning slice for `/ueben/mikrooekonomik-1/substitutionseffekt/`, reusing the shared module/session architecture and the existing restricted practice route.
 
 ## Last Audit
 
@@ -147,17 +148,18 @@ PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
 
 Current milestone:
 
-- Reusable platform structure: in-progress
-- Mikroökonomik I migration to shared model: in-progress
-- Module registry: in-progress
-- Generic module overview renderer: in-progress
-- Generic session architecture renderer: in-progress
-- Second non-economics fixture: in-progress
-- Future module-ingestion guide: in-progress
+- Reusable platform structure: release-ready
+- Mikroökonomik I migration to shared model: release-ready
+- Module registry: release-ready
+- Generic module overview renderer: release-ready
+- Generic session architecture renderer: release-ready
+- Second non-economics fixture: release-ready
+- Future module-ingestion guide: release-ready
 - Practice evaluator migration: future-scope; existing evaluators remain
   intentionally untouched.
-- Blockers: full validation and final push are still pending for this
-  architecture milestone.
+- Completed commit: `a8f2aba`
+- Blockers: none for the reusable architecture milestone. Human academic review
+  and publication approval remain separate release blockers.
 - Exact next command:
 
 ```sh
@@ -165,6 +167,6 @@ cd /Users/enowmunteh/Documents/Study
 PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
 ```
 
-- Exact next highest-priority milestone after this architecture work: add a
-  coherent end-to-end learning slice for
+- Exact next highest-priority milestone: add a coherent end-to-end learning
+  slice for
   `/ueben/mikrooekonomik-1/substitutionseffekt/`.
