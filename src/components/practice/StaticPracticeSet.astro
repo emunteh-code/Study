@@ -2,6 +2,7 @@
 import Callout from "../foundation/Callout.astro";
 import StaticPracticeExercise from "./StaticPracticeExercise.astro";
 import Mikro1PracticeNavigation from "./Mikro1PracticeNavigation.astro";
+import Mikro1PreferenceLesson from "./Mikro1PreferenceLesson.astro";
 import Mikro1TopicOrientation from "./Mikro1TopicOrientation.astro";
 import { mikro1PreferenceOrientation } from "../../data/mikro1-orientation";
 import type { StaticMikro1PreferenceExercise } from "../../lib/mikro1-preferences-practice";
@@ -19,11 +20,11 @@ const exerciseTitles = new Map(
 <div class="practice-page static-practice-set">
   <header class="static-practice-set__header">
     <p class="eyebrow">Mikroökonomik I</p>
-    <h1>Preference relations practice</h1>
+    <h1>Präferenzrelationen lernen und üben</h1>
     <p>
-      Twelve original exercises on weak preference, strict preference,
-      indifference, completeness, transitivity, rationality, and the derived
-      incompatibility result.
+      Eine vollständige Lernstrecke zu schwacher Präferenz, strikter Präferenz,
+      Indifferenz, Vollständigkeit, Transitivität und rationalen
+      Präferenzrelationen.
     </p>
   </header>
 
@@ -33,6 +34,8 @@ const exerciseTitles = new Map(
     orientation={mikro1PreferenceOrientation}
     exerciseTitles={exerciseTitles}
   />
+
+  <Mikro1PreferenceLesson />
 
   <section
     data-practice-progress
@@ -47,10 +50,12 @@ const exerciseTitles = new Map(
     >
   </section>
 
-  <Callout title="Static practice foundation" variant="information">
+  <Callout title="Unabhängige Übungsphase" variant="information">
     <p>
-      You can enter responses in this version. Features that need JavaScript
-      remain optional; the practice content itself stays readable without it.
+      Die Lektion oben erklärt die Begriffe und zeigt gelöste Beispiele. Die
+      folgenden Aufgaben prüfen, ob du die Begriffe selbst anwenden kannst.
+      Antwortprüfung benötigt JavaScript; Aufgaben, Notation und Eingabefelder
+      bleiben ohne JavaScript lesbar.
     </p>
   </Callout>
 
@@ -59,8 +64,8 @@ const exerciseTitles = new Map(
     aria-labelledby="practice-overview-title"
   >
     <div>
-      <p class="eyebrow">Practice map</p>
-      <h2 id="practice-overview-title">Move through the set</h2>
+      <p class="eyebrow">Übungskarte</p>
+      <h2 id="practice-overview-title">Aufgabenkarten</h2>
     </div>
     <ol>
       {
@@ -77,25 +82,26 @@ const exerciseTitles = new Map(
   </nav>
 
   <section aria-labelledby="static-practice-instructions">
-    <h2 id="static-practice-instructions">How to use this practice set</h2>
+    <h2 id="static-practice-instructions">So nutzt du die Aufgaben</h2>
     <ol>
-      <li>Read the prompt and relation data carefully.</li>
-      <li>Use the response controls to structure your own work.</li>
+      <li>Lies Aufgabenstellung, Relationendaten und Annahmen sorgfältig.</li>
+      <li>Nutze die Antwortfelder, um deine eigene Lösung zu strukturieren.</li>
       <li>
-        Keep your notes while later feedback and self-review features are added.
+        Vergleiche Feedback mit den Definitionen aus der Lektion, nicht nur mit
+        der ausgewählten Option.
       </li>
     </ol>
   </section>
 
   <section aria-labelledby="static-practice-notation">
-    <h2 id="static-practice-notation">Notation used in this set</h2>
+    <h2 id="static-practice-notation">Notation in den Aufgaben</h2>
     <dl class="practice-data-list">
       <dt><span aria-label="is weakly preferred to">≽</span></dt>
-      <dd>is weakly preferred to</dd>
+      <dd>ist schwach präferiert gegenüber</dd>
       <dt><span aria-label="is strictly preferred to">≻</span></dt>
-      <dd>is strictly preferred to</dd>
+      <dd>ist strikt präferiert gegenüber</dd>
       <dt><span aria-label="is indifferent to">∼</span></dt>
-      <dd>is indifferent to</dd>
+      <dd>ist indifferent zu</dd>
     </dl>
   </section>
 

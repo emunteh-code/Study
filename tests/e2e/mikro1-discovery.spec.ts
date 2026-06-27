@@ -69,6 +69,7 @@ test("topic orientations render source-backed objectives before exercises", asyn
       objective: "distinguish weak preference",
       source: "Mikroökonomik I Preferences Claim Evidence Pack",
       exercise: "Read the derived relations",
+      overview: "Aufgabenkarten",
     },
     {
       path: "/ueben/mikrooekonomik-1/substitutionseffekt/",
@@ -76,6 +77,7 @@ test("topic orientations render source-backed objectives before exercises", asyn
       objective: "distinguish the signed indifference-curve slope",
       source: "Mikro I substitution production specification",
       exercise: "Orient the GRS ratio",
+      overview: "Aufgaben",
     },
   ]) {
     await page.goto(`${base}${route.path}`);
@@ -95,7 +97,7 @@ test("topic orientations render source-backed objectives before exercises", asyn
       orientation.getByRole("link", { name: route.exercise }),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: /Aufgaben|Move through the set/ }),
+      page.getByRole("heading", { name: route.overview }),
     ).toBeVisible();
   }
 });

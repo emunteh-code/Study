@@ -9,7 +9,7 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
   await page.goto(practicePath);
 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Preference relations practice",
+    "Präferenzrelationen lernen und üben",
   );
   await expect(page.locator(".static-practice-exercise")).toHaveCount(12);
   await expect(
@@ -18,7 +18,7 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
   await expect(
     page.getByRole("heading", { name: "Derive the incompatibility" }),
   ).toBeVisible();
-  await expect(page.getByText("Notation used in this set")).toBeVisible();
+  await expect(page.getByText("Notation in den Aufgaben")).toBeVisible();
   await expect(page.locator('button[type="submit"]')).toHaveCount(12);
   await expect(page.locator("form[data-mikro1-evaluation-form]")).toHaveCount(
     9,
@@ -51,6 +51,121 @@ test("Mikro I preferences practice renders all approved exercises with scoped ev
       page.getByText("Answer checking requires JavaScript.").first(),
     ).toBeVisible();
   }
+});
+
+test("preference topic teaches the lesson before independent practice", async ({
+  page,
+}) => {
+  await page.goto(practicePath);
+
+  for (const heading of [
+    "Warum das wichtig ist",
+    "Kernintuition",
+    "Formale Definitionen",
+    "Zusammenhang von schwacher Präferenz, strikter Präferenz und Indifferenz",
+    "Vollständigkeit und Transitivität",
+    "Rationalität als technischer Begriff",
+    "Durchgerechnete Beispiele",
+    "Geführte Übung mit Hinweisen",
+    "Häufige Denkfehler",
+    "Active Recall",
+    "Klausurtypische Aufgaben",
+    "Themencheck vor dem Weitergehen",
+  ]) {
+    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+  }
+
+  expect(
+    await page.getByText("Schwache Präferenz", { exact: true }).count(),
+  ).toBeGreaterThan(0);
+  expect(
+    await page.getByText("Strikte Präferenz", { exact: true }).count(),
+  ).toBeGreaterThan(0);
+  expect(
+    await page.getByText("Indifferenz", { exact: true }).count(),
+  ).toBeGreaterThan(0);
+  expect(
+    await page.getByText("Vollständigkeit", { exact: true }).count(),
+  ).toBeGreaterThan(0);
+  expect(
+    await page.getByText("Transitivität", { exact: true }).count(),
+  ).toBeGreaterThan(0);
+  await expect(page.getByText("Exam-style problem 1")).toBeVisible();
+  await expect(page.getByText("Schwache Bereiche erneut üben")).toBeVisible();
+
+  const order = await page.evaluate(() => {
+    const definition = document.querySelector("#pref-definitions");
+    const worked = document.querySelector("#pref-worked-examples");
+    const independent = document.querySelector("#pref-independent-practice");
+    const overview = document.querySelector("#practice-overview-title");
+    const firstExercise = document.querySelector("#pref-practice-01");
+    return {
+      definitionsBeforePractice:
+        !!definition &&
+        !!overview &&
+        Boolean(
+          definition.compareDocumentPosition(overview) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+        ),
+      workedBeforeExercise:
+        !!worked &&
+        !!firstExercise &&
+        Boolean(
+          worked.compareDocumentPosition(firstExercise) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+        ),
+      independentBeforeExercise:
+        !!independent &&
+        !!firstExercise &&
+        Boolean(
+          independent.compareDocumentPosition(firstExercise) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+        ),
+    };
+  });
+  expect(order).toEqual({
+    definitionsBeforePractice: true,
+    workedBeforeExercise: true,
+    independentBeforeExercise: true,
+  });
+});
+
+test("preference lesson provides explanatory feedback and common-error diagnostics", async ({
+  page,
+}) => {
+  await page.goto(practicePath);
+
+  await expect(page.getByText("Geführte Übung mit Hinweisen")).toBeVisible();
+  await expect(page.getByText("Hinweis 1").first()).toBeVisible();
+  await expect(page.getByText("Aus z ≽ x allein folgt nicht")).toBeVisible();
+  await expect(page.getByText("Die verlangte Aussage ist x ≽ z")).toBeVisible();
+  await expect(page.getByText("Die Richtung umdrehen")).toBeVisible();
+  await expect(
+    page.getByText("Rationalität als psychologische Wirklichkeitsbehauptung"),
+  ).toBeVisible();
+});
+
+test("preference lesson remains visible without JavaScript", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    !testInfo.project.name.includes("no-js"),
+    "No-JavaScript project only.",
+  );
+  await page.goto(practicePath);
+
+  await expect(
+    page.getByRole("heading", { name: "Formale Definitionen" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Durchgerechnete Beispiele" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Selbstständig üben" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Answer checking requires JavaScript.").first(),
+  ).toBeVisible();
 });
 
 test("static practice controls and relation tables expose native semantics", async ({

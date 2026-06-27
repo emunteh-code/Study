@@ -1579,6 +1579,118 @@ details > * {
   font-weight: 700;
 }
 
+.lesson-slice,
+.lesson-slice section,
+.lesson-slice__header,
+.lesson-slice__toc,
+.lesson-worked-example,
+.lesson-guided-card {
+  display: grid;
+  gap: var(--space-16);
+  min-inline-size: 0;
+}
+
+.lesson-slice {
+  padding-block: var(--space-16);
+  border-block: var(--border-width) solid var(--color-border);
+}
+
+.lesson-slice__header,
+.lesson-slice > section {
+  max-inline-size: var(--layout-content);
+}
+
+.lesson-slice h2,
+.lesson-slice h3,
+.lesson-slice h4 {
+  margin-block-end: 0;
+}
+
+.lesson-slice__toc {
+  max-inline-size: var(--layout-content);
+  padding: var(--space-16);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface-raised);
+}
+
+.lesson-slice__toc ol,
+.lesson-checklist,
+.lesson-recall-list,
+.lesson-mistake-list {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.lesson-example-grid {
+  display: grid;
+  gap: var(--space-16);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.lesson-example,
+.lesson-worked-example,
+.lesson-guided-card {
+  min-inline-size: 0;
+  padding: var(--space-16);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+}
+
+.lesson-definition-list {
+  display: grid;
+  gap: var(--space-16);
+}
+
+.lesson-definition-list dt {
+  font-weight: 800;
+}
+
+.lesson-definition-list dd {
+  display: grid;
+  gap: var(--space-8);
+  margin: 0;
+  padding: var(--space-16);
+  border-inline-start: 0.25rem solid var(--color-border-strong);
+  background: var(--color-surface-raised);
+}
+
+.lesson-definition-list p,
+.lesson-worked-example p,
+.lesson-guided-card p,
+.lesson-feedback {
+  margin: 0;
+}
+
+.math-token {
+  font-family: var(--font-family-mono);
+  overflow-wrap: anywhere;
+}
+
+.lesson-result {
+  display: inline;
+  font-weight: 700;
+}
+
+.lesson-feedback {
+  padding: var(--space-12);
+  border: var(--border-width) solid var(--color-status-info-text);
+  border-radius: var(--radius-4);
+  background: var(--color-status-info-bg);
+}
+
+.lesson-next-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.lesson-next-actions .button {
+  min-inline-size: min(100%, 12rem);
+}
+
 .static-practice-list {
   gap: var(--space-48);
 }

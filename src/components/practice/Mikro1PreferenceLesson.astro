@@ -1,0 +1,564 @@
+---
+import Button from "../foundation/Button.astro";
+import Callout from "../foundation/Callout.astro";
+---
+
+<section class="lesson-slice" aria-labelledby="pref-lesson-title">
+  <header class="lesson-slice__header">
+    <p class="eyebrow">Lektion</p>
+    <h2 id="pref-lesson-title">Präferenzrelationen von Grund auf</h2>
+    <p>
+      Diese Lektion führt dich von der ersten Idee einer binären Relation bis
+      zur Klassifikation rationaler Präferenzrelationen. Sie nutzt die
+      quellengeprüften Begriffe aus den vorhandenen Audit- und Outline-Dateien
+      und bleibt bewusst vor Nutzenfunktionen, Budgetgeraden und Optimierung
+      stehen.
+    </p>
+  </header>
+
+  <nav class="lesson-slice__toc" aria-labelledby="pref-lesson-toc-title">
+    <h3 id="pref-lesson-toc-title">In dieser Reihenfolge arbeiten</h3>
+    <ol>
+      <li><a href="#pref-why">Warum das wichtig ist</a></li>
+      <li><a href="#pref-intuition">Kernintuition</a></li>
+      <li><a href="#pref-definitions">Formale Definitionen</a></li>
+      <li><a href="#pref-relationships">Zusammenhang der Begriffe</a></li>
+      <li><a href="#pref-axioms">Vollständigkeit und Transitivität</a></li>
+      <li><a href="#pref-rationality">Rationalität</a></li>
+      <li><a href="#pref-worked-examples">Durchgerechnete Beispiele</a></li>
+      <li><a href="#pref-guided-practice">Geführte Übung</a></li>
+      <li><a href="#pref-independent-practice">Selbstständig üben</a></li>
+      <li>
+        <a href="#pref-mastery-check">Themencheck und nächster Schritt</a>
+      </li>
+    </ol>
+  </nav>
+
+  <section id="pref-why" aria-labelledby="pref-why-title">
+    <h3 id="pref-why-title">1. Warum das wichtig ist</h3>
+    <p>
+      Präferenzrelationen beschreiben, wie Alternativen paarweise geordnet
+      werden. In Mikroökonomik I sind sie der begriffliche Boden für spätere
+      Themen: Indifferenzkurven, Nutzenfunktionen und Optimierung setzen voraus,
+      dass du solche Vergleiche sauber lesen kannst.
+    </p>
+    <p>
+      Das Ziel hier ist nicht, Verhalten psychologisch zu erklären. Das Ziel ist
+      ein präzises Modell: Welche Vergleiche gelten, welche folgen daraus und
+      welche dürfen gerade nicht hineingelesen werden?
+    </p>
+  </section>
+
+  <section id="pref-intuition" aria-labelledby="pref-intuition-title">
+    <h3 id="pref-intuition-title">2. Kernintuition</h3>
+    <p>
+      Stell dir drei mögliche Güterbündel vor: <span class="math-token">x</span
+      >,
+      <span class="math-token">y</span> und <span class="math-token">z</span>.
+      Eine Präferenzrelation beantwortet Fragen der Form: “Wird das erste Bündel
+      mindestens so gut eingeordnet wie das zweite?”
+    </p>
+    <div class="lesson-example-grid">
+      <article class="lesson-example">
+        <h4>Gerichteter Vergleich</h4>
+        <p>
+          <span class="math-token">x ≽ y</span> ist ein Vergleich von
+          <span class="math-token">x</span> nach <span class="math-token"
+            >y</span
+          >. Die Gegenrichtung <span class="math-token">y ≽ x</span> ist eine eigene
+          Aussage.
+        </p>
+      </article>
+      <article class="lesson-example">
+        <h4>Keine versteckte Strenge</h4>
+        <p>
+          “Mindestens so gut” lässt offen, ob <span class="math-token">x</span>
+          wirklich besser ist oder ob beide als gleich gut eingeordnet werden.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section id="pref-definitions" aria-labelledby="pref-definitions-title">
+    <h3 id="pref-definitions-title">3. Formale Definitionen</h3>
+    <p>
+      In den Definitionen sind <span class="math-token">x</span>,
+      <span class="math-token">y</span> und <span class="math-token">z</span>
+      Alternativen aus derselben betrachteten Menge. Das Symbol
+      <span class="math-token">≽</span> bezeichnet die schwache Präferenzrelation.
+    </p>
+
+    <dl class="lesson-definition-list">
+      <dt>Binäre Relation</dt>
+      <dd>
+        <p>
+          Eine binäre Relation ordnet Paaren von Alternativen eine Aussage zu:
+          Der Vergleich gilt oder gilt nicht. Beispiel: Auf der Menge
+          <span class="math-token">&#123;x, y&#125;</span> kann die Relation enthalten,
+          dass <span class="math-token">x ≽ y</span> gilt.
+        </p>
+        <p>
+          Kontrast: Eine Liste einzelner Alternativen ohne Paarvergleich ist
+          noch keine binäre Relation.
+        </p>
+      </dd>
+
+      <dt>Schwache Präferenz</dt>
+      <dd>
+        <p>
+          Notation: <span class="math-token">x ≽ y</span>. Das bedeutet:
+          <span class="math-token">x</span> wird mindestens so gut wie
+          <span class="math-token">y</span> eingeordnet.
+        </p>
+        <p>
+          Gültiges Beispiel: Wenn <span class="math-token">x ≽ y</span> gegeben ist,
+          darfst du genau diese Richtung verwenden. Ungültiger Schluss: Daraus allein
+          folgt nicht, dass <span class="math-token">y ≽ x</span>
+          falsch ist.
+        </p>
+      </dd>
+
+      <dt>Strikte Präferenz</dt>
+      <dd>
+        <p>
+          Notation: <span class="math-token">x ≻ y</span>. Standarddefinition:
+          <span class="math-token">x ≽ y</span> gilt und
+          <span class="math-token">y ≽ x</span> gilt nicht.
+        </p>
+        <p>
+          Gültiges Beispiel: <span class="math-token">x ≽ y</span> gilt, aber die
+          Gegenrichtung gilt nicht. Kontrast: Wenn beide Richtungen gelten, liegt
+          keine strikte Präferenz vor.
+        </p>
+      </dd>
+
+      <dt>Indifferenz</dt>
+      <dd>
+        <p>
+          Notation: <span class="math-token">x ∼ y</span>. Standarddefinition:
+          <span class="math-token">x ≽ y</span> und
+          <span class="math-token">y ≽ x</span> gelten beide.
+        </p>
+        <p>
+          Gültiges Beispiel: Beide schwachen Richtungen sind vorhanden.
+          Ungültiger Schluss: “Nicht genug Information” ist nicht dasselbe wie
+          Indifferenz.
+        </p>
+      </dd>
+    </dl>
+  </section>
+
+  <section id="pref-relationships" aria-labelledby="pref-relationships-title">
+    <h3 id="pref-relationships-title">
+      4. Zusammenhang von schwacher Präferenz, strikter Präferenz und
+      Indifferenz
+    </h3>
+    <p>
+      Der zentrale Punkt: <span class="math-token">≻</span> und
+      <span class="math-token">∼</span> werden aus der schwachen Relation
+      <span class="math-token">≽</span> abgeleitet. Du prüfst deshalb zuerst, welche
+      schwachen Richtungen gelten.
+    </p>
+    <ol class="lesson-checklist">
+      <li>
+        Nur <span class="math-token">x ≽ y</span> bekannt:
+        <span class="lesson-result"
+          >schwach bevorzugt, aber nicht automatisch strikt.</span
+        >
+      </li>
+      <li>
+        <span class="math-token">x ≽ y</span> gilt und
+        <span class="math-token">y ≽ x</span> gilt nicht:
+        <span class="lesson-result">strikte Präferenz x ≻ y.</span>
+      </li>
+      <li>
+        Beide Richtungen gelten:
+        <span class="lesson-result">Indifferenz x ∼ y.</span>
+      </li>
+    </ol>
+    <Callout title="Merksatz" variant="note">
+      <p>
+        Strikte Präferenz schließt die Gegenrichtung aus. Indifferenz verlangt
+        die Gegenrichtung. Deshalb können strikte Präferenz und Indifferenz für
+        dasselbe geordnete Paar nicht gleichzeitig gelten.
+      </p>
+    </Callout>
+  </section>
+
+  <section id="pref-axioms" aria-labelledby="pref-axioms-title">
+    <h3 id="pref-axioms-title">5. Vollständigkeit und Transitivität</h3>
+    <div class="lesson-example-grid">
+      <article class="lesson-example">
+        <h4>Vollständigkeit</h4>
+        <p>
+          Formal: Für jedes Paar <span class="math-token">x</span> und
+          <span class="math-token">y</span> gilt
+          <span class="math-token">x ≽ y</span> oder
+          <span class="math-token">y ≽ x</span>.
+        </p>
+        <p>
+          Diagnostik: Prüfe jedes Paar. Sobald für ein Paar keine Richtung
+          vorhanden ist, ist die Relation nicht vollständig.
+        </p>
+        <p>
+          Gegenbeispiel: Auf <span class="math-token">&#123;x, y, z&#125;</span> fehlen
+          beide Richtungen zwischen <span class="math-token">x</span> und
+          <span class="math-token">z</span>.
+        </p>
+      </article>
+      <article class="lesson-example">
+        <h4>Transitivität</h4>
+        <p>
+          Formal: Wenn <span class="math-token">x ≽ y</span> und
+          <span class="math-token">y ≽ z</span>, dann muss
+          <span class="math-token">x ≽ z</span> gelten.
+        </p>
+        <p>
+          Diagnostik: Suche alle Ketten aus zwei schwachen Vergleichen und prüfe
+          jeweils, ob der direkte Schluss ebenfalls gilt.
+        </p>
+        <p>
+          Gegenbeispiel: <span class="math-token">x ≽ y</span> und
+          <span class="math-token">y ≽ z</span> gelten, aber
+          <span class="math-token">x ≽ z</span> fehlt.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section id="pref-rationality" aria-labelledby="pref-rationality-title">
+    <h3 id="pref-rationality-title">6. Rationalität als technischer Begriff</h3>
+    <p>
+      In diesem Modell heißt eine Präferenzrelation rational, wenn sie
+      vollständig und transitiv ist. Das ist ein technischer Modellbegriff. Er
+      bedeutet nicht, dass eine Person moralisch gut, besonders intelligent,
+      psychologisch realistisch oder egoistisch handelt.
+    </p>
+    <p>
+      Vorgehen: Prüfe zuerst Vollständigkeit, dann Transitivität. Erst wenn
+      beide Eigenschaften halten, verwendest du die technische Bezeichnung
+      “rational”.
+    </p>
+  </section>
+
+  <section
+    id="pref-worked-examples"
+    aria-labelledby="pref-worked-examples-title"
+  >
+    <h3 id="pref-worked-examples-title">7. Durchgerechnete Beispiele</h3>
+    <article class="lesson-worked-example">
+      <h4>Beispiel A: Strikt oder indifferent?</h4>
+      <p>
+        Gegeben: <span class="math-token">x ≽ y</span> gilt und
+        <span class="math-token">y ≽ x</span> gilt nicht.
+      </p>
+      <ol>
+        <li>
+          Starte mit der schwachen Richtung: <span class="math-token"
+            >x ≽ y</span
+          >.
+        </li>
+        <li>Prüfe die Gegenrichtung: Sie gilt nicht.</li>
+        <li>
+          Ergebnis: Nach der Definition gilt
+          <span class="math-token">x ≻ y</span>. Indifferenz gilt nicht, weil
+          dafür beide Richtungen nötig wären.
+        </li>
+      </ol>
+    </article>
+
+    <article class="lesson-worked-example">
+      <h4>Beispiel B: Vollständigkeit testen</h4>
+      <p>
+        Menge: <span class="math-token">&#123;x, y, z&#125;</span>. Zusätzlich
+        zu allen reflexiven Vergleichen gelten
+        <span class="math-token">x ≽ y</span> und
+        <span class="math-token">y ≽ z</span>.
+      </p>
+      <ol>
+        <li>
+          Prüfe das Paar <span class="math-token">x, y</span>: eine Richtung ist
+          vorhanden.
+        </li>
+        <li>
+          Prüfe das Paar <span class="math-token">y, z</span>: eine Richtung ist
+          vorhanden.
+        </li>
+        <li>
+          Prüfe das Paar <span class="math-token">x, z</span>: keine Richtung
+          ist gegeben.
+        </li>
+        <li>Ergebnis: Die Relation ist nicht vollständig.</li>
+      </ol>
+    </article>
+
+    <article class="lesson-worked-example">
+      <h4>Beispiel C: Transitivität und Rationalität</h4>
+      <p>
+        Menge: <span class="math-token">&#123;x, y, z&#125;</span>. Alle Paare
+        sind vergleichbar. Es gelten
+        <span class="math-token">x ≽ y</span>,
+        <span class="math-token">y ≽ z</span> und
+        <span class="math-token">x ≽ z</span>.
+      </p>
+      <ol>
+        <li>
+          Vollständigkeit: Für jedes Paar gibt es mindestens eine Richtung.
+        </li>
+        <li>
+          Transitivität: Die Kette
+          <span class="math-token">x ≽ y</span> und
+          <span class="math-token">y ≽ z</span> hat den geforderten Schluss
+          <span class="math-token">x ≽ z</span>.
+        </li>
+        <li>
+          Wenn alle weiteren Ketten ebenfalls bestehen, ist die Relation
+          vollständig und transitiv.
+        </li>
+        <li>Ergebnis: Dann ist sie im technischen Sinn rational.</li>
+      </ol>
+    </article>
+
+    <article class="lesson-worked-example">
+      <h4>Beispiel D: Widerspruch ableiten</h4>
+      <p>
+        Angenommen, für dasselbe Paar gelten zugleich
+        <span class="math-token">x ≻ y</span> und
+        <span class="math-token">x ∼ y</span>.
+      </p>
+      <ol>
+        <li>
+          Aus <span class="math-token">x ≻ y</span> folgt:
+          <span class="math-token">x ≽ y</span> und nicht
+          <span class="math-token">y ≽ x</span>.
+        </li>
+        <li>
+          Aus <span class="math-token">x ∼ y</span> folgt:
+          <span class="math-token">x ≽ y</span> und
+          <span class="math-token">y ≽ x</span>.
+        </li>
+        <li>
+          Damit müsste <span class="math-token">y ≽ x</span> zugleich gelten und nicht
+          gelten.
+        </li>
+        <li>Ergebnis: Beide Aussagen können nicht gleichzeitig wahr sein.</li>
+      </ol>
+    </article>
+  </section>
+
+  <section
+    id="pref-guided-practice"
+    aria-labelledby="pref-guided-practice-title"
+  >
+    <h3 id="pref-guided-practice-title">8. Geführte Übung mit Hinweisen</h3>
+    <article class="lesson-guided-card">
+      <h4>Aufgabe 1: Lies die Richtung</h4>
+      <p>
+        Gegeben ist <span class="math-token">z ≽ x</span>. Was darfst du über
+        <span class="math-token">x ≽ z</span> schließen?
+      </p>
+      <details>
+        <summary>Hinweis 1</summary>
+        <p>Die Richtung der Relation ist Teil der Aussage.</p>
+      </details>
+      <details>
+        <summary>Hinweis 2</summary>
+        <p>
+          Eine Aussage über <span class="math-token">z</span> nach <span
+            class="math-token">x</span
+          > ist keine Aussage über die Gegenrichtung.
+        </p>
+      </details>
+      <p class="lesson-feedback">
+        Erklärung: Aus <span class="math-token">z ≽ x</span> allein folgt nicht, ob
+        <span class="math-token">x ≽ z</span> gilt. Wenn du die Gegenrichtung ergänzt,
+        verwechselst du einen gerichteten Vergleich mit einem ungeordneten Paar.
+      </p>
+    </article>
+
+    <article class="lesson-guided-card">
+      <h4>Aufgabe 2: Prüfe eine Kette</h4>
+      <p>
+        Gegeben sind <span class="math-token">x ≽ y</span> und
+        <span class="math-token">y ≽ z</span>. Welche zusätzliche Aussage wird
+        für diese Kette durch Transitivität verlangt?
+      </p>
+      <details>
+        <summary>Hinweis 1</summary>
+        <p>
+          Transitivität verbindet das erste und das letzte Element der Kette.
+        </p>
+      </details>
+      <details>
+        <summary>Hinweis 2</summary>
+        <p>
+          Die geforderte Richtung läuft von <span class="math-token">x</span> nach
+          <span class="math-token">z</span>.
+        </p>
+      </details>
+      <p class="lesson-feedback">
+        Erklärung: Die verlangte Aussage ist
+        <span class="math-token">x ≽ z</span>. Fehlt sie, ist diese Kette ein
+        konkreter Transitivitätsfehler.
+      </p>
+    </article>
+  </section>
+
+  <section
+    id="pref-common-mistakes"
+    aria-labelledby="pref-common-mistakes-title"
+  >
+    <h3 id="pref-common-mistakes-title">9. Häufige Denkfehler</h3>
+    <ul class="lesson-mistake-list">
+      <li>
+        Die Richtung umdrehen: aus <span class="math-token">x ≽ y</span> wird nicht
+        automatisch <span class="math-token">y ≽ x</span>.
+      </li>
+      <li>Schwache Präferenz als strikte Präferenz lesen.</li>
+      <li>Vollständigkeit aus Transitivität ableiten.</li>
+      <li>Bei Vollständigkeit nur ein Paar prüfen.</li>
+      <li>
+        Bei Transitivität nur eine Kette prüfen, obwohl mehrere Ketten
+        existieren.
+      </li>
+      <li>Indifferenz mit “nicht vergleichbar” verwechseln.</li>
+      <li>Rationalität als psychologische Wirklichkeitsbehauptung deuten.</li>
+    </ul>
+  </section>
+
+  <section
+    id="pref-independent-practice"
+    aria-labelledby="pref-independent-practice-title"
+  >
+    <h3 id="pref-independent-practice-title">10. Selbstständig üben</h3>
+    <p>
+      Die folgenden zwölf Aufgaben sind die unabhängige Übungsphase. Einige
+      Aufgaben prüfen strukturierte Antworten sofort. Andere sind
+      Selbstkontrolle: Du formulierst erst selbst und vergleichst danach mit den
+      Modellhinweisen.
+    </p>
+    <p>
+      Arbeite in der angezeigten Reihenfolge. Sie beginnt mit Symbollesen und
+      führt zu Relationstabellen, Rationalitätsprüfung und dem
+      Widerspruchsargument.
+    </p>
+  </section>
+
+  <section id="pref-recall" aria-labelledby="pref-recall-title">
+    <h3 id="pref-recall-title">11. Active Recall</h3>
+    <ol class="lesson-recall-list">
+      <li>
+        Formuliere die Definition von <span class="math-token">x ≻ y</span> ohne nachzusehen.
+      </li>
+      <li>
+        Formuliere die Definition von <span class="math-token">x ∼ y</span> ohne nachzusehen.
+      </li>
+      <li>
+        Nenne den Unterschied zwischen “indifferent” und “nicht vergleichbar”.
+      </li>
+      <li>Beschreibe, wie du Vollständigkeit auf drei Alternativen prüfst.</li>
+      <li>Beschreibe, wie du eine Transitivitätsverletzung nachweist.</li>
+      <li>
+        Erkläre in einem Satz, was “rational” hier bedeutet und was nicht.
+      </li>
+    </ol>
+  </section>
+
+  <section id="pref-exam-style" aria-labelledby="pref-exam-style-title">
+    <h3 id="pref-exam-style-title">12. Klausurtypische Aufgaben</h3>
+    <article class="lesson-guided-card">
+      <h4>Exam-style problem 1: Relation klassifizieren</h4>
+      <p>
+        Auf <span class="math-token">&#123;x, y, z&#125;</span> gelten alle reflexiven
+        Vergleiche sowie <span class="math-token">x ≽ y</span>,
+        <span class="math-token">y ≽ z</span> und
+        <span class="math-token">x ≽ z</span>. Prüfe Vollständigkeit,
+        Transitivität und Rationalität.
+      </p>
+      <ol>
+        <li>
+          Vollständigkeit: Prüfe jedes nicht-reflexive Paar. Für
+          <span class="math-token">y</span> und <span class="math-token">x</span
+          >
+          reicht <span class="math-token">x ≽ y</span>; für
+          <span class="math-token">z</span> und <span class="math-token">y</span
+          >
+          reicht <span class="math-token">y ≽ z</span>; für
+          <span class="math-token">x</span> und <span class="math-token">z</span
+          >
+          reicht <span class="math-token">x ≽ z</span>.
+        </li>
+        <li>
+          Transitivität: Die sichtbare Kette
+          <span class="math-token">x ≽ y</span> und
+          <span class="math-token">y ≽ z</span> hat den Schluss
+          <span class="math-token">x ≽ z</span>.
+        </li>
+        <li>
+          Ergebnis: Innerhalb dieser vollständig angegebenen Struktur ist die
+          Relation vollständig und transitiv, also rational.
+        </li>
+      </ol>
+    </article>
+
+    <article class="lesson-guided-card">
+      <h4>Exam-style problem 2: Fehlerdiagnose</h4>
+      <p>
+        Eine Lösung sagt: “Da <span class="math-token">x ≽ y</span> gilt, ist
+        <span class="math-token">x ≻ y</span> bewiesen.” Was fehlt?
+      </p>
+      <p class="lesson-feedback">
+        Erklärung: Für <span class="math-token">x ≻ y</span> muss zusätzlich gelten,
+        dass <span class="math-token">y ≽ x</span> nicht gilt. Die Lösung behandelt
+        schwache Präferenz fälschlich als strikte Präferenz.
+      </p>
+    </article>
+  </section>
+
+  <section id="pref-mastery-check" aria-labelledby="pref-mastery-check-title">
+    <h3 id="pref-mastery-check-title">13. Themencheck vor dem Weitergehen</h3>
+    <p>
+      Nutze diesen Check nach den Aufgaben. Er ist kein automatischer
+      Mastery-Score, sondern eine Entscheidungshilfe für Wiederholung und
+      weitere Übung.
+    </p>
+    <ul class="lesson-checklist">
+      <li>
+        Ich kann <span class="math-token">≽</span>, <span class="math-token"
+          >≻</span
+        > und <span class="math-token">∼</span> definieren.
+      </li>
+      <li>Ich lese die Richtung einer Relation ohne sie umzudrehen.</li>
+      <li>Ich prüfe Vollständigkeit paarweise.</li>
+      <li>Ich prüfe Transitivität über Ketten.</li>
+      <li>
+        Ich kann erklären, warum strikte Präferenz und Indifferenz kollidieren.
+      </li>
+      <li>
+        Ich verwende “rational” nur als technischen Begriff für vollständig und
+        transitiv.
+      </li>
+    </ul>
+    <div class="lesson-next-actions" aria-label="Nächste Schritte">
+      <Button href="#practice-overview-title" variant="secondary">
+        Schwache Bereiche erneut üben
+      </Button>
+      <Button href="/lernen/mikrooekonomik-1/" variant="secondary">
+        Zur Kursübersicht
+      </Button>
+      <Button href="/ueben/mikrooekonomik-1/substitutionseffekt/">
+        Nächstes Thema öffnen
+      </Button>
+    </div>
+  </section>
+
+  <section aria-labelledby="pref-source-basis-title">
+    <h3 id="pref-source-basis-title">Quellenbasis dieser Lektion</h3>
+    <p>
+      Die Definitionen und Axiome folgen den vorhandenen
+      Präferenzrelationen-Audit- und Outline-Records im Repository. Die
+      Beispiele und Aufgabenformulierungen hier sind originale didaktische
+      Ausarbeitungen innerhalb dieses geprüften Umfangs.
+    </p>
+  </section>
+</section>
