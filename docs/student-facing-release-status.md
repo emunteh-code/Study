@@ -50,7 +50,7 @@ Only these statuses are used below: `not-started`, `in-progress`, `blocked`,
 | `aa11405` | Mikro I course discovery journey                        | release-ready |
 | `cafa856` | Mikro I source-traceable topic orientation              | release-ready |
 | `a8f2aba` | Reusable dependency-based learning architecture         | release-ready |
-| `694b005` | Focused completeness learning session                   | release-ready |
+| `ec69f47` | Focused completeness learning session                   | release-ready |
 
 ## Release-Critical Blockers
 
@@ -190,7 +190,7 @@ Current milestone:
 - Responsive status: in-progress
 - Test status: release-ready
 - Blockers: human academic review and publication approval remain pending.
-- Completed commit: `694b005`
+- Completed commit: `ec69f47`
 - Exact next command:
 
 ```sh
