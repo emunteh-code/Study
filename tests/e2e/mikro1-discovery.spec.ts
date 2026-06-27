@@ -155,6 +155,84 @@ test("focused completeness session follows the required learning order", async (
   );
 });
 
+test("focused transitivity session teaches chain checks before practice handoff", async ({
+  page,
+}) => {
+  await page.goto(`${base}/lernen/mikrooekonomik-1/transitivitaet/`);
+
+  const kinds = await page
+    .locator("[data-lesson-block-kind]")
+    .evaluateAll((nodes) =>
+      nodes.map((node) => node.getAttribute("data-lesson-block-kind")),
+    );
+  const indexOf = (kind: string) => kinds.indexOf(kind);
+
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Transitivität",
+  );
+  await expect(page.getByText("Complete learning session")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Formale Definition" }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole("heading", { name: "Formale Definition" })
+      .locator("xpath=ancestor::section[1]")
+      .getByText("wenn fuer alle x, y und z", { exact: false }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Beispiel 7: Vollstaendig, aber nicht transitiv",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Denkfehler: Vollstaendig heisst transitiv",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Klausurdenken: Gegenbeispiel konstruieren",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Mastery Checklist" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Zur passenden Übung" }),
+  ).toHaveAttribute(
+    "href",
+    "/Study/ueben/mikrooekonomik-1/praeferenzrelationen/",
+  );
+
+  expect(indexOf("intuition")).toBeLessThan(indexOf("definition"));
+  expect(indexOf("definition")).toBeLessThan(indexOf("worked-example"));
+  expect(indexOf("worked-example")).toBeLessThan(indexOf("guided-practice"));
+  expect(indexOf("guided-practice")).toBeLessThan(indexOf("practice-handoff"));
+  expect(indexOf("exam-thinking")).toBeGreaterThan(indexOf("misconception"));
+  expect(indexOf("active-recall")).toBeGreaterThan(indexOf("exam-thinking"));
+  expect(indexOf("cheat-sheet")).toBeGreaterThan(indexOf("interleaving"));
+});
+
+test("focused transitivity session links backward to completeness and forward to rationality", async ({
+  page,
+}) => {
+  await page.goto(`${base}/lernen/mikrooekonomik-1/transitivitaet/`);
+  const navigation = page.getByRole("navigation", {
+    name: "Sitzungsnavigation",
+  });
+
+  await expect(
+    navigation.getByRole("link", { name: "Vorherige Sitzung" }),
+  ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/vollstaendigkeit/");
+  await expect(
+    navigation.getByRole("link", { name: "Nächste Sitzung" }),
+  ).toHaveAttribute(
+    "href",
+    "/Study/lernen/mikrooekonomik-1/rationale-praeferenzrelationen/",
+  );
+});
+
 test("generic Mikro I session page is keyboard reachable", async ({ page }) => {
   await page.goto(
     `${base}/lernen/mikrooekonomik-1/praeferenzrelationen-grundvergleiche/`,
@@ -185,13 +263,22 @@ test("Mikro I practice routes expose an accessible shared learning path", async 
   }
 });
 
-test("preference practice route links back to the focused completeness session", async ({
+test("preference practice route links back to focused learning sessions", async ({
   page,
 }) => {
   await page.goto(`${base}/ueben/mikrooekonomik-1/praeferenzrelationen/`);
   await expect(
     page.getByRole("link", { name: "Vollständigkeit lernen" }),
   ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/vollstaendigkeit/");
+  await expect(
+    page.getByRole("link", { name: "Transitivität lernen" }),
+  ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/transitivitaet/");
+  await expect(
+    page.getByRole("link", { name: "Vorwissen wiederholen" }),
+  ).toHaveAttribute(
+    "href",
+    "/Study/lernen/mikrooekonomik-1/strikte-praeferenz-und-indifferenz/",
+  );
 });
 
 test("topic orientations render source-backed objectives before exercises", async ({
@@ -264,6 +351,14 @@ test("focused completeness session remains visible without JavaScript", async ({
   await page.goto(`${base}/lernen/mikrooekonomik-1/vollstaendigkeit/`);
   await expect(
     page.getByRole("heading", { level: 1, name: "Vollständigkeit" }),
+  ).toBeVisible();
+  await expect(page.getByText("Formale Definition")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Zur passenden Übung" }),
+  ).toBeVisible();
+  await page.goto(`${base}/lernen/mikrooekonomik-1/transitivitaet/`);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Transitivität" }),
   ).toBeVisible();
   await expect(page.getByText("Formale Definition")).toBeVisible();
   await expect(
@@ -347,12 +442,14 @@ for (const width of [320, 768, 1440]) {
   test(`generic Mikro I session has no horizontal overflow at ${width} CSS pixels`, async ({
     page,
   }, testInfo) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto(`${base}/lernen/mikrooekonomik-1/vollstaendigkeit/`);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    expect(
-      await page.evaluate(() => document.documentElement.scrollWidth),
-    ).toBeLessThanOrEqual(width);
+    for (const route of ["vollstaendigkeit", "transitivitaet"]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`${base}/lernen/mikrooekonomik-1/${route}/`);
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+      ).toBeLessThanOrEqual(width);
+    }
     testInfo.annotations.push({
       type: "viewport",
       description: `${width} CSS pixels`,

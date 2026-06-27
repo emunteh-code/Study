@@ -197,19 +197,21 @@ describe("learning module architecture", () => {
   });
 
   it("requires complete-session pages to contain the full pedagogical block order", () => {
-    const completenessSession = sessionById("pref-completeness");
-    const kinds = completenessSession.lessonBlocks!.map(({ kind }) => kind);
+    for (const sessionId of ["pref-completeness", "pref-transitivity"]) {
+      const session = sessionById(sessionId);
+      const kinds = session.lessonBlocks!.map(({ kind }) => kind);
 
-    expect(completenessSession.availability.lesson).toBe("complete-session");
-    expect(validateStudyModule(mikrooekonomik1Module)).toEqual([]);
-    let searchStart = 0;
-    for (const kind of COMPLETE_SESSION_BLOCK_ORDER) {
-      const index = kinds.findIndex(
-        (candidate, candidateIndex) =>
-          candidateIndex >= searchStart && candidate === kind,
-      );
-      expect(index).toBeGreaterThanOrEqual(searchStart);
-      searchStart = index + 1;
+      expect(session.availability.lesson).toBe("complete-session");
+      expect(validateStudyModule(mikrooekonomik1Module)).toEqual([]);
+      let searchStart = 0;
+      for (const kind of COMPLETE_SESSION_BLOCK_ORDER) {
+        const index = kinds.findIndex(
+          (candidate, candidateIndex) =>
+            candidateIndex >= searchStart && candidate === kind,
+        );
+        expect(index).toBeGreaterThanOrEqual(searchStart);
+        searchStart = index + 1;
+      }
     }
   });
 
@@ -245,6 +247,45 @@ describe("learning module architecture", () => {
     ).not.toContain("graph");
   });
 
+  it("protects the transitivity complete session scope and practice mapping", () => {
+    const transitivitySession = sessionById("pref-transitivity");
+    const blocks = transitivitySession.lessonBlocks!;
+    const blockIds = blocks.map(({ id }) => id);
+    const exampleLevels = workedExampleBlocks(blocks).map(({ level }) => level);
+    const publicProjection = JSON.stringify(transitivitySession);
+
+    expect(new Set(blockIds).size).toBe(blockIds.length);
+    expect(
+      exampleLevels.filter((level) => level === "foundational"),
+    ).toHaveLength(4);
+    expect(
+      exampleLevels.filter((level) => level === "intermediate"),
+    ).toHaveLength(4);
+    expect(
+      exampleLevels.filter((level) => level === "exam-style"),
+    ).toHaveLength(3);
+    expect(publicProjection).toContain("pref-practice-07");
+    expect(publicProjection).toContain("pref-practice-08");
+    expect(publicProjection).toContain("pref-practice-09");
+    expect(publicProjection).not.toContain("acceptedAnswer");
+    expect(publicProjection).not.toContain("correctOption");
+    expect(publicProjection).not.toContain("evaluator");
+    expect(transitivitySession.practiceMappings[0]!.exerciseIds).toEqual([
+      "pref-practice-07",
+      "pref-practice-08",
+      "pref-practice-09",
+    ]);
+    expect(transitivitySession.practiceMappings[0]!.exerciseIds).not.toContain(
+      "pref-practice-10",
+    );
+    expect(
+      transitivitySession.instructionalRequirements.map(({ kind }) => kind),
+    ).not.toContain("formula");
+    expect(
+      transitivitySession.instructionalRequirements.map(({ kind }) => kind),
+    ).not.toContain("graph");
+  });
+
   it("validates practice mappings against sessions and objectives", () => {
     const preferenceSession = mikrooekonomik1Module.sessions.find(
       ({ id }) => id === "pref-derived-relations",
@@ -258,6 +299,16 @@ describe("learning module architecture", () => {
       practiceRoute: "/ueben/mikrooekonomik-1/praeferenzrelationen/",
       objectiveIds: ["pref-lo-completeness-01", "pref-lo-completeness-02"],
       exerciseIds: ["pref-practice-05", "pref-practice-06"],
+    });
+    expect(sessionById("pref-transitivity").practiceMappings[0]).toMatchObject({
+      practiceRoute: "/ueben/mikrooekonomik-1/praeferenzrelationen/",
+      objectiveIds: [
+        "pref-lo-transitivity-01",
+        "pref-lo-transitivity-02",
+        "pref-lo-transitivity-03",
+        "pref-lo-transitivity-04",
+      ],
+      exerciseIds: ["pref-practice-07", "pref-practice-08", "pref-practice-09"],
     });
     expect(validateStudyModule(mikrooekonomik1Module)).toEqual([]);
   });

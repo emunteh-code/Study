@@ -5,6 +5,7 @@ import type {
   StudyModule,
 } from "../../../learning/model";
 import { preferenceCompletenessLessonBlocks } from "./preference-completeness-lesson";
+import { preferenceTransitivityLessonBlocks } from "./preference-transitivity-lesson";
 
 const preferenceSources = [
   {
@@ -29,6 +30,12 @@ const preferenceSources = [
     id: "pref-completeness-review",
     title: "Completeness session human review checklist",
     path: "docs/mikro1-preferences-completeness-session-review.md",
+    status: "readiness-record",
+  },
+  {
+    id: "pref-transitivity-review",
+    title: "Transitivity session human review checklist",
+    path: "docs/mikro1-preferences-transitivity-session-review.md",
     status: "readiness-record",
   },
 ] as const satisfies readonly SourceReference[];
@@ -489,18 +496,45 @@ const sessions = [
     unitId: "preferences",
     sequence: 4,
     whyThisSessionExists:
-      "Diese Sitzung hält die Kettenprüfung getrennt von Vollständigkeit; sie ist noch keine vollständige Quelle-zu-Lernsequenz.",
+      "Diese Sitzung macht die Kettenprüfung vollständig lern- und übbar, ohne sie mit Vollständigkeit oder Rationalität zu vermischen.",
     concepts: [
       {
         id: "transitivity",
         label: "Transitivität",
         description: "Wenn x ≽ y und y ≽ z gelten, muss auch x ≽ z gelten.",
       },
+      {
+        id: "transitivity-chain",
+        label: "Schwache-Präferenz-Kette",
+        description:
+          "Zwei gerichtete Vergleiche mit gemeinsamem Mittelglied, etwa x ≽ y und y ≽ z.",
+      },
+      {
+        id: "transitivity-violation",
+        label: "Verletzendes Tripel",
+        description:
+          "Ein geordnetes Tripel, bei dem beide Kettenprämissen gelten, aber der geforderte Endpunkt fehlt.",
+      },
     ],
     learningObjectives: [
       {
         id: "pref-lo-transitivity-01",
         text: "check whether stated weak-preference chains include the required direct consequence.",
+        sourceReferenceIds: ["pref-claims", "pref-outline"],
+      },
+      {
+        id: "pref-lo-transitivity-02",
+        text: "identify a concrete ordered triple that violates transitivity when a required endpoint is missing.",
+        sourceReferenceIds: ["pref-claims", "pref-outline"],
+      },
+      {
+        id: "pref-lo-transitivity-03",
+        text: "distinguish transitivity from completeness in finite relation records.",
+        sourceReferenceIds: ["pref-claims", "pref-outline"],
+      },
+      {
+        id: "pref-lo-transitivity-04",
+        text: "justify a transitivity classification using the formal chain notation.",
         sourceReferenceIds: ["pref-claims", "pref-outline"],
       },
     ],
@@ -521,7 +555,41 @@ const sessions = [
         title: "Transitivität definieren",
         description:
           "State the weak-preference chain condition and distinguish it from completeness.",
-        conceptIds: ["transitivity"],
+        conceptIds: ["transitivity", "transitivity-chain"],
+      },
+      {
+        kind: "mental-model",
+        id: "pref-req-transitivity-chain-model",
+        title: "Kettenmodell prüfen",
+        description:
+          "Use beginning, middle, and endpoint labels to avoid reversing the required comparison.",
+        conceptIds: ["transitivity-chain", "transitivity-violation"],
+      },
+      {
+        kind: "worked-example",
+        id: "pref-req-transitivity-examples",
+        title: "Transitivität in Relationstabellen",
+        description:
+          "Work through closed chains, missing endpoints, cycles, and independence from completeness.",
+      },
+      {
+        kind: "proof",
+        id: "pref-req-transitivity-counterexample",
+        title: "Gegenbeispiel begründen",
+        description:
+          "Show why one ordered triple with true premises and a missing conclusion refutes transitivity.",
+      },
+      {
+        kind: "exam-strategy",
+        id: "pref-req-transitivity-exam",
+        title: "Transitivität in Klausuraufgaben",
+        description:
+          "Find applicable chains, name required endpoints, and keep the rationality label out until both axioms are checked.",
+        taskFamilyIds: [
+          "pref-exam-transitivity-check",
+          "pref-exam-transitivity-diagnosis",
+          "pref-exam-transitivity-counterexample",
+        ],
       },
     ],
     examTaskFamilies: [
@@ -531,11 +599,38 @@ const sessions = [
         description:
           "Find every applicable chain and verify the required direct weak-preference consequence.",
       },
+      {
+        id: "pref-exam-transitivity-diagnosis",
+        title: "Verletzendes Tripel diagnostizieren",
+        description:
+          "State the ordered triple and missing endpoint that refute transitivity.",
+      },
+      {
+        id: "pref-exam-transitivity-counterexample",
+        title: "Gegenbeispiel konstruieren",
+        description:
+          "Build a small relation that separates completeness from transitivity.",
+      },
     ],
     commonMistakes: [
       {
         id: "pref-mistake-single-chain",
         description: "Checking only one chain when testing transitivity.",
+      },
+      {
+        id: "pref-mistake-complete-implies-transitive",
+        description:
+          "Assuming a complete relation is automatically transitive.",
+      },
+      {
+        id: "pref-mistake-missing-comparison-transitivity",
+        description:
+          "Treating every missing comparison as a transitivity violation without finding a chain.",
+      },
+      {
+        id: "pref-mistake-chain-direction",
+        description:
+          "Reversing the required endpoint of a weak-preference chain.",
       },
     ],
     masteryCriteria: [
@@ -543,7 +638,14 @@ const sessions = [
         id: "pref-mastery-transitivity",
         description:
           "Learner can locate a weak-preference chain and its required direct comparison.",
-        evidence: "Future complete session or deterministic practice attempt.",
+        evidence: "Worked solution or deterministic practice attempt.",
+      },
+      {
+        id: "pref-mastery-transitivity-violation",
+        description:
+          "Learner can identify a violating ordered triple without turning the task into a completeness check.",
+        evidence:
+          "Practice attempt names true premises and the missing endpoint.",
       },
     ],
     sourceRecords: preferenceSources,
@@ -551,7 +653,12 @@ const sessions = [
       preferenceMapping(
         "pref-practice-map-transitivity",
         ["pref-transitivity"],
-        ["pref-lo-transitivity-01"],
+        [
+          "pref-lo-transitivity-01",
+          "pref-lo-transitivity-02",
+          "pref-lo-transitivity-03",
+          "pref-lo-transitivity-04",
+        ],
         {
           exerciseIds: [
             "pref-practice-07",
@@ -559,20 +666,22 @@ const sessions = [
             "pref-practice-09",
           ],
           limitations: [
-            "The practice route contains transitivity items, but this learning session is not yet a complete session.",
+            "pref-practice-09 is included only as an axiom-separation bridge; the full rationality classification belongs to the next session.",
+            "pref-practice-10 remains mapped to the later rationality session, not this focused transitivity session.",
           ],
         },
       ),
     ],
+    lessonBlocks: preferenceTransitivityLessonBlocks,
     availability: {
       architecture: "available",
-      lesson: "practice-available",
+      lesson: "complete-session",
       practice: "available",
       sourceStatus: "available",
     },
     reviewState: {
       status: "in-review",
-      note: "Source-backed architecture exists; full lesson sequence remains a future bounded task.",
+      note: "Complete-session structure and automated checks are in place; final human academic approval remains pending.",
     },
   },
   {

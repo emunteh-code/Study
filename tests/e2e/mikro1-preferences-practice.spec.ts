@@ -79,7 +79,7 @@ test("preference topic links to the focused lesson before independent practice",
     "/Study/lernen/mikrooekonomik-1/strikte-praeferenz-und-indifferenz/",
   );
   await expect(
-    page.getByRole("link", { name: "Nächste Sitzung ansehen" }),
+    page.getByRole("link", { name: "Transitivität lernen" }),
   ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/transitivitaet/");
 
   const order = await page.evaluate(() => {
