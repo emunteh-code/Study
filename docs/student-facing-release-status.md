@@ -22,6 +22,7 @@ Only these statuses are used below: `not-started`, `in-progress`, `blocked`,
 | `/ueben/`                                                                   | Practice discovery                                              | in-progress    | in-progress            | in-progress    | release-ready      | in-progress   | in-progress          | in-progress       | release-ready                                                      | The two review-ready Mikro I practice routes are discoverable; broader practice catalogue remains future-scope.                                 |
 | `/lernen/mikrooekonomik-1/vollstaendigkeit/`                                | Mikroökonomik I, preference-relation completeness               | in-progress    | in-progress            | release-ready  | release-ready      | in-progress   | in-progress          | in-progress       | in-progress                                                        | Complete source-grounded session is implemented; human academic review and publication approval remain pending.                                 |
 | `/lernen/mikrooekonomik-1/transitivitaet/`                                  | Mikroökonomik I, preference-relation transitivity               | in-progress    | in-progress            | release-ready  | release-ready      | in-progress   | in-progress          | release-ready     | release-ready                                                      | Complete source-grounded session is implemented; human academic review and publication approval remain pending.                                 |
+| `/lernen/mikrooekonomik-1/rationale-praeferenzrelationen/`                  | Mikroökonomik I, rational preference relations                  | in-progress    | in-progress            | release-ready  | release-ready      | in-progress   | release-ready        | release-ready     | release-ready                                                      | Complete source-grounded synthesis session is implemented; human academic review and publication approval remain pending.                       |
 | `/lernen/mikrooekonomik-1/<other-session>/`                                 | Mikroökonomik I session architecture                            | in-progress    | in-progress            | in-progress    | release-ready      | in-progress   | in-progress          | in-progress       | in-progress                                                        | Other session pages are architecture, orientation, or practice mappings, not complete lessons unless explicitly marked.                         |
 | `/ueben/mikrooekonomik-1/praeferenzrelationen/`                             | Mikroökonomik I, preference relations                           | in-progress    | in-progress            | release-ready  | release-ready      | release-ready | release-ready        | release-ready     | release-ready                                                      | Complete instructional vertical slice is implemented; human academic review and publication approval remain pending.                            |
 | `/ueben/mikrooekonomik-1/substitutionseffekt/`                              | Mikroökonomik I, substitution elasticity and homothetic utility | in-progress    | in-progress            | in-progress    | release-ready      | in-progress   | release-ready        | release-ready     | release-ready                                                      | Source-traceable orientation and restricted practice are implemented; broader CES scope, human review, and publication approval remain pending. |
@@ -59,7 +60,7 @@ Only these statuses are used below: `not-started`, `in-progress`, `blocked`,
 1. `docs/content-audits/mikro1-preferences-rights-review.md` requires human academic traceability, originality, accessibility, editorial, asset-specific rights, and final publication review before learner-facing publication.
 2. `docs/content-audits/mikro1-preferences-outline.md` marks the preference lesson as not ready for lesson drafting or publication.
 3. `docs/mikro1-substitution-readiness.md` marks the substitution practice scope as conditionally ready pending independent model-solution and rights review.
-4. Full lesson content is not yet implemented for substitution or the remaining preference-relation sessions; completeness and transitivity now have focused complete sessions pending human review.
+4. Full lesson content is not yet implemented for substitution or the remaining preference-relation sessions; completeness, transitivity, and rationality now have focused complete sessions pending human review.
 
 ## Exact Next Highest-Priority Milestone
 
@@ -232,3 +233,41 @@ PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
   `/lernen/mikrooekonomik-1/rationale-praeferenzrelationen/`, using the same
   complete-session contract and keeping rationality technical rather than
   psychological.
+
+## 2026-06-27 Focused Rationality Session Update
+
+Current milestone:
+
+- Route: `/lernen/mikrooekonomik-1/rationale-praeferenzrelationen/`
+- Course and topic ownership: Mikroökonomik I, rational preference relations
+- Release status: in-progress
+- Academic-source status: in-progress
+- Content status: release-ready
+- Interaction status: release-ready
+- Design status: in-progress
+- Accessibility status: in-progress
+- Responsive status: release-ready
+- Test status: release-ready
+- Source records used: `pref-claims`, `pref-outline`,
+  `pref-implementation-spec`, and the new rationality review record.
+- Prerequisite sessions: Vollständigkeit and Transitivität.
+- Synthesis content added: retrieval bridge, conjunction definition,
+  four-case property matrix, classification algorithm, full-credit answer
+  template, technical-versus-everyday rationality boundary.
+- Example and guided-task counts: 11 worked examples and 5 guided tasks.
+- Practice mappings: `pref-practice-09`, `pref-practice-10`, and
+  `pref-practice-11`.
+- Bounded shared improvements: generic classification-matrix lesson block.
+- Blockers: human academic review and publication approval remain pending.
+- Completed commit: `1e40cb1 feat: add rational preference relations session`.
+- Exact next command:
+
+```sh
+cd /Users/enowmunteh/Documents/Study
+PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
+```
+
+- Exact next highest-priority milestone: validate, commit, and push the
+  rational preference relations session ledger update; after that, continue
+  with the next student-facing learning session rather than publication
+  infrastructure.
