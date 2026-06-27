@@ -1,0 +1,202 @@
+import { describe, expect, it } from "vitest";
+
+import { mikrooekonomik1Module } from "../../src/data/modules/mikrooekonomik-1/module";
+import {
+  getModuleBySlug,
+  getModuleSessionsInOrder,
+  getPublicLearningModules,
+} from "../../src/learning/registry";
+import {
+  moduleLearningRoute,
+  modulePracticeRoute,
+  sessionLearningRoute,
+} from "../../src/learning/routing";
+import {
+  getSessionsInDependencyOrder,
+  validateStudyModule,
+  validateStudyModules,
+} from "../../src/learning/validation";
+import { lawFixtureModule } from "../fixtures/learning-modules";
+
+describe("learning module architecture", () => {
+  it("allows multiple modules to coexist without assuming economics capabilities", () => {
+    const errors = validateStudyModules([
+      mikrooekonomik1Module,
+      lawFixtureModule,
+    ]);
+
+    expect(errors).toEqual([]);
+    expect(
+      lawFixtureModule.sessions[0]!.instructionalRequirements.map(
+        ({ kind }) => kind,
+      ),
+    ).toEqual(["case-analysis", "legal-reasoning"]);
+    const lawKinds: string[] =
+      lawFixtureModule.sessions[0]!.instructionalRequirements.map(
+        ({ kind }) => kind,
+      );
+    expect(lawKinds).not.toContain("formula");
+    expect(lawKinds).not.toContain("graph");
+  });
+
+  it("requires unique module IDs and slugs across registered module sets", () => {
+    expect(
+      validateStudyModules([mikrooekonomik1Module, mikrooekonomik1Module]),
+    ).toEqual(
+      expect.arrayContaining([
+        "Module IDs must be unique.",
+        "Module slugs must be unique.",
+      ]),
+    );
+  });
+
+  it("requires session slugs only within the same module", () => {
+    const duplicateSlugWithinModule = {
+      ...lawFixtureModule,
+      sessions: [
+        lawFixtureModule.sessions[0]!,
+        {
+          ...lawFixtureModule.sessions[0]!,
+          id: "second-law-session",
+        },
+      ],
+    };
+
+    expect(
+      validateStudyModules([mikrooekonomik1Module, lawFixtureModule]),
+    ).toEqual([]);
+    expect(validateStudyModule(duplicateSlugWithinModule)).toEqual(
+      expect.arrayContaining([
+        "law-fixture: session slugs must be unique within the module.",
+      ]),
+    );
+  });
+
+  it("rejects unknown cross-module dependency references unless explicitly modeled", () => {
+    const invalidDependency = {
+      ...lawFixtureModule,
+      sessions: [
+        {
+          ...lawFixtureModule.sessions[0]!,
+          prerequisiteSessionIds: ["pref-binary-comparisons"],
+        },
+      ],
+    };
+
+    expect(validateStudyModule(invalidDependency)).toEqual(
+      expect.arrayContaining([
+        "law-fixture:offer-acceptance: unknown prerequisite session pref-binary-comparisons.",
+      ]),
+    );
+  });
+
+  it("detects dependency cycles per module", () => {
+    const cyclicModule = {
+      ...lawFixtureModule,
+      sessions: [
+        {
+          ...lawFixtureModule.sessions[0]!,
+          prerequisiteSessionIds: ["second-law-session"],
+        },
+        {
+          ...lawFixtureModule.sessions[0]!,
+          id: "second-law-session",
+          slug: "second-law-session",
+          sequence: 2,
+          prerequisiteSessionIds: ["offer-acceptance"],
+        },
+      ],
+      units: [
+        {
+          ...lawFixtureModule.units[0]!,
+          sessionIds: ["offer-acceptance", "second-law-session"],
+        },
+      ],
+    };
+
+    expect(validateStudyModule(cyclicModule)).toEqual(
+      expect.arrayContaining([
+        "law-fixture: dependency graph must not contain cycles.",
+      ]),
+    );
+  });
+
+  it("returns deterministic topological display order per module", () => {
+    expect(
+      getSessionsInDependencyOrder(mikrooekonomik1Module).map(({ id }) => id),
+    ).toEqual([
+      "pref-binary-comparisons",
+      "pref-derived-relations",
+      "pref-rationality-axioms",
+      "sub-grs-foundations",
+      "sub-ces-conversions",
+      "sub-homothetic-representations",
+    ]);
+  });
+
+  it("rejects unsafe source paths", () => {
+    const invalidSourceModule = {
+      ...lawFixtureModule,
+      sourceRecords: [
+        {
+          ...lawFixtureModule.sourceRecords[0]!,
+          path: "/Users/example/private.pdf",
+        },
+      ],
+    };
+
+    expect(validateStudyModule(invalidSourceModule)).toEqual(
+      expect.arrayContaining([
+        "law-fixture: source law-fixture-source must use a repository-relative path.",
+      ]),
+    );
+  });
+
+  it("keeps availability claims honest for available lesson sessions", () => {
+    const invalidAvailability = {
+      ...lawFixtureModule,
+      sessions: [
+        {
+          ...lawFixtureModule.sessions[0]!,
+          instructionalRequirements: [],
+          availability: {
+            ...lawFixtureModule.sessions[0]!.availability,
+            lesson: "available" as const,
+          },
+        },
+      ],
+    };
+
+    expect(validateStudyModule(invalidAvailability)).toEqual(
+      expect.arrayContaining([
+        "law-fixture:offer-acceptance: available lesson sessions need instructional requirements.",
+      ]),
+    );
+  });
+
+  it("validates practice mappings against sessions and objectives", () => {
+    const preferenceSession = mikrooekonomik1Module.sessions.find(
+      ({ id }) => id === "pref-derived-relations",
+    )!;
+
+    expect(preferenceSession.practiceMappings[0]).toMatchObject({
+      practiceRoute: "/ueben/mikrooekonomik-1/praeferenzrelationen/",
+      objectiveIds: ["pref-lo-02", "pref-lo-04"],
+    });
+    expect(validateStudyModule(mikrooekonomik1Module)).toEqual([]);
+  });
+
+  it("exposes registry routes without hard-coding Mikro I into route helpers", () => {
+    const module = getModuleBySlug("mikrooekonomik-1")!;
+    const firstSession = getModuleSessionsInOrder(module)[0]!;
+
+    expect(getPublicLearningModules().map(({ slug }) => slug)).toContain(
+      "mikrooekonomik-1",
+    );
+    expect(moduleLearningRoute(module)).toBe("/lernen/mikrooekonomik-1/");
+    expect(modulePracticeRoute(module)).toBe("/ueben/mikrooekonomik-1/");
+    expect(sessionLearningRoute(module, firstSession)).toBe(
+      "/lernen/mikrooekonomik-1/praeferenzrelationen-grundvergleiche/",
+    );
+  });
+});

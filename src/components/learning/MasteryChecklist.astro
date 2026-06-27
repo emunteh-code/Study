@@ -1,0 +1,22 @@
+---
+import type { MasteryCriterion } from "../../learning/model";
+
+interface Props {
+  criteria: readonly MasteryCriterion[];
+}
+
+const { criteria } = Astro.props;
+---
+
+{
+  criteria.length > 0 && (
+    <ul>
+      {criteria.map((criterion) => (
+        <li>
+          <strong>{criterion.description}</strong>
+          <p class="card__meta">Nachweis: {criterion.evidence}</p>
+        </li>
+      ))}
+    </ul>
+  )
+}

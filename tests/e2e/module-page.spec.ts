@@ -16,10 +16,9 @@ test("learning index exposes the Mikro I course journey honestly", async ({
     page.getByRole("link", { name: "Mikroökonomik I öffnen" }),
   ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/");
   await expect(
-    page.getByText(
-      "Originale Übungsinhalte mit nachvollziehbarer Quellenbasis.",
-    ),
+    page.getByText("wiederverwendbaren Lernarchitektur"),
   ).toBeVisible();
+  await expect(page.getByText("Volkswirtschaftslehre")).toBeVisible();
   await expect(page.locator("a[href*='pilot-modul']")).toHaveCount(0);
   await expect(
     page

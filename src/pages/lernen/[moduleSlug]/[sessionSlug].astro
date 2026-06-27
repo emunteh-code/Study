@@ -1,0 +1,41 @@
+---
+import SessionArchitecture from "../../../components/learning/SessionArchitecture.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import {
+  getModuleSessionsInOrder,
+  getRegisteredModules,
+  getRequiredModuleBySlug,
+  getRequiredSessionBySlug,
+} from "../../../learning/registry";
+import { sessionLearningRoute } from "../../../learning/routing";
+
+export function getStaticPaths() {
+  return getRegisteredModules().flatMap((module) =>
+    getModuleSessionsInOrder(module).map((session) => ({
+      params: {
+        moduleSlug: module.slug,
+        sessionSlug: session.slug,
+      },
+    })),
+  );
+}
+
+const { moduleSlug, sessionSlug } = Astro.params;
+const module = getRequiredModuleBySlug(moduleSlug ?? "");
+const session = getRequiredSessionBySlug(module, sessionSlug ?? "");
+---
+
+<BaseLayout
+  title={`${session.title} | ${module.title}`}
+  description={session.whyThisSessionExists}
+  canonicalPath={sessionLearningRoute(module, session)}
+  robots="noindex, follow"
+  breadcrumbs={[
+    { label: "Startseite", href: "/" },
+    { label: "Lernen", href: "/lernen/" },
+    { label: module.title, href: `/lernen/${module.slug}/` },
+    { label: session.title },
+  ]}
+>
+  <SessionArchitecture module={module} session={session} />
+</BaseLayout>

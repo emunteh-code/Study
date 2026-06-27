@@ -1,0 +1,24 @@
+---
+import type { LearningObjective } from "../../learning/model";
+
+interface Props {
+  objectives: readonly LearningObjective[];
+}
+
+const { objectives } = Astro.props;
+---
+
+{
+  objectives.length > 0 && (
+    <ul>
+      {objectives.map((objective) => (
+        <li>
+          <span>{objective.text}</span>
+          <span class="card__meta">
+            Quellen: {objective.sourceReferenceIds.join(", ")}
+          </span>
+        </li>
+      ))}
+    </ul>
+  )
+}

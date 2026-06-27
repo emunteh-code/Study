@@ -20,6 +20,7 @@ Only these statuses are used below: `not-started`, `in-progress`, `blocked`,
 | `/lernen/`                                                                  | Course discovery                                                | in-progress    | in-progress            | in-progress    | release-ready      | in-progress   | in-progress          | in-progress       | release-ready                                                      | Mikroökonomik I is discoverable; final human review and publication approval remain pending.                                                    |
 | `/lernen/pilot-modul/` and child topic                                      | Technical fixture                                               | future-scope   | not-started            | future-scope   | release-ready      | release-ready | release-ready        | release-ready     | Must not be represented as a real course.                          |
 | `/ueben/`                                                                   | Practice discovery                                              | in-progress    | in-progress            | in-progress    | release-ready      | in-progress   | in-progress          | in-progress       | release-ready                                                      | The two review-ready Mikro I practice routes are discoverable; broader practice catalogue remains future-scope.                                 |
+| `/lernen/mikrooekonomik-1/<session>/`                                       | Mikroökonomik I session architecture                            | in-progress    | in-progress            | in-progress    | release-ready      | in-progress   | in-progress          | in-progress       | in-progress                                                        | Generic session architecture pages exist; they are not complete lessons unless the session status says so.                                      |
 | `/ueben/mikrooekonomik-1/praeferenzrelationen/`                             | Mikroökonomik I, preference relations                           | in-progress    | in-progress            | release-ready  | release-ready      | release-ready | release-ready        | release-ready     | release-ready                                                      | Complete instructional vertical slice is implemented; human academic review and publication approval remain pending.                            |
 | `/ueben/mikrooekonomik-1/substitutionseffekt/`                              | Mikroökonomik I, substitution elasticity and homothetic utility | in-progress    | in-progress            | in-progress    | release-ready      | in-progress   | release-ready        | release-ready     | release-ready                                                      | Source-traceable orientation and restricted practice are implemented; broader CES scope, human review, and publication approval remain pending. |
 | `/probeklausuren/`                                                          | Exam transfer                                                   | future-scope   | blocked                | future-scope   | release-ready      | release-ready | release-ready        | release-ready     | release-ready                                                      | No verified original or officially licensed mock exams.                                                                                         |
@@ -57,14 +58,14 @@ Only these statuses are used below: `not-started`, `in-progress`, `blocked`,
 
 ## Exact Next Highest-Priority Milestone
 
-`in-progress`: extend the same student-facing instructional depth to the next Mikroökonomik I practice topic without adding release dashboards or publication infrastructure. The next command is:
+`in-progress`: validate and complete the reusable dependency-based module architecture now being introduced. The next command is:
 
 ```sh
 cd /Users/enowmunteh/Documents/Study
 PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
 ```
 
-The next implementation milestone is to create a coherent end-to-end learning slice for `/ueben/mikrooekonomik-1/substitutionseffekt/`, reusing the existing route, approved restricted scope, and current practice infrastructure.
+The next implementation milestone is to finish validation for the reusable learning module model, registry, module overview renderer, session architecture renderer, and module-ingestion workflow documentation.
 
 ## Last Audit
 
@@ -141,3 +142,29 @@ PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
 
 - Exact next highest-priority milestone: implement the same end-to-end
   instructional depth for `/ueben/mikrooekonomik-1/substitutionseffekt/`.
+
+## 2026-06-27 Reusable Architecture Update
+
+Current milestone:
+
+- Reusable platform structure: in-progress
+- Mikroökonomik I migration to shared model: in-progress
+- Module registry: in-progress
+- Generic module overview renderer: in-progress
+- Generic session architecture renderer: in-progress
+- Second non-economics fixture: in-progress
+- Future module-ingestion guide: in-progress
+- Practice evaluator migration: future-scope; existing evaluators remain
+  intentionally untouched.
+- Blockers: full validation and final push are still pending for this
+  architecture milestone.
+- Exact next command:
+
+```sh
+cd /Users/enowmunteh/Documents/Study
+PATH="/opt/homebrew/opt/node@24/bin:$PATH" npm run validate
+```
+
+- Exact next highest-priority milestone after this architecture work: add a
+  coherent end-to-end learning slice for
+  `/ueben/mikrooekonomik-1/substitutionseffekt/`.

@@ -1,109 +1,21 @@
 ---
-import Button from "../../../components/foundation/Button.astro";
-import Card from "../../../components/foundation/Card.astro";
-import PageHeader from "../../../components/foundation/PageHeader.astro";
-import SectionHeader from "../../../components/foundation/SectionHeader.astro";
-import {
-  mikro1PreferenceOrientation,
-  mikro1SubstitutionOrientation,
-} from "../../../data/mikro1-orientation";
+import ModuleOverview from "../../../components/learning/ModuleOverview.astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getRequiredModuleBySlug } from "../../../learning/registry";
+
+const module = getRequiredModuleBySlug("mikrooekonomik-1");
 ---
 
 <BaseLayout
-  title="Mikroökonomik I"
-  description="Ein strukturierter Einstieg in die aktuell verfügbaren Übungsbereiche der Mikroökonomik I."
+  title={module.title}
+  description={module.description}
   canonicalPath="/lernen/mikrooekonomik-1/"
   robots="noindex, follow"
   breadcrumbs={[
     { label: "Startseite", href: "/" },
     { label: "Lernen", href: "/lernen/" },
-    { label: "Mikroökonomik I" },
+    { label: module.title },
   ]}
 >
-  <section class="module-page" aria-labelledby="page-title">
-    <PageHeader
-      eyebrow="Kursübersicht"
-      title="Mikroökonomik I"
-      summary="Beginne mit Präferenzrelationen. Danach vertiefst du den Zusammenhang zwischen Substitution, Elastizität und homothetischen Nutzenfunktionen."
-    >
-      <Button
-        slot="actions"
-        href="/ueben/mikrooekonomik-1/praeferenzrelationen/"
-        >Mit Präferenzrelationen beginnen</Button
-      >
-    </PageHeader>
-
-    <section class="home-section" aria-labelledby="mikro1-path-title">
-      <SectionHeader
-        id="mikro1-path-title"
-        title="Dein Lernpfad"
-        summary="Die verfügbaren Bereiche bauen begrifflich aufeinander auf. Wähle einen Einstieg oder setze mit dem nächsten Bereich fort."
-      />
-      <div class="home-grid home-grid--modules">
-        <Card title="1. Präferenzrelationen" metadata="Grundlagen">
-          <p>
-            Aktueller Umfang: quellengeprüfte Orientierung und ein interaktives
-            Übungsset. Keine vollständige Lektion und keine Veröffentlichung als
-            offizielles Kursmaterial.
-          </p>
-          <ul>
-            {
-              mikro1PreferenceOrientation.learningObjectives.map(
-                (objective) => <li>{objective.text}</li>,
-              )
-            }
-          </ul>
-          <div slot="footer" class="card-actions">
-            <Button
-              href="/ueben/mikrooekonomik-1/praeferenzrelationen/"
-              variant="secondary">Übungsset öffnen</Button
-            >
-          </div>
-        </Card>
-        <Card title="2. Substitutionselastizität" metadata="Anwendung">
-          <p>
-            Aktueller Umfang: quellengeprüfte Orientierung und ein
-            eingeschränktes Übungsset zu den freigegebenen Aufgaben. Breitere
-            CES-Rechnung und Optimierung bleiben ausgeschlossen.
-          </p>
-          <ul>
-            {
-              mikro1SubstitutionOrientation.learningObjectives.map(
-                (objective) => <li>{objective.text}</li>,
-              )
-            }
-          </ul>
-          <div slot="footer" class="card-actions">
-            <Button
-              href="/ueben/mikrooekonomik-1/substitutionseffekt/"
-              variant="secondary">Übungsset öffnen</Button
-            >
-          </div>
-        </Card>
-      </div>
-    </section>
-
-    <section class="home-section" aria-labelledby="mikro1-study-title">
-      <SectionHeader
-        id="mikro1-study-title"
-        title="So arbeitest du mit den Übungssets"
-        summary="Starte mit Präferenzrelationen, wechsle danach zum Substitutionsthema und nutze die Übungen als Bearbeitungsnachweis, nicht als Note oder Mastery-Score."
-      />
-      <ol>
-        <li>
-          Öffne zuerst Präferenzrelationen, wenn du die Symbolik und
-          Rationalitätsaxiome noch einordnen musst.
-        </li>
-        <li>
-          Öffne danach Substitutionselastizität, wenn du Steigung, GRS,
-          CES-Parameter und Darstellungseigenschaften üben möchtest.
-        </li>
-        <li>
-          Nutze Selbstkontrollaufgaben erst nach eigener Antwort und vergleiche
-          dann mit den bereitgestellten Modellhinweisen.
-        </li>
-      </ol>
-    </section>
-  </section>
+  <ModuleOverview module={module} />
 </BaseLayout>

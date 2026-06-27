@@ -3,6 +3,40 @@ import Button from "../../components/foundation/Button.astro";
 import Card from "../../components/foundation/Card.astro";
 import PageHeader from "../../components/foundation/PageHeader.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getRegisteredModules } from "../../learning/registry";
+
+const practiceEntriesByRoute = new Map<
+  string,
+  {
+    module: ReturnType<typeof getRegisteredModules>[number];
+    sessionTitles: string[];
+    practiceTitle: string;
+    objectiveIds: string[];
+    availability: string;
+  }
+>();
+
+for (const module of getRegisteredModules()) {
+  for (const session of module.sessions) {
+    for (const mapping of session.practiceMappings) {
+      const existing = practiceEntriesByRoute.get(mapping.practiceRoute);
+      if (existing) {
+        existing.sessionTitles.push(session.title);
+        existing.objectiveIds.push(...mapping.objectiveIds);
+      } else {
+        practiceEntriesByRoute.set(mapping.practiceRoute, {
+          module,
+          sessionTitles: [session.title],
+          practiceTitle: mapping.practiceTitle,
+          objectiveIds: [...mapping.objectiveIds],
+          availability: mapping.availability,
+        });
+      }
+    }
+  }
+}
+
+const practiceEntries = [...practiceEntriesByRoute.entries()];
 ---
 
 <BaseLayout
@@ -15,34 +49,27 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     <PageHeader
       eyebrow="Übungsbereich"
       title="Üben"
-      summary="Wähle einen aktuell verfügbaren Bereich. Antworten können je nach Aufgabe direkt geprüft oder mit einer Modellbegründung verglichen werden."
+      summary="Wähle einen aktuell verfügbaren Bereich. Die Zuordnung zu Modulen, Sitzungen und Lernzielen kommt aus dem gemeinsamen Modulmodell."
     />
     <div class="home-grid home-grid--modules">
-      <Card title="Mikroökonomik I: Präferenzrelationen" metadata="12 Aufgaben">
-        <p>
-          Grundbegriffe, Rationalitätsaxiome und relationale Schlussfolgerungen.
-        </p>
-        <div slot="footer" class="card-actions">
-          <Button
-            href="/ueben/mikrooekonomik-1/praeferenzrelationen/"
-            variant="secondary">Übungsset öffnen</Button
+      {
+        practiceEntries.map(([practiceRoute, entry]) => (
+          <Card
+            title={`${entry.module.shortTitle ?? entry.module.title}: ${entry.practiceTitle}`}
+            metadata={entry.sessionTitles.join(" · ")}
           >
-        </div>
-      </Card>
-      <Card
-        title="Mikroökonomik I: Substitutionselastizität"
-        metadata="8 Aufgaben"
-      >
-        <p>
-          GRS, CES-Parameter, Homogenität und reflektierende Vergleichsaufgaben.
-        </p>
-        <div slot="footer" class="card-actions">
-          <Button
-            href="/ueben/mikrooekonomik-1/substitutionseffekt/"
-            variant="secondary">Übungsset öffnen</Button
-          >
-        </div>
-      </Card>
+            <p>
+              Zugeordnete Ziele: {[...new Set(entry.objectiveIds)].join(", ")}
+            </p>
+            <p class="card__meta">Verfügbarkeit: {entry.availability}</p>
+            <div slot="footer" class="card-actions">
+              <Button href={practiceRoute} variant="secondary">
+                Übungsset öffnen
+              </Button>
+            </div>
+          </Card>
+        ))
+      }
     </div>
   </section>
 </BaseLayout>

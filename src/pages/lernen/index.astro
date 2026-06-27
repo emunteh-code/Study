@@ -6,11 +6,16 @@ import PageHeader from "../../components/foundation/PageHeader.astro";
 import SectionHeader from "../../components/foundation/SectionHeader.astro";
 import StatusLabel from "../../components/foundation/StatusLabel.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublicLearningModules } from "../../learning/registry";
+import { moduleLearningRoute } from "../../learning/routing";
+
+const modules = getPublicLearningModules();
+const firstModule = modules[0];
 ---
 
 <BaseLayout
   title="Lernen"
-  description="Wähle einen verfügbaren Lernbereich und beginne mit dem nächsten sinnvollen Schritt."
+  description="Wähle einen registrierten Lernbereich und beginne mit dem nächsten sinnvollen Schritt."
   canonicalPath="/lernen/"
   breadcrumbs={[{ label: "Startseite", href: "/" }, { label: "Lernen" }]}
 >
@@ -18,42 +23,59 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     <PageHeader
       eyebrow="Lernbereich"
       title="Lernen"
-      summary="Wähle einen Lernbereich und starte mit dem nächsten sinnvollen Schritt."
+      summary="Wähle einen registrierten Lernbereich. Die Struktur kommt aus dem wiederverwendbaren Modulmodell, nicht aus fachgebundenen Einzelseiten."
     >
-      <Button slot="actions" href="/lernen/mikrooekonomik-1/">
-        Mikroökonomik I öffnen
-      </Button>
+      {
+        firstModule && (
+          <Button slot="actions" href={moduleLearningRoute(firstModule)}>
+            {firstModule.title} öffnen
+          </Button>
+        )
+      }
     </PageHeader>
     <Callout title="Verfügbare Inhalte" variant="information">
       <p>
-        Mikroökonomik I ist als reviewbereiter Lernpfad mit zwei Übungsbereichen
-        verfügbar.
+        Mikroökonomik I ist aktuell die erste öffentliche Implementierung der
+        wiederverwendbaren Lernarchitektur. Weitere Module werden erst nach
+        Quellenprüfung und Registrierung sichtbar.
       </p>
     </Callout>
     <section class="home-section" aria-labelledby="learning-modules-title">
       <SectionHeader
         id="learning-modules-title"
-        title="Verfügbare Lernbereiche"
-        summary="Wähle einen verfügbaren Kursbereich."
+        title="Registrierte Lernbereiche"
+        summary="Weitere Module sollen künftig durch Daten, Quellenprüfung und Registrierung ergänzt werden, ohne die Seitenstruktur neu zu bauen."
       />
       <div class="home-grid home-grid--modules">
-        <Card title="Mikroökonomik I" metadata="Zwei Übungsbereiche">
-          <div class="module-card__status">
-            <StatusLabel label="Verfügbar" tone="success" />
-          </div>
-          <p>
-            Beginne mit Präferenzrelationen und setze mit
-            Substitutionselastizität fort.
-          </p>
-          <p class="card__meta">
-            Originale Übungsinhalte mit nachvollziehbarer Quellenbasis.
-          </p>
-          <div slot="footer" class="card-actions">
-            <Button href="/lernen/mikrooekonomik-1/" variant="secondary">
-              Kursübersicht öffnen
-            </Button>
-          </div>
-        </Card>
+        {
+          modules.map((module) => (
+            <Card
+              title={module.title}
+              metadata={`${module.subjectArea} · ${module.sessions.length} Sitzungen`}
+            >
+              <div class="module-card__status">
+                <StatusLabel
+                  label={`Architektur: ${module.availability.architecture}`}
+                  tone="success"
+                />
+                <StatusLabel
+                  label={`Praxis: ${module.availability.practice}`}
+                  tone="info"
+                />
+              </div>
+              <p>{module.description}</p>
+              <p class="card__meta">
+                Lektionen: {module.availability.lessons}. Quellen:{" "}
+                {module.availability.sourceStatus}.
+              </p>
+              <div slot="footer" class="card-actions">
+                <Button href={moduleLearningRoute(module)} variant="secondary">
+                  Kursübersicht öffnen
+                </Button>
+              </div>
+            </Card>
+          ))
+        }
       </div>
     </section>
   </section>

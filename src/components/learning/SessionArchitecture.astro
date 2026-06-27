@@ -1,0 +1,287 @@
+---
+import type { LearningSession, StudyModule } from "../../learning/model";
+import { sessionLearningRoute } from "../../learning/routing";
+import { toBasePath } from "../../lib/routes";
+import Button from "../foundation/Button.astro";
+import Card from "../foundation/Card.astro";
+import Callout from "../foundation/Callout.astro";
+import PageHeader from "../foundation/PageHeader.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import InstructionalRequirementList from "./InstructionalRequirementList.astro";
+import LearningObjectiveList from "./LearningObjectiveList.astro";
+import MasteryChecklist from "./MasteryChecklist.astro";
+
+interface Props {
+  module: StudyModule;
+  session: LearningSession;
+}
+
+const { module, session } = Astro.props;
+const previousSession = module.sessions.find((candidate) =>
+  session.prerequisiteSessionIds.includes(candidate.id),
+);
+const nextSession = module.sessions
+  .filter((candidate) => session.futureSessionIds.includes(candidate.id))
+  .sort((left, right) => left.sequence - right.sequence)[0];
+const firstPractice = session.practiceMappings[0];
+---
+
+<section class="module-page" aria-labelledby="page-title">
+  <PageHeader
+    eyebrow={`${module.title} · Sitzung ${session.sequence}`}
+    title={session.title}
+    summary={session.whyThisSessionExists}
+  >
+    {
+      firstPractice && (
+        <Button slot="actions" href={firstPractice.practiceRoute}>
+          Passende Übung öffnen
+        </Button>
+      )
+    }
+  </PageHeader>
+
+  <Callout title="Verfügbarkeit" variant="note">
+    <p>
+      Architektur: {session.availability.architecture}. Lektion: {
+        session.availability.lesson
+      }. Praxis: {session.availability.practice}. Quellenstatus: {
+        session.availability.sourceStatus
+      }.
+    </p>
+    {
+      session.reviewState && (
+        <p>
+          Review: {session.reviewState.status}. {session.reviewState.note}
+        </p>
+      )
+    }
+  </Callout>
+
+  {
+    session.concepts.length > 0 && (
+      <section class="home-section" aria-labelledby="session-concepts-title">
+        <SectionHeader
+          id="session-concepts-title"
+          title="Konzepte und Skills"
+          summary="Diese Begriffe oder Fähigkeiten bestimmen, was die Sitzung fachlich leistet."
+        />
+        <div class="home-grid home-grid--modules">
+          {session.concepts.map((concept) => (
+            <Card title={concept.label} metadata={concept.id}>
+              <p>{concept.description}</p>
+            </Card>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    session.learningObjectives.length > 0 && (
+      <section class="home-section" aria-labelledby="session-objectives-title">
+        <SectionHeader
+          id="session-objectives-title"
+          title="Lernziele"
+          summary="Jedes Ziel verwendet einen beobachtbaren Verbstamm und verweist auf Quellen."
+        />
+        <LearningObjectiveList objectives={session.learningObjectives} />
+      </section>
+    )
+  }
+
+  {
+    (session.prerequisiteSessionIds.length > 0 ||
+      session.futureSessionIds.length > 0 ||
+      session.dependencyConnections.length > 0) && (
+      <section
+        class="home-section"
+        aria-labelledby="session-dependencies-title"
+      >
+        <SectionHeader
+          id="session-dependencies-title"
+          title="Abhängigkeiten"
+          summary="Die Sitzung ist Teil des modulbezogenen Graphen, nicht einer universellen Reihenfolge."
+        />
+        <dl class="module-inline-meta">
+          {previousSession && (
+            <div>
+              <dt>Vorher</dt>
+              <dd>
+                <a
+                  href={toBasePath(
+                    sessionLearningRoute(module, previousSession),
+                  )}
+                >
+                  {previousSession.title}
+                </a>
+              </dd>
+            </div>
+          )}
+          {nextSession && (
+            <div>
+              <dt>Danach</dt>
+              <dd>
+                <a href={toBasePath(sessionLearningRoute(module, nextSession))}>
+                  {nextSession.title}
+                </a>
+              </dd>
+            </div>
+          )}
+        </dl>
+        {session.dependencyConnections.length > 0 && (
+          <ul>
+            {session.dependencyConnections.map((connection) => (
+              <li>
+                <strong>
+                  {connection.fromSessionId} → {connection.toSessionId}
+                </strong>
+                <p>{connection.explanation}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    )
+  }
+
+  {
+    session.instructionalRequirements.length > 0 && (
+      <section
+        class="home-section"
+        aria-labelledby="session-requirements-title"
+      >
+        <SectionHeader
+          id="session-requirements-title"
+          title="Instructional capabilities"
+          summary="Nur die fachlich benötigten Lehrformen werden angezeigt."
+        />
+        <InstructionalRequirementList
+          requirements={session.instructionalRequirements}
+        />
+      </section>
+    )
+  }
+
+  {
+    session.examTaskFamilies.length > 0 && (
+      <section class="home-section" aria-labelledby="session-exam-title">
+        <SectionHeader
+          id="session-exam-title"
+          title="Klausurbezug"
+          summary="Prüfungsnahe Aufgabenfamilien, soweit sie durch Quellen und Spezifikation gedeckt sind."
+        />
+        <div class="home-grid home-grid--modules">
+          {session.examTaskFamilies.map((family) => (
+            <Card title={family.title} metadata={family.id}>
+              <p>{family.description}</p>
+            </Card>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    session.commonMistakes.length > 0 && (
+      <section class="home-section" aria-labelledby="session-mistakes-title">
+        <SectionHeader
+          id="session-mistakes-title"
+          title="Typische Denkfehler"
+          summary="Diese Fehler bestimmen, worauf Feedback und Wiederholung achten sollen."
+        />
+        <ul>
+          {session.commonMistakes.map((mistake) => (
+            <li>{mistake.description}</li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    session.masteryCriteria.length > 0 && (
+      <section class="home-section" aria-labelledby="session-mastery-title">
+        <SectionHeader
+          id="session-mastery-title"
+          title="Mastery-Evidence"
+          summary="Diese Kriterien beschreiben mögliche Lernnachweise, nicht automatisch Noten oder Scores."
+        />
+        <MasteryChecklist criteria={session.masteryCriteria} />
+      </section>
+    )
+  }
+
+  {
+    session.practiceMappings.length > 0 && (
+      <section class="home-section" aria-labelledby="session-practice-title">
+        <SectionHeader
+          id="session-practice-title"
+          title="Passende Praxis"
+          summary="Bestehende Übungsrouten bleiben erhalten und werden nur zugeordnet."
+        />
+        <div class="home-grid home-grid--modules">
+          {session.practiceMappings.map((mapping) => (
+            <Card title={mapping.practiceTitle} metadata={mapping.id}>
+              <p>Zugeordnete Ziele: {mapping.objectiveIds.join(", ")}</p>
+              <StatusLabel label={mapping.availability} tone="success" />
+              <div slot="footer" class="card-actions">
+                <Button href={mapping.practiceRoute} variant="secondary">
+                  Übung öffnen
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="home-section" aria-labelledby="session-sources-title">
+    <SectionHeader
+      id="session-sources-title"
+      title="Quellen"
+      summary="Die Sitzung verwendet nur repository-relative Quellenhinweise."
+    />
+    <ul>
+      {
+        session.sourceRecords.map((source) => (
+          <li>
+            <strong>{source.title}</strong>
+            <span class="card__meta">
+              {" "}
+              {source.status}: {source.path}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <nav class="lesson-next-actions" aria-label="Sitzungsnavigation">
+    <Button href={`/lernen/${module.slug}/`} variant="secondary">
+      Zur Modulübersicht
+    </Button>
+    {
+      previousSession && (
+        <Button
+          href={sessionLearningRoute(module, previousSession)}
+          variant="quiet"
+        >
+          Vorherige Sitzung
+        </Button>
+      )
+    }
+    {
+      nextSession && (
+        <Button
+          href={sessionLearningRoute(module, nextSession)}
+          variant="primary"
+        >
+          Nächste Sitzung
+        </Button>
+      )
+    }
+  </nav>
+</section>

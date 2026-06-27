@@ -12,8 +12,10 @@ test("learning and practice discovery lead to the two implemented Mikro I topics
     page.getByRole("heading", { name: "Mikroökonomik I" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Übungsset öffnen" }),
-  ).toHaveCount(2);
+    page.getByRole("heading", {
+      name: "Sitzungen in Abhängigkeitsreihenfolge",
+    }),
+  ).toBeVisible();
   await expect(page.locator("a[href*='pilot-modul']")).toHaveCount(0);
 
   await page.goto(`${base}/ueben/`);
@@ -28,16 +30,89 @@ test("Mikro I course overview explains current scope and next actions", async ({
 }) => {
   await page.goto(`${base}/lernen/mikrooekonomik-1/`);
   await expect(
-    page.getByRole("heading", { name: "Dein Lernpfad" }),
+    page.getByRole("heading", {
+      name: "Sitzungen in Abhängigkeitsreihenfolge",
+    }),
   ).toBeVisible();
-  await expect(page.getByText("Aktueller Umfang:")).toHaveCount(2);
+  await expect(page.getByText("Architekturprinzip")).toBeVisible();
   await expect(page.getByText("identify the direction")).toBeVisible();
   await expect(page.getByText("calculate sigma from rho")).toBeVisible();
-  await expect(page.getByText("Starte mit Präferenzrelationen")).toBeVisible();
+  await expect(page.getByText("Praxiszuordnung")).toBeVisible();
   await expect(page.locator("a[href*='sub-practice-04']")).toHaveCount(0);
   await expect(page.locator("a[href*='mikrooekonomik-1/optim']")).toHaveCount(
     0,
   );
+});
+
+test("Mikro I sessions render in dependency order through reusable architecture", async ({
+  page,
+}) => {
+  await page.goto(`${base}/lernen/mikrooekonomik-1/`);
+
+  const sessions = page
+    .getByRole("heading", {
+      name: "Sitzungen in Abhängigkeitsreihenfolge",
+    })
+    .locator("xpath=ancestor::section[1]")
+    .locator(".module-topic-item h3");
+  await expect(sessions).toHaveText([
+    "Binäre Relationen und schwache Präferenz",
+    "Strikte Präferenz und Indifferenz ableiten",
+    "Vollständigkeit, Transitivität und Rationalität",
+    "GRS, Steigung und lokale Annahmen",
+    "CES-Parameter und Substitutionselastizität",
+    "Homogene Darstellungen und homothetische Präferenzen",
+  ]);
+  await expect(
+    page.getByRole("link", { name: "Sitzungsarchitektur öffnen" }).first(),
+  ).toHaveAttribute(
+    "href",
+    "/Study/lernen/mikrooekonomik-1/praeferenzrelationen-grundvergleiche/",
+  );
+});
+
+test("generic Mikro I session page exposes dependencies, capabilities, sources, and practice", async ({
+  page,
+}) => {
+  await page.goto(
+    `${base}/lernen/mikrooekonomik-1/vollstaendigkeit-transitivitaet-rationalitaet/`,
+  );
+
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Vollständigkeit, Transitivität und Rationalität",
+  );
+  for (const heading of [
+    "Konzepte und Skills",
+    "Lernziele",
+    "Abhängigkeiten",
+    "Instructional capabilities",
+    "Klausurbezug",
+    "Typische Denkfehler",
+    "Mastery-Evidence",
+    "Passende Praxis",
+    "Quellen",
+  ]) {
+    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+  }
+  await expect(page.getByText("Definition")).toBeVisible();
+  await expect(page.getByText("Klausurstrategie")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Übung öffnen" }).first(),
+  ).toHaveAttribute(
+    "href",
+    "/Study/ueben/mikrooekonomik-1/praeferenzrelationen/",
+  );
+});
+
+test("generic Mikro I session page is keyboard reachable", async ({ page }) => {
+  await page.goto(
+    `${base}/lernen/mikrooekonomik-1/praeferenzrelationen-grundvergleiche/`,
+  );
+  await page.keyboard.press("Tab");
+  await expect(page.locator(":focus")).toBeVisible();
+  await expect(
+    page.getByRole("navigation", { name: "Sitzungsnavigation" }),
+  ).toBeVisible();
 });
 
 test("Mikro I practice routes expose an accessible shared learning path", async ({
@@ -169,3 +244,22 @@ test("topic orientation remains usable at 320 CSS pixels", async ({
     description: "320 CSS pixels",
   });
 });
+
+for (const width of [320, 768, 1440]) {
+  test(`generic Mikro I session has no horizontal overflow at ${width} CSS pixels`, async ({
+    page,
+  }, testInfo) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(
+      `${base}/lernen/mikrooekonomik-1/vollstaendigkeit-transitivitaet-rationalitaet/`,
+    );
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(width);
+    testInfo.annotations.push({
+      type: "viewport",
+      description: `${width} CSS pixels`,
+    });
+  });
+}

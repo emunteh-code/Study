@@ -1,0 +1,78 @@
+---
+import type { InstructionalRequirement } from "../../learning/model";
+
+interface Props {
+  requirements: readonly InstructionalRequirement[];
+}
+
+const { requirements } = Astro.props;
+
+const labels: Record<InstructionalRequirement["kind"], string> = {
+  "active-recall": "Active Recall",
+  "calculation-procedure": "Rechenverfahren",
+  "case-analysis": "Fallanalyse",
+  definition: "Definition",
+  derivation: "Herleitung",
+  "exam-strategy": "Klausurstrategie",
+  formula: "Formel",
+  graph: "Graph",
+  "language-production": "Sprachproduktion",
+  "legal-reasoning": "Juristische Begründung",
+  "mental-model": "Mental Model",
+  pronunciation: "Aussprache",
+  proof: "Beweis",
+  "worked-example": "Durchgerechnetes Beispiel",
+};
+---
+
+{
+  requirements.length > 0 && (
+    <ul class="home-grid home-grid--modules">
+      {requirements.map((requirement) => (
+        <li class="card card--compact">
+          <p class="card__meta">{labels[requirement.kind]}</p>
+          <h3 class="card__title">{requirement.title}</h3>
+          <p>{requirement.description}</p>
+          {requirement.kind === "formula" && (
+            <ul>
+              {requirement.variableDefinitions.map((definition) => (
+                <li>{definition}</li>
+              ))}
+            </ul>
+          )}
+          {requirement.kind === "graph" && (
+            <dl class="module-inline-meta">
+              <div>
+                <dt>Achsen</dt>
+                <dd>{requirement.axes.join(", ")}</dd>
+              </div>
+              <div>
+                <dt>Interpretation</dt>
+                <dd>{requirement.interpretation}</dd>
+              </div>
+            </dl>
+          )}
+          {requirement.kind === "calculation-procedure" && (
+            <ol>
+              {requirement.steps.map((step) => (
+                <li>{step}</li>
+              ))}
+            </ol>
+          )}
+          {requirement.kind === "case-analysis" && (
+            <dl class="module-inline-meta">
+              <div>
+                <dt>Issue</dt>
+                <dd>{requirement.issue}</dd>
+              </div>
+              <div>
+                <dt>Rule</dt>
+                <dd>{requirement.rule}</dd>
+              </div>
+            </dl>
+          )}
+        </li>
+      ))}
+    </ul>
+  )
+}

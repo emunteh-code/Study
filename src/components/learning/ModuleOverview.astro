@@ -1,0 +1,153 @@
+---
+import type { StudyModule } from "../../learning/model";
+import { modulePracticeRoute } from "../../learning/routing";
+import Button from "../foundation/Button.astro";
+import Callout from "../foundation/Callout.astro";
+import Card from "../foundation/Card.astro";
+import PageHeader from "../foundation/PageHeader.astro";
+import SectionHeader from "../foundation/SectionHeader.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+import DependencySequence from "./DependencySequence.astro";
+
+interface Props {
+  module: StudyModule;
+}
+
+const { module } = Astro.props;
+const firstPracticeRoute =
+  module.sessions.find((session) => session.practiceMappings[0])
+    ?.practiceMappings[0]?.practiceRoute ?? modulePracticeRoute(module);
+---
+
+<section class="module-page" aria-labelledby="page-title">
+  <PageHeader
+    eyebrow={module.subjectArea}
+    title={module.title}
+    summary={module.description}
+  >
+    <Button slot="actions" href={firstPracticeRoute}>
+      Nächsten verfügbaren Schritt öffnen
+    </Button>
+  </PageHeader>
+
+  <Callout title="Architekturprinzip" variant="information">
+    <p>
+      Dieser Kurs wird über das gemeinsame Modulmodell gerendert. Mikroökonomik
+      I ist die erste konkrete Implementierung, nicht der feste Mittelpunkt der
+      Plattform.
+    </p>
+  </Callout>
+
+  <section class="home-section" aria-labelledby="module-status-title">
+    <SectionHeader
+      id="module-status-title"
+      title="Aktueller Stand"
+      summary="Die Statusangaben trennen Architektur, Quellenlage, Lektionen und Praxis."
+    />
+    <dl class="module-inline-meta">
+      <div>
+        <dt>Architektur</dt>
+        <dd>
+          <StatusLabel
+            label={module.availability.architecture}
+            tone="success"
+          />
+        </dd>
+      </div>
+      <div>
+        <dt>Quellen</dt>
+        <dd>
+          <StatusLabel label={module.availability.sourceStatus} tone="info" />
+        </dd>
+      </div>
+      <div>
+        <dt>Lektionen</dt>
+        <dd>
+          <StatusLabel label={module.availability.lessons} tone="warning" />
+        </dd>
+      </div>
+      <div>
+        <dt>Praxis</dt>
+        <dd>
+          <StatusLabel label={module.availability.practice} tone="success" />
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="home-section" aria-labelledby="module-units-title">
+    <SectionHeader
+      id="module-units-title"
+      title="Konzeptionelle Einheiten"
+      summary="Die Einheiten bestimmen die fachliche Reihenfolge. Die Software erzwingt keine universelle Sequenz für alle Fächer."
+    />
+    <div class="home-grid home-grid--modules">
+      {
+        module.units.map((unit) => (
+          <Card
+            title={unit.title}
+            metadata={`${unit.sessionIds.length} Sitzungen`}
+          >
+            <p>{unit.purpose}</p>
+          </Card>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="home-section" aria-labelledby="dependency-title">
+    <SectionHeader
+      id="dependency-title"
+      title="Sitzungen in Abhängigkeitsreihenfolge"
+      summary="Öffne eine Sitzung, um Konzepte, Ziele, Voraussetzungen, Prüfungsbezug, Quellen und passende Übungen zu sehen."
+    />
+    <DependencySequence module={module} />
+  </section>
+
+  <section class="home-section" aria-labelledby="module-practice-title">
+    <SectionHeader
+      id="module-practice-title"
+      title="Praxiszuordnung"
+      summary="Übungssets bleiben eigene Routen; die Architektur ordnet sie den Sitzungen und Zielen zu."
+    />
+    <div class="home-grid home-grid--modules">
+      {
+        module.sessions
+          .flatMap((session) =>
+            session.practiceMappings.map((mapping) => ({ session, mapping })),
+          )
+          .map(({ session, mapping }) => (
+            <Card title={mapping.practiceTitle} metadata={session.title}>
+              <p>Unterstützte Ziele: {mapping.objectiveIds.join(", ")}</p>
+              <div slot="footer" class="card-actions">
+                <Button href={mapping.practiceRoute} variant="secondary">
+                  Übung öffnen
+                </Button>
+              </div>
+            </Card>
+          ))
+      }
+    </div>
+  </section>
+
+  <section class="home-section" aria-labelledby="module-source-title">
+    <SectionHeader
+      id="module-source-title"
+      title="Quellen und Prüfstand"
+      summary="Es werden nur repository-relative Audit- und Spezifikationspfade gezeigt. Private Kursmaterialien bleiben außerhalb von Git."
+    />
+    <ul>
+      {
+        module.sourceRecords.map((source) => (
+          <li>
+            <strong>{source.title}</strong>
+            <span class="card__meta">
+              {" "}
+              {source.status}: {source.path}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</section>

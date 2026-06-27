@@ -1,0 +1,71 @@
+---
+import type { LearningSession, StudyModule } from "../../learning/model";
+import { sessionLearningRoute } from "../../learning/routing";
+import { getSessionsInDependencyOrder } from "../../learning/validation";
+import Button from "../foundation/Button.astro";
+import StatusLabel from "../foundation/StatusLabel.astro";
+
+interface Props {
+  module: StudyModule;
+}
+
+const { module } = Astro.props;
+const sessions = getSessionsInDependencyOrder(module);
+
+function statusLabel(session: LearningSession): string {
+  if (session.availability.lesson === "available") return "Lektion verfügbar";
+  if (session.availability.practice === "available") return "Praxis verfügbar";
+  if (session.availability.lesson === "in-review") return "In Prüfung";
+  return "Geplant";
+}
+---
+
+<ol class="module-learning-path">
+  {
+    sessions.map((session) => (
+      <li class="module-topic-item">
+        <article>
+          <header>
+            <p class="card__meta">Sitzung {session.sequence}</p>
+            <h3>{session.title}</h3>
+            <StatusLabel
+              label={statusLabel(session)}
+              tone={
+                session.availability.lesson === "available" ? "success" : "info"
+              }
+            />
+          </header>
+          <p>{session.whyThisSessionExists}</p>
+          {session.learningObjectives.length > 0 && (
+            <ul>
+              {session.learningObjectives.map((objective) => (
+                <li>{objective.text}</li>
+              ))}
+            </ul>
+          )}
+          {session.prerequisiteSessionIds.length > 0 && (
+            <p class="card__meta">
+              Voraussetzung: {session.prerequisiteSessionIds.join(", ")}
+            </p>
+          )}
+          <div class="card-actions">
+            <Button
+              href={sessionLearningRoute(module, session)}
+              variant="secondary"
+            >
+              Sitzungsarchitektur öffnen
+            </Button>
+            {session.practiceMappings[0] && (
+              <Button
+                href={session.practiceMappings[0].practiceRoute}
+                variant="quiet"
+              >
+                Übung öffnen
+              </Button>
+            )}
+          </div>
+        </article>
+      </li>
+    ))
+  }
+</ol>
