@@ -248,6 +248,27 @@ function validateLessonBlock(
       );
     }
   }
+  if (block.kind === "classification-matrix") {
+    if (
+      block.columns.length !== 3 ||
+      block.columns.some((column) => !column.trim()) ||
+      block.rows.length < 4 ||
+      block.rows.some(
+        (row) =>
+          !row.id.trim() ||
+          !row.complete.trim() ||
+          !row.transitive.trim() ||
+          !row.classification.trim() ||
+          !row.example.trim() ||
+          !row.reason.trim() ||
+          !row.examTrap.trim(),
+      )
+    ) {
+      errors.push(
+        `${context}: classification matrix ${block.id} needs columns and at least four complete rows.`,
+      );
+    }
+  }
   if (block.kind === "guided-practice") {
     if (
       !block.prompt.trim() ||

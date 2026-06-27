@@ -81,6 +81,12 @@ test("preference topic links to the focused lesson before independent practice",
   await expect(
     page.getByRole("link", { name: "Transitivität lernen" }),
   ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/transitivitaet/");
+  await expect(
+    page.getByRole("link", { name: "Rationalität klassifizieren" }),
+  ).toHaveAttribute(
+    "href",
+    "/Study/lernen/mikrooekonomik-1/rationale-praeferenzrelationen/",
+  );
 
   const order = await page.evaluate(() => {
     const bridge = document.querySelector("#pref-lesson-title");

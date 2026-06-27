@@ -5,6 +5,7 @@ import type {
   StudyModule,
 } from "../../../learning/model";
 import { preferenceCompletenessLessonBlocks } from "./preference-completeness-lesson";
+import { preferenceRationalityLessonBlocks } from "./preference-rationality-lesson";
 import { preferenceTransitivityLessonBlocks } from "./preference-transitivity-lesson";
 
 const preferenceSources = [
@@ -36,6 +37,12 @@ const preferenceSources = [
     id: "pref-transitivity-review",
     title: "Transitivity session human review checklist",
     path: "docs/mikro1-preferences-transitivity-session-review.md",
+    status: "readiness-record",
+  },
+  {
+    id: "pref-rationality-review",
+    title: "Rationality session human review checklist",
+    path: "docs/mikro1-preferences-rationality-session-review.md",
     status: "readiness-record",
   },
 ] as const satisfies readonly SourceReference[];
@@ -691,7 +698,7 @@ const sessions = [
     unitId: "preferences",
     sequence: 5,
     whyThisSessionExists:
-      "Diese Sitzung verbindet Vollständigkeit und Transitivität zum technischen Rationalitätsbegriff, bleibt aber vorerst eine Architektur- und Praxiszuordnung.",
+      "Diese Sitzung verbindet Vollständigkeit und Transitivität zu einer vollständigen technischen Rationalitätsklassifikation.",
     concepts: [
       {
         id: "rational-preference",
@@ -699,11 +706,43 @@ const sessions = [
         description:
           "Technischer Begriff für eine vollständige und transitive Präferenzrelation.",
       },
+      {
+        id: "rationality-conjunction",
+        label: "Konjunktion der Axiome",
+        description:
+          "Rationalität verlangt Vollständigkeit und Transitivität gleichzeitig.",
+      },
+      {
+        id: "rationality-classification",
+        label: "Rationalitätsklassifikation",
+        description:
+          "Systematische Verbindung aus Paarabdeckung, Kettenabschluss und formalem Schluss.",
+      },
     ],
     learningObjectives: [
       {
         id: "pref-lo-rationality-01",
         text: "classify small relation records for technical rationality only after checking completeness and transitivity separately.",
+        sourceReferenceIds: ["pref-claims", "pref-outline"],
+      },
+      {
+        id: "pref-lo-rationality-02",
+        text: "explain why both completeness and transitivity are required for the course definition of rationality.",
+        sourceReferenceIds: ["pref-claims", "pref-outline"],
+      },
+      {
+        id: "pref-lo-rationality-03",
+        text: "identify the exact failed condition when a relation is not rational.",
+        sourceReferenceIds: ["pref-claims", "pref-outline"],
+      },
+      {
+        id: "pref-lo-rationality-04",
+        text: "construct examples for the four completeness-transitivity property combinations.",
+        sourceReferenceIds: ["pref-claims", "pref-outline"],
+      },
+      {
+        id: "pref-lo-rationality-05",
+        text: "distinguish technical rationality from everyday psychological or moral meanings.",
         sourceReferenceIds: ["pref-claims", "pref-outline"],
       },
     ],
@@ -730,21 +769,97 @@ const sessions = [
         title: "Rationalität technisch definieren",
         description:
           "Use rationality only for a relation satisfying completeness and transitivity.",
-        conceptIds: ["rational-preference"],
+        conceptIds: ["rational-preference", "rationality-conjunction"],
+      },
+      {
+        kind: "mental-model",
+        id: "pref-req-rationality-matrix",
+        title: "Vier Eigenschaftskombinationen",
+        description:
+          "Use a two-by-two property matrix to separate rational from three different non-rational cases.",
+        conceptIds: ["rationality-conjunction", "rationality-classification"],
+      },
+      {
+        kind: "worked-example",
+        id: "pref-req-rationality-examples",
+        title: "Synthese-Beispiele",
+        description:
+          "Classify relation tables, pairwise lists, compact formal relations, constructed examples, and flawed student solutions.",
+      },
+      {
+        kind: "proof",
+        id: "pref-req-rationality-proof",
+        title: "Formalen Schluss begründen",
+        description:
+          "Justify rational or non-rational conclusions from the conjunction of the two axioms.",
+      },
+      {
+        kind: "exam-strategy",
+        id: "pref-req-rationality-exam",
+        title: "Rationalität in Klausuraufgaben",
+        description:
+          "Use a fixed order: domain, completeness, transitivity, combined classification, and evidence.",
+        taskFamilyIds: [
+          "pref-exam-rationality-definition",
+          "pref-exam-rationality-combination",
+          "pref-exam-classify-relation",
+          "pref-exam-rationality-counterexample",
+          "pref-exam-rationality-proof",
+          "pref-exam-rationality-traps",
+        ],
       },
     ],
     examTaskFamilies: [
+      {
+        id: "pref-exam-rationality-definition",
+        title: "Definition nennen",
+        description:
+          "State rationality as completeness and transitivity in the technical course sense.",
+      },
+      {
+        id: "pref-exam-rationality-combination",
+        title: "Eigenschaftskombination einordnen",
+        description:
+          "Use the four property combinations and identify which are not rational.",
+      },
       {
         id: "pref-exam-classify-relation",
         title: "Relation auf Rationalität prüfen",
         description:
           "Test completeness and transitivity separately, then classify the relation.",
       },
+      {
+        id: "pref-exam-rationality-counterexample",
+        title: "Gegenbeispiel konstruieren",
+        description:
+          "Construct a relation that fails exactly the requested condition.",
+      },
+      {
+        id: "pref-exam-rationality-proof",
+        title: "Formalen Schluss begründen",
+        description:
+          "Show how the rationality conclusion follows from the two axiom checks.",
+      },
+      {
+        id: "pref-exam-rationality-traps",
+        title: "Multiple-Choice-Fallen erkennen",
+        description:
+          "Reject options that treat one property, unusual preferences, or missing information as sufficient.",
+      },
     ],
     commonMistakes: [
       {
+        id: "pref-mistake-completeness-is-rationality",
+        description: "Assuming completeness alone establishes rationality.",
+      },
+      {
         id: "pref-mistake-completeness-from-transitivity",
         description: "Assuming completeness from transitivity.",
+      },
+      {
+        id: "pref-mistake-mostly-rational",
+        description:
+          "Treating mostly complete or mostly transitive as sufficient for the formal definition.",
       },
       {
         id: "pref-mistake-rationality-psychology",
@@ -758,7 +873,13 @@ const sessions = [
         description:
           "Learner can classify a finite relation without treating rationality as psychological realism.",
         evidence:
-          "Deterministic classification attempts and future complete-session check.",
+          "Worked solution or deterministic classification attempt checks both axioms before the final label.",
+      },
+      {
+        id: "pref-mastery-rationality-failure",
+        description:
+          "Learner can identify the exact failed condition in a non-rational relation.",
+        evidence: "Solution names the missing pair, violating chain, or both.",
       },
     ],
     sourceRecords: preferenceSources,
@@ -766,24 +887,37 @@ const sessions = [
       preferenceMapping(
         "pref-practice-map-rationality",
         ["pref-rationality-classification"],
-        ["pref-lo-rationality-01"],
+        [
+          "pref-lo-rationality-01",
+          "pref-lo-rationality-02",
+          "pref-lo-rationality-03",
+          "pref-lo-rationality-04",
+          "pref-lo-rationality-05",
+        ],
         {
-          exerciseIds: ["pref-practice-10"],
+          exerciseIds: [
+            "pref-practice-09",
+            "pref-practice-10",
+            "pref-practice-11",
+          ],
           limitations: [
-            "The practice route contains a deterministic rationality item, but this route is not yet a complete learning session.",
+            "pref-practice-09 checks the insufficiency of completeness alone.",
+            "pref-practice-10 is the direct deterministic rationality classification item.",
+            "pref-practice-11 is a self-review error-diagnosis item and does not use automatic prose grading.",
           ],
         },
       ),
     ],
+    lessonBlocks: preferenceRationalityLessonBlocks,
     availability: {
       architecture: "available",
-      lesson: "architecture-only",
+      lesson: "complete-session",
       practice: "available",
       sourceStatus: "available",
     },
     reviewState: {
       status: "in-review",
-      note: "Architecture and practice mapping exist; complete lesson content is intentionally deferred.",
+      note: "Complete-session structure and automated checks are in place; final human academic approval remains pending.",
     },
   },
   {

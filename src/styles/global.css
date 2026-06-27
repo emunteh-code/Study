@@ -178,6 +178,14 @@ th {
   font-weight: 700;
 }
 
+.lesson-table-scroll {
+  overflow-x: auto;
+}
+
+.lesson-table-scroll table {
+  min-inline-size: 34rem;
+}
+
 code,
 kbd,
 pre {

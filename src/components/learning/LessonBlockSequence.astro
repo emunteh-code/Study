@@ -71,6 +71,42 @@ const { blocks } = Astro.props;
           </article>
         )}
 
+        {block.kind === "classification-matrix" && (
+          <article class="lesson-guided-card">
+            <div class="lesson-table-scroll">
+              <table>
+                <caption>{block.title}</caption>
+                <thead>
+                  <tr>
+                    {block.columns.map((column) => (
+                      <th scope="col">{column}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {block.rows.map((row) => (
+                    <tr>
+                      <td>{row.complete}</td>
+                      <td>{row.transitive}</td>
+                      <td>{row.classification}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <dl class="lesson-definition-list">
+              {block.rows.map((row) => (
+                <>
+                  <dt>{row.classification}</dt>
+                  <dd>
+                    {row.example} {row.reason} Klausurfalle: {row.examTrap}
+                  </dd>
+                </>
+              ))}
+            </dl>
+          </article>
+        )}
+
         {block.kind === "guided-practice" && (
           <article class="lesson-guided-card">
             <p>

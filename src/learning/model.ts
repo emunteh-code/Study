@@ -233,6 +233,7 @@ export type LessonBlockKind =
   | "big-picture"
   | "intuition"
   | "definition"
+  | "classification-matrix"
   | "assumptions"
   | "symbols"
   | "concept-build"
@@ -281,6 +282,22 @@ export interface GuidedPracticeBlock extends BaseLessonBlock<"guided-practice"> 
   prompt: string;
   hints: readonly GuidedPracticeHint[];
   fullExplanation: string;
+}
+
+export interface ClassificationMatrixRow {
+  id: string;
+  complete: string;
+  transitive: string;
+  classification: string;
+  example: string;
+  reason: string;
+  examTrap: string;
+}
+
+export interface ClassificationMatrixBlock extends BaseLessonBlock<"classification-matrix"> {
+  kind: "classification-matrix";
+  columns: readonly [string, string, string];
+  rows: readonly ClassificationMatrixRow[];
 }
 
 export interface MisconceptionBlock extends BaseLessonBlock<"misconception"> {
@@ -345,6 +362,7 @@ export type LessonBlock =
       | "connections"
       | "remediation"
     >
+  | ClassificationMatrixBlock
   | WorkedExampleBlock
   | GuidedPracticeBlock
   | MisconceptionBlock

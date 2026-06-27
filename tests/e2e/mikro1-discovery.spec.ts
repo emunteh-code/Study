@@ -233,6 +233,98 @@ test("focused transitivity session links backward to completeness and forward to
   );
 });
 
+test("focused rationality session synthesizes both axioms before practice handoff", async ({
+  page,
+}) => {
+  await page.goto(
+    `${base}/lernen/mikrooekonomik-1/rationale-praeferenzrelationen/`,
+  );
+
+  const kinds = await page
+    .locator("[data-lesson-block-kind]")
+    .evaluateAll((nodes) =>
+      nodes.map((node) => node.getAttribute("data-lesson-block-kind")),
+    );
+  const indexOf = (kind: string) => kinds.indexOf(kind);
+
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Rationale Präferenzrelationen klassifizieren",
+  );
+  await expect(page.getByText("Complete learning session")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Retrieval Bridge" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Formale Definition" }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole("heading", { name: "Formale Definition" })
+      .locator("xpath=ancestor::section[1]")
+      .getByText("Rationalitaet = Vollstaendigkeit AND Transitivitaet"),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("table", { name: "Property Matrix" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("row", { name: /Yes Yes Rational/ }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Klassifikationsalgorithmus" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Denkfehler: Rational bedeutet optimal",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Klausurdenken: Multiple-Choice-Fallen",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Mastery Checklist" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Zur passenden Übung" }),
+  ).toHaveAttribute(
+    "href",
+    "/Study/ueben/mikrooekonomik-1/praeferenzrelationen/",
+  );
+
+  expect(indexOf("dependency-position")).toBeLessThan(indexOf("big-picture"));
+  expect(indexOf("intuition")).toBeLessThan(indexOf("definition"));
+  expect(indexOf("definition")).toBeLessThan(indexOf("classification-matrix"));
+  expect(indexOf("classification-matrix")).toBeLessThan(
+    indexOf("worked-example"),
+  );
+  expect(indexOf("worked-example")).toBeLessThan(indexOf("guided-practice"));
+  expect(indexOf("guided-practice")).toBeLessThan(indexOf("practice-handoff"));
+  expect(indexOf("active-recall")).toBeGreaterThan(indexOf("exam-thinking"));
+  expect(indexOf("mastery-check")).toBeGreaterThan(indexOf("cheat-sheet"));
+});
+
+test("focused rationality session navigation is honest at both edges", async ({
+  page,
+}) => {
+  await page.goto(
+    `${base}/lernen/mikrooekonomik-1/rationale-praeferenzrelationen/`,
+  );
+  const navigation = page.getByRole("navigation", {
+    name: "Sitzungsnavigation",
+  });
+
+  await expect(
+    navigation.getByRole("link", { name: "Vorherige Sitzung" }),
+  ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/transitivitaet/");
+  await expect(
+    navigation.getByRole("link", { name: "Nächste Sitzung" }),
+  ).toHaveAttribute(
+    "href",
+    "/Study/lernen/mikrooekonomik-1/grs-steigung-und-lokale-annahmen/",
+  );
+});
+
 test("generic Mikro I session page is keyboard reachable", async ({ page }) => {
   await page.goto(
     `${base}/lernen/mikrooekonomik-1/praeferenzrelationen-grundvergleiche/`,
@@ -273,6 +365,12 @@ test("preference practice route links back to focused learning sessions", async 
   await expect(
     page.getByRole("link", { name: "Transitivität lernen" }),
   ).toHaveAttribute("href", "/Study/lernen/mikrooekonomik-1/transitivitaet/");
+  await expect(
+    page.getByRole("link", { name: "Rationalität klassifizieren" }),
+  ).toHaveAttribute(
+    "href",
+    "/Study/lernen/mikrooekonomik-1/rationale-praeferenzrelationen/",
+  );
   await expect(
     page.getByRole("link", { name: "Vorwissen wiederholen" }),
   ).toHaveAttribute(
@@ -353,6 +451,21 @@ test("focused completeness session remains visible without JavaScript", async ({
     page.getByRole("heading", { level: 1, name: "Vollständigkeit" }),
   ).toBeVisible();
   await expect(page.getByText("Formale Definition")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Zur passenden Übung" }),
+  ).toBeVisible();
+  await page.goto(
+    `${base}/lernen/mikrooekonomik-1/rationale-praeferenzrelationen/`,
+  );
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Rationale Präferenzrelationen klassifizieren",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("table", { name: "Property Matrix" }),
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Zur passenden Übung" }),
   ).toBeVisible();
@@ -442,7 +555,11 @@ for (const width of [320, 768, 1440]) {
   test(`generic Mikro I session has no horizontal overflow at ${width} CSS pixels`, async ({
     page,
   }, testInfo) => {
-    for (const route of ["vollstaendigkeit", "transitivitaet"]) {
+    for (const route of [
+      "vollstaendigkeit",
+      "transitivitaet",
+      "rationale-praeferenzrelationen",
+    ]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`${base}/lernen/mikrooekonomik-1/${route}/`);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

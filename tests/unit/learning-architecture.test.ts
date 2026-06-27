@@ -197,7 +197,11 @@ describe("learning module architecture", () => {
   });
 
   it("requires complete-session pages to contain the full pedagogical block order", () => {
-    for (const sessionId of ["pref-completeness", "pref-transitivity"]) {
+    for (const sessionId of [
+      "pref-completeness",
+      "pref-transitivity",
+      "pref-rationality-classification",
+    ]) {
       const session = sessionById(sessionId);
       const kinds = session.lessonBlocks!.map(({ kind }) => kind);
 
@@ -286,6 +290,51 @@ describe("learning module architecture", () => {
     ).not.toContain("graph");
   });
 
+  it("protects the rationality complete session synthesis scope and matrix", () => {
+    const rationalitySession = sessionById("pref-rationality-classification");
+    const blocks = rationalitySession.lessonBlocks!;
+    const blockIds = blocks.map(({ id }) => id);
+    const exampleLevels = workedExampleBlocks(blocks).map(({ level }) => level);
+    const publicProjection = JSON.stringify(rationalitySession);
+    const matrix = blocks.find(
+      (block) => block.kind === "classification-matrix",
+    );
+
+    expect(rationalitySession.availability.lesson).toBe("complete-session");
+    expect(new Set(blockIds).size).toBe(blockIds.length);
+    expect(
+      exampleLevels.filter((level) => level === "foundational"),
+    ).toHaveLength(3);
+    expect(
+      exampleLevels.filter((level) => level === "intermediate"),
+    ).toHaveLength(5);
+    expect(
+      exampleLevels.filter((level) => level === "exam-style"),
+    ).toHaveLength(3);
+    expect(matrix).toMatchObject({
+      kind: "classification-matrix",
+      columns: ["Vollstaendig", "Transitiv", "Klassifikation"],
+    });
+    expect(matrix && "rows" in matrix ? matrix.rows : []).toHaveLength(4);
+    expect(publicProjection).toContain(
+      "Rationalitaet = Vollstaendigkeit AND Transitivitaet",
+    );
+    expect(publicProjection).not.toContain("acceptedAnswer");
+    expect(publicProjection).not.toContain("correctOption");
+    expect(publicProjection).not.toContain("evaluator");
+    expect(rationalitySession.practiceMappings[0]!.exerciseIds).toEqual([
+      "pref-practice-09",
+      "pref-practice-10",
+      "pref-practice-11",
+    ]);
+    expect(
+      rationalitySession.instructionalRequirements.map(({ kind }) => kind),
+    ).not.toContain("formula");
+    expect(
+      rationalitySession.instructionalRequirements.map(({ kind }) => kind),
+    ).not.toContain("graph");
+  });
+
   it("validates practice mappings against sessions and objectives", () => {
     const preferenceSession = mikrooekonomik1Module.sessions.find(
       ({ id }) => id === "pref-derived-relations",
@@ -309,6 +358,19 @@ describe("learning module architecture", () => {
         "pref-lo-transitivity-04",
       ],
       exerciseIds: ["pref-practice-07", "pref-practice-08", "pref-practice-09"],
+    });
+    expect(
+      sessionById("pref-rationality-classification").practiceMappings[0],
+    ).toMatchObject({
+      practiceRoute: "/ueben/mikrooekonomik-1/praeferenzrelationen/",
+      objectiveIds: [
+        "pref-lo-rationality-01",
+        "pref-lo-rationality-02",
+        "pref-lo-rationality-03",
+        "pref-lo-rationality-04",
+        "pref-lo-rationality-05",
+      ],
+      exerciseIds: ["pref-practice-09", "pref-practice-10", "pref-practice-11"],
     });
     expect(validateStudyModule(mikrooekonomik1Module)).toEqual([]);
   });
