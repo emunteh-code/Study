@@ -228,6 +228,27 @@ test("Mikro I discovery remains usable at a narrow keyboard viewport", async ({
   });
 });
 
+for (const width of [320, 768, 1440]) {
+  test(`Mikro I module overview has no horizontal overflow at ${width} CSS pixels`, async ({
+    page,
+  }, testInfo) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`${base}/lernen/mikrooekonomik-1/`);
+    await expect(
+      page.getByRole("heading", {
+        name: "Sitzungen in Abhängigkeitsreihenfolge",
+      }),
+    ).toBeVisible();
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(width);
+    testInfo.annotations.push({
+      type: "viewport",
+      description: `${width} CSS pixels`,
+    });
+  });
+}
+
 test("topic orientation remains usable at 320 CSS pixels", async ({
   page,
 }, testInfo) => {
